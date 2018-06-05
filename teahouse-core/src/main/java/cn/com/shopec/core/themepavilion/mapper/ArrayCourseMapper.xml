@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.themepavilion.dao.ArrayCourseDao">
+
+<resultMap type="ArrayCourse" id="ArrayCourse">
+	<id column="ARRAY_COURSE_NO" property="arrayCourseNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="STORE_NO" property="storeNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="STORE_NAME" property="storeName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COURSE_NO" property="courseNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CHINESE_NAME" property="chineseName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COURSE_START" property="courseStart" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="COURSE_END" property="courseEnd" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="COURSE_DATE" property="courseDate" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="COURSE_WEEK" property="courseWeek" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COACH_NO" property="coachNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COACH_NAME" property="coachName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="PEOPLE_NUMBER" property="peopleNumber" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result column="RESERVATION" property="reservation" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result column="LINE_UP" property="lineUp" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result column="COURSE_TYPE" property="courseType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="FTL_ROW" property="ftlRow" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result column="POSTED_STATUS" property="postedStatus" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result column="STORE_AREA_CODE" property="storeAreaCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CITY_ID" property="cityId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+ARRAY_COURSE_NO,STORE_NO,STORE_NAME,COURSE_NO,CHINESE_NAME,COURSE_START,COURSE_END,
+COURSE_DATE,COURSE_WEEK,COACH_NO,COACH_NAME,PEOPLE_NUMBER,RESERVATION,LINE_UP,COURSE_TYPE,
+CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID,FTL_ROW,POSTED_STATUS,STORE_AREA_CODE,CITY_ID
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+ARRAY_COURSE_NO,STORE_NO,STORE_NAME,COURSE_NO,CHINESE_NAME,COURSE_START,COURSE_END,
+COURSE_DATE,COURSE_WEEK,COACH_NO,COACH_NAME,PEOPLE_NUMBER,RESERVATION,LINE_UP,COURSE_TYPE,
+CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID,FTL_ROW,POSTED_STATUS,STORE_AREA_CODE,CITY_ID
+</sql>
+
+<insert id="add" parameterType="ArrayCourse" useGeneratedKeys="true" keyProperty="arrayCourseNo">
+	insert into T_ARRAY_COURSE(
+		<if test="arrayCourseNo!=null">
+		ARRAY_COURSE_NO,
+		</if>
+		STORE_NO,
+		STORE_NAME,
+		COURSE_NO,
+		CHINESE_NAME,
+		COURSE_START,
+		COURSE_END,
+		COURSE_DATE,
+		COURSE_WEEK,
+		COACH_NO,
+		COACH_NAME,
+		PEOPLE_NUMBER,
+		RESERVATION,
+		LINE_UP,
+		COURSE_TYPE,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID,
+		FTL_ROW,
+		POSTED_STATUS,
+		STORE_AREA_CODE,
+		CITY_ID
+	) values (
+		<if test="arrayCourseNo!=null">
+		#{arrayCourseNo,jdbcType = VARCHAR},
+		</if>
+		#{storeNo,jdbcType = VARCHAR},
+		#{storeName,jdbcType = VARCHAR},
+		#{courseNo,jdbcType = VARCHAR},
+		#{chineseName,jdbcType = VARCHAR},
+		#{courseStart,jdbcType = TIMESTAMP},
+		#{courseEnd,jdbcType = TIMESTAMP},
+		#{courseDate,jdbcType = TIMESTAMP},
+		#{courseWeek,jdbcType = VARCHAR},
+		#{coachNo,jdbcType = VARCHAR},
+		#{coachName,jdbcType = VARCHAR},
+		#{peopleNumber,jdbcType = INTEGER},
+		#{reservation,jdbcType = INTEGER},
+		#{lineUp,jdbcType = INTEGER},
+		#{courseType,jdbcType = TINYINT},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR},
+		#{ftlRow,jdbcType = TINYINT},
+		#{postedStatus,jdbcType = TINYINT},
+		#{storeAreaCode,jdbcType = VARCHAR},
+		#{cityId,jdbcType = VARCHAR}
+	)
+</insert>
+
+<update id="update" parameterType="ArrayCourse">
+	update T_ARRAY_COURSE 
+	<set>
+		<if test="storeNo!=null and storeNo!=''">
+			STORE_NO=#{storeNo,jdbcType = VARCHAR},
+		</if>
+		<if test="storeName!=null and storeName!=''">
+			STORE_NAME=#{storeName,jdbcType = VARCHAR},
+		</if>
+		<if test="courseNo!=null and courseNo!=''">
+			COURSE_NO=#{courseNo,jdbcType = VARCHAR},
+		</if>
+		<if test="chineseName!=null and chineseName!=''">
+			CHINESE_NAME=#{chineseName,jdbcType = VARCHAR},
+		</if>
+		<if test="courseStart!=null ">
+			COURSE_START=#{courseStart,jdbcType = TIMESTAMP},
+		</if>
+		<if test="courseEnd!=null ">
+			COURSE_END=#{courseEnd,jdbcType = TIMESTAMP},
+		</if>
+		<if test="courseDate!=null ">
+			COURSE_DATE=#{courseDate,jdbcType = TIMESTAMP},
+		</if>
+		<if test="courseWeek!=null and courseWeek!=''">
+			COURSE_WEEK=#{courseWeek,jdbcType = VARCHAR},
+		</if>
+		<if test="coachNo!=null and coachNo!=''">
+			COACH_NO=#{coachNo,jdbcType = VARCHAR},
+		</if>
+		<if test="coachName!=null and coachName!=''">
+			COACH_NAME=#{coachName,jdbcType = VARCHAR},
+		</if>
+		<if test="peopleNumber!=null ">
+			PEOPLE_NUMBER=#{peopleNumber,jdbcType = INTEGER},
+		</if>
+		<if test="reservation!=null ">
+			RESERVATION=#{reservation,jdbcType = INTEGER},
+		</if>
+		<if test="lineUp!=null ">
+			LINE_UP=#{lineUp,jdbcType = INTEGER},
+		</if>
+		<if test="courseType!=null ">
+			COURSE_TYPE=#{courseType,jdbcType = TINYINT},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+		<if test="ftlRow!=null ">
+			FTL_ROW =#{ftlRow,jdbcType = TINYINT},
+		</if>
+		<if test="postedStatus!=null ">
+			POSTED_STATUS =#{postedStatus,jdbcType = TINYINT},
+		</if>
+		<if test="storeAreaCode!=null and storeAreaCode!=''">
+			STORE_AREA_CODE = #{storeAreaCode,jdbcType = VARCHAR},
+		</if>
+		<if test="cityId!=null and cityId!=''">
+			CITY_ID = #{cityId,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND ARRAY_COURSE_NO=#{arrayCourseNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_ARRAY_COURSE 
+	<where>
+		ARRAY_COURSE_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="ArrayCourse">
+	select <include refid="AllColumnlist"/> from T_ARRAY_COURSE
+	<where>
+		ARRAY_COURSE_NO=#{0}
+	</where>
+</select>
+
+<select id="getArrayForCourse" resultMap="ArrayCourse">
+	select * from T_ARRAY_COURSE where POSTED_STATUS = 1 AND STORE_AREA_CODE=#{0} GROUP BY STORE_NAME
+</select>
+
+<select id="getCourseTimeByFtl" resultMap="ArrayCourse">
+	select <include refid="AllColumnlist"/> from T_ARRAY_COURSE
+	<where>
+		FTL_ROW=#{0} and COURSE_TYPE=#{1} and COURSE_NO  is null
+	</where>
+</select>
+
+<select id="getStoreCourseTimeByFtl" resultMap="ArrayCourse">
+	select <include refid="AllColumnlist"/> from T_ARRAY_COURSE
+	<where>
+		STORE_NO=#{0} AND FTL_ROW=#{1} AND COURSE_TYPE=#{2} AND COURSE_NO is null
+	</where>
+</select>
+
+<select id="getByIds" resultMap="ArrayCourse">
+	select <include refid="AllColumnlist"/> from T_ARRAY_COURSE
+	<where>
+		ARRAY_COURSE_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(ARRAY_COURSE_NO) from T_ARRAY_COURSE 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="ArrayCourse">
+	select <include refid="CommonColumnlist"/> from T_ARRAY_COURSE 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="listStoreNameGroupBy" parameterType="Query" resultMap="ArrayCourse">
+	select * from T_ARRAY_COURSE where POSTED_STATUS = 1 and CITY_ID=#{0} GROUP BY STORE_NAME
+	
+</select>
+
+<select id="listStoreByAreaCode" parameterType="Query" resultMap="ArrayCourse">
+	select * from T_ARRAY_COURSE where POSTED_STATUS = 1 AND STORE_AREA_CODE=#{0} GROUP BY STORE_NAME
+	
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="ArrayCourse">
+	select <include refid="CommonColumnlist"/> from T_ARRAY_COURSE
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	ORDER BY COURSE_DATE ASC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+<select id="queryArrayCourseRow" parameterType="Query" resultMap="ArrayCourse">
+	select <include refid="AllColumnlist"/> from T_ARRAY_COURSE 
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	group by FTL_ROW ORDER BY COURSE_START ASC
+</select>
+
+<select id="countThemeAll" parameterType="Query" resultType="Long">
+	select count(ARRAY_COURSE_NO) from T_ARRAY_COURSE 
+	<where>
+	<include refid="commonWhere"/>
+	</where>
+</select>
+
+<select id="listThemeAll" parameterType="Query" resultMap="ArrayCourse">
+	select <include refid="CommonColumnlist"/> from T_ARRAY_COURSE
+	<where>
+	 <include refid="commonWhere"/>
+	</where>
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+	<if test="q!=null">
+		<if test="q.arrayCourseNo!=null and q.arrayCourseNo!=''">
+			AND ARRAY_COURSE_NO=#{q.arrayCourseNo}
+		</if>
+		<if test="q.storeNo!=null and q.storeNo!=''">
+			AND STORE_NO=#{q.storeNo}
+		</if>
+		<if test="q.storeName!=null and q.storeName!=''">
+			AND STORE_NAME=#{q.storeName}
+		</if>
+		<if test="q.courseNo!=null and q.courseNo!=''">
+			AND COURSE_NO=#{q.courseNo}
+		</if>
+		<if test="q.chineseName!=null and q.chineseName!=''">
+			AND CHINESE_NAME=#{q.chineseName}
+		</if>
+		<if test="q.courseStart!=null ">
+			AND COURSE_START=#{q.courseStart}
+		</if>
+		<if test="q.courseStartStart!=null">
+		<![CDATA[	AND COURSE_START>=#{q.courseStartStart}  ]]>
+		</if>
+		<if test="q.courseStartEnd!=null">
+		<![CDATA[	AND COURSE_START<#{q.courseStartEnd}   ]]>
+		</if>
+		<if test="q.courseEnd!=null ">
+			AND COURSE_END=#{q.courseEnd}
+		</if>
+		<if test="q.courseEndStart!=null">
+		<![CDATA[	AND COURSE_END>=#{q.courseEndStart}  ]]>
+		</if>
+		<if test="q.courseEndEnd!=null">
+		<![CDATA[	AND COURSE_END<#{q.courseEndEnd}   ]]>
+		</if>
+		<if test="q.courseDate!=null ">
+			AND COURSE_DATE=#{q.courseDate}
+		</if>
+		<if test="q.courseDateStart!=null">
+		<![CDATA[	AND COURSE_DATE>=#{q.courseDateStart}  ]]>
+		</if>
+		<if test="q.courseDateEnd!=null">
+		<![CDATA[	AND COURSE_DATE<#{q.courseDateEnd}   ]]>
+		</if>
+		<if test="q.courseWeek!=null and q.courseWeek!=''">
+			AND COURSE_WEEK=#{q.courseWeek}
+		</if>
+		<if test="q.coachNo!=null and q.coachNo!=''">
+			AND COACH_NO=#{q.coachNo}
+		</if>
+		<if test="q.coachName!=null and q.coachName!=''">
+			AND COACH_NAME=#{q.coachName}
+		</if>
+		<if test="q.peopleNumber!=null ">
+			AND PEOPLE_NUMBER=#{q.peopleNumber}
+		</if>
+		<if test="q.reservation!=null ">
+			AND RESERVATION=#{q.reservation}
+		</if>
+		<if test="q.lineUp!=null ">
+			AND LINE_UP=#{q.lineUp}
+		</if>
+		<if test="q.courseType!=null ">
+			AND COURSE_TYPE=#{q.courseType}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+		<if test="q.ftlRow!=null ">
+			AND FTL_ROW=#{q.ftlRow}
+		</if>
+		<if test="q.postedStatus!=null ">
+			AND POSTED_STATUS=#{q.postedStatus}
+		</if>
+		<if test="q.storeAreaCode!=null and q.storeAreaCode!=''">
+			AND STORE_AREA_CODE=#{q.storeAreaCode}
+		</if>
+		<if test="q.cityId!=null and q.cityId!=''">
+			AND CITY_ID=#{q.cityId}
+		</if>
+	</if>
+</sql>
+
+
+<!-- 查询全部主题馆当前时间的排课课程数据 -->
+<sql id="commonWhere">
+	<if test="q!=null">
+		<if test="q.arrayCourseNo!=null and q.arrayCourseNo!=''">
+			AND ARRAY_COURSE_NO=#{q.arrayCourseNo}
+		</if>
+		<if test="q.storeNo!=null and q.storeNo!=''">
+			AND STORE_NO=#{q.storeNo}
+		</if>
+		<if test="q.storeName!=null and q.storeName!=''">
+			AND STORE_NAME=#{q.storeName}
+		</if>
+		<if test="q.courseNo!=null and q.courseNo!=''">
+			AND COURSE_NO=#{q.courseNo}
+		</if>
+		<if test="q.chineseName!=null and q.chineseName!=''">
+			AND CHINESE_NAME=#{q.chineseName}
+		</if>
+		<if test="q.courseStart!=null ">
+			AND COURSE_START=#{q.courseStart}
+		</if>
+		<if test="q.courseStartStart!=null">
+		<![CDATA[	AND COURSE_START>=#{q.courseStartStart}  ]]>
+		</if>
+		<if test="q.courseStartEnd!=null">
+		<![CDATA[	AND COURSE_START<#{q.courseStartEnd}   ]]>
+		</if>
+		<if test="q.courseEnd!=null ">
+			AND COURSE_END=#{q.courseEnd}
+		</if>
+		<if test="q.courseEndStart!=null">
+		<![CDATA[	AND COURSE_END>=#{q.courseEndStart}  ]]>
+		</if>
+		<if test="q.courseEndEnd!=null">
+		<![CDATA[	AND COURSE_END<#{q.courseEndEnd}   ]]>
+		</if>
+		<if test="q.courseDate!=null ">
+		<![CDATA[AND DATE_FORMAT(COURSE_DATE,'%Y-%m-%d') = DATE_FORMAT(#{q.courseDate},'%Y-%m-%d')]]>
+		</if>
+		<if test="q.courseDateStart!=null">
+		<![CDATA[	AND COURSE_DATE>=#{q.courseDateStart}  ]]>
+		</if>
+		<if test="q.courseDateEnd!=null">
+		<![CDATA[	AND COURSE_DATE<#{q.courseDateEnd}   ]]>
+		</if>
+		<if test="q.courseWeek!=null and q.courseWeek!=''">
+			AND COURSE_WEEK=#{q.courseWeek}
+		</if>
+		<if test="q.coachNo!=null and q.coachNo!=''">
+			AND COACH_NO=#{q.coachNo}
+		</if>
+		<if test="q.coachName!=null and q.coachName!=''">
+			AND COACH_NAME=#{q.coachName}
+		</if>
+		<if test="q.peopleNumber!=null ">
+			AND PEOPLE_NUMBER=#{q.peopleNumber}
+		</if>
+		<if test="q.reservation!=null ">
+			AND RESERVATION=#{q.reservation}
+		</if>
+		<if test="q.lineUp!=null ">
+			AND LINE_UP=#{q.lineUp}
+		</if>
+		<if test="q.courseType!=null ">
+			AND COURSE_TYPE=#{q.courseType}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+		<if test="q.ftlRow!=null ">
+			AND FTL_ROW=#{q.ftlRow}
+		</if>
+		<if test="q.postedStatus!=null ">
+			AND POSTED_STATUS=#{q.postedStatus}
+		</if>
+		<if test="q.storeAreaCode!=null and q.storeAreaCode!=''">
+			AND STORE_AREA_CODE=#{q.storeAreaCode}
+		</if>
+		<if test="q.cityId!=null and q.cityId!=''">
+			AND CITY_ID=#{q.cityId}
+		</if>
+	</if>
+</sql>
+</mapper>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.member.dao.MemberBalanceDao">
+
+<resultMap type="MemberBalance" id="MemberBalance">
+	<id column="MEMBER_NO" property="memberNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MEMBER_BALANCE" property="memberBalance" javaType="java.lang.Double" jdbcType="DOUBLE"/>
+	<result column="MEMBER_DEPOSIT" property="memberDeposit" javaType="java.lang.Double" jdbcType="DOUBLE"/>
+	<result column="COURSE_NUMBER" property="courseNumber" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result column="FREE_COURSE_BAG" property="freeCourseBag" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+MEMBER_NO,MEMBER_BALANCE,MEMBER_DEPOSIT,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID,COURSE_NUMBER,FREE_COURSE_BAG
+
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+MEMBER_NO,MEMBER_BALANCE,MEMBER_DEPOSIT,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID,COURSE_NUMBER,FREE_COURSE_BAG
+
+</sql>
+
+<insert id="add" parameterType="MemberBalance" useGeneratedKeys="true" keyProperty="memberNo">
+	insert into T_MEMBER_BALANCE(
+		<if test="memberNo!=null">
+		MEMBER_NO,
+		</if>
+		MEMBER_BALANCE,
+		MEMBER_DEPOSIT,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID,
+		COURSE_NUMBER,
+		FREE_COURSE_BAG
+	) values (
+		<if test="memberNo!=null">
+		#{memberNo,jdbcType = VARCHAR},
+		</if>
+		#{memberBalance,jdbcType = DOUBLE},
+		#{memberDeposit,jdbcType = DOUBLE},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR},
+		#{courseNumber,jdbcType = INTEGER},
+		#{freeCourseBag,jdbcType = INTEGER}
+	)
+</insert>
+
+<update id="update" parameterType="MemberBalance">
+	update T_MEMBER_BALANCE 
+	<set>
+		<if test="memberBalance!=null ">
+			MEMBER_BALANCE=#{memberBalance,jdbcType = DOUBLE},
+		</if>
+		<if test="memberDeposit!=null ">
+			MEMBER_DEPOSIT=#{memberDeposit,jdbcType = DOUBLE},
+		</if>
+		<if test="courseNumber!=null ">
+			COURSE_NUMBER=#{courseNumber,jdbcType = INTEGER},
+		</if>
+		<if test="freeCourseBag!=null ">
+			FREE_COURSE_BAG=#{freeCourseBag,jdbcType = INTEGER},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND MEMBER_NO=#{memberNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_MEMBER_BALANCE 
+	<where>
+		MEMBER_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="MemberBalance">
+	select <include refid="AllColumnlist"/> from T_MEMBER_BALANCE
+	<where>
+		MEMBER_NO=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="MemberBalance">
+	select <include refid="AllColumnlist"/> from T_MEMBER_BALANCE
+	<where>
+		MEMBER_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(MEMBER_NO) from T_MEMBER_BALANCE 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="MemberBalance">
+	select <include refid="CommonColumnlist"/> from T_MEMBER_BALANCE 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="MemberBalance">
+	select <include refid="CommonColumnlist"/> from T_MEMBER_BALANCE
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC,CREATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+	<if test="q!=null">
+		<if test="q.memberNo!=null and q.memberNo!=''">
+			AND MEMBER_NO=#{q.memberNo}
+		</if>
+		<if test="q.memberBalance!=null ">
+			AND MEMBER_BALANCE=#{q.memberBalance}
+		</if>
+		<if test="q.memberDeposit!=null ">
+			AND MEMBER_DEPOSIT=#{q.memberDeposit}
+		</if>
+		<if test="q.courseNumber!=null ">
+			AND COURSE_NUMBER=#{q.courseNumber}
+		</if>
+		<if test="q.freeCourseBag!=null ">
+			AND FREE_COURSE_BAG=#{q.freeCourseBag}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+
+</mapper>

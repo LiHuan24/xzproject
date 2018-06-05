@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.equipment.dao.EquipmentCategoryDao">
+
+<resultMap type="EquipmentCategory" id="EquipmentCategory">
+	<id column="SORT_NO" property="sortNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="SORT_NAME" property="sortName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="SORT_TYPE" property="sortType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="IS_DELETED" property="isDeleted" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+SORT_NO,SORT_NAME,SORT_TYPE,IS_DELETED,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,
+OPERATOR_ID
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+SORT_NO,SORT_NAME,SORT_TYPE,IS_DELETED,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,
+OPERATOR_ID
+</sql>
+
+<insert id="add" parameterType="EquipmentCategory" useGeneratedKeys="true" keyProperty="sortNo">
+	insert into T_EQUIPMENT_CATEGORY(
+		<if test="sortNo!=null">
+		SORT_NO,
+		</if>
+		SORT_NAME,
+		SORT_TYPE,
+		IS_DELETED,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID
+	) values (
+		<if test="sortNo!=null">
+		#{sortNo,jdbcType = VARCHAR},
+		</if>
+		#{sortName,jdbcType = VARCHAR},
+		#{sortType,jdbcType = TINYINT},
+		#{isDeleted,jdbcType = TINYINT},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR}
+	)
+</insert>
+
+<update id="update" parameterType="EquipmentCategory">
+	update T_EQUIPMENT_CATEGORY 
+	<set>
+		<if test="sortName!=null and sortName!=''">
+			SORT_NAME=#{sortName,jdbcType = VARCHAR},
+		</if>
+		<if test="sortType!=null ">
+			SORT_TYPE=#{sortType,jdbcType = TINYINT},
+		</if>
+		<if test="isDeleted!=null ">
+			IS_DELETED=#{isDeleted,jdbcType = TINYINT},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND SORT_NO=#{sortNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_EQUIPMENT_CATEGORY 
+	<where>
+		SORT_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="EquipmentCategory">
+	select <include refid="AllColumnlist"/> from T_EQUIPMENT_CATEGORY
+	<where>
+		SORT_NO=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="EquipmentCategory">
+	select <include refid="AllColumnlist"/> from T_EQUIPMENT_CATEGORY
+	<where>
+		SORT_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(SORT_NO) from T_EQUIPMENT_CATEGORY 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="EquipmentCategory">
+	select <include refid="CommonColumnlist"/> from T_EQUIPMENT_CATEGORY 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="EquipmentCategory">
+	select <include refid="CommonColumnlist"/> from T_EQUIPMENT_CATEGORY
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+    <if test="q==null"><!-- 无传入参数时默认查未删除的 -->
+       AND IS_DELETED=0
+    </if>
+	<if test="q!=null">
+		<if test="q.sortNo!=null and q.sortNo!=''">
+			AND SORT_NO=#{q.sortNo}
+		</if>
+		<if test="q.sortName!=null and q.sortName!=''">
+			AND SORT_NAME=#{q.sortName}
+		</if>
+		<if test="q.sortType!=null ">
+			AND SORT_TYPE=#{q.sortType}
+		</if>
+		<if test="q.isDeleted!=null ">
+			AND IS_DELETED=#{q.isDeleted}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+
+</mapper>

@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.car.dao.CarInventoryDao">
+
+	<resultMap type="CarInventory" id="CarInventory">
+		<id column="CAR_INVENTORY_ID" property="carInventoryId" javaType="java.lang.String"
+			jdbcType="VARCHAR" />
+		<result column="CAR_MODEL_ID" property="carModelId" javaType="java.lang.String"
+			jdbcType="VARCHAR" />
+		<result column="CAR_MODEL_NAME" property="carModelName"
+			javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="CAR_BRAND_ID" property="carBrandId" javaType="java.lang.String"
+			jdbcType="VARCHAR" />
+		<result column="CAR_BRAND_NAME" property="carBrandName"
+			javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="CAR_PHOTO_URL1" property="carPhotoUrl1"
+			javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="CAR_DOC_PHOTO_URL1" property="carDocPhotoUrl1"
+			javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="PARK_NO" property="parkNo" javaType="java.lang.String"
+			jdbcType="VARCHAR" />
+		<result column="PARK_NAME" property="parkName" javaType="java.lang.String"
+			jdbcType="VARCHAR" />
+		<result column="CITY_ID" property="cityId" javaType="java.lang.String"
+			jdbcType="VARCHAR" />
+		<result column="CITY_NAME" property="cityName" javaType="java.lang.String"
+			jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" javaType="java.util.Date"
+			jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date"
+			jdbcType="TIMESTAMP" />
+		<result column="INVENTORY_DATE" property="inventoryDate"
+			javaType="java.util.Date" jdbcType="TIMESTAMP" />
+		<result column="INVENTORY_TOTAL" property="inventoryTotal"
+			javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="LEASED_QUANTITY" property="leasedQuantity"
+			javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="RESERVE_QUANTITY" property="reserveQuantity"
+			javaType="java.lang.Integer" jdbcType="INTEGER" />
+		<result column="AVAILABLE" property="available" javaType="java.lang.Integer"
+			jdbcType="INTEGER" />
+		<result column="IS_AVAILABLE" property="isAvailable" javaType="java.lang.Integer"
+			jdbcType="TINYINT" />
+		<result column="OPERATOR_TYPE" property="operatorType"
+			javaType="java.lang.Integer" jdbcType="TINYINT" />
+		<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<!-- 全部字段，一般用于明细查询 -->
+	<sql id="AllColumnlist">
+		CAR_INVENTORY_ID,CAR_MODEL_ID,CAR_MODEL_NAME,CAR_BRAND_ID,CAR_BRAND_NAME,PARK_NO,PARK_NAME,
+		CITY_ID,CITY_NAME,CREATE_TIME,UPDATE_TIME,INVENTORY_DATE,INVENTORY_TOTAL,
+		LEASED_QUANTITY,RESERVE_QUANTITY,OPERATOR_TYPE,OPERATOR_ID,CAR_DOC_PHOTO_URL1,CAR_PHOTO_URL1,AVAILABLE,IS_AVAILABLE
+	</sql>
+
+	<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+	<sql id="CommonColumnlist">
+		CAR_INVENTORY_ID,CAR_MODEL_ID,CAR_MODEL_NAME,CAR_BRAND_ID,CAR_BRAND_NAME,PARK_NO,PARK_NAME,
+		CITY_ID,CITY_NAME,CREATE_TIME,UPDATE_TIME,INVENTORY_DATE,INVENTORY_TOTAL,
+		LEASED_QUANTITY,RESERVE_QUANTITY,OPERATOR_TYPE,OPERATOR_ID,CAR_DOC_PHOTO_URL1,CAR_PHOTO_URL1,AVAILABLE,IS_AVAILABLE
+	</sql>
+
+	<insert id="add" parameterType="CarInventory" useGeneratedKeys="true"
+		keyProperty="carInventoryId">
+		insert into T_CAR_INVENTORY(
+		<if test="carInventoryId!=null">
+			CAR_INVENTORY_ID,
+		</if>
+		CAR_MODEL_ID,
+		CAR_MODEL_NAME,
+		CAR_BRAND_ID,
+		CAR_BRAND_NAME,
+		PARK_NO,
+		PARK_NAME,
+		CITY_ID,
+		CITY_NAME,
+		CREATE_TIME,
+		UPDATE_TIME,
+		INVENTORY_DATE,
+		INVENTORY_TOTAL,
+		LEASED_QUANTITY,
+		RESERVE_QUANTITY,
+		OPERATOR_TYPE,
+		OPERATOR_ID,
+		CAR_PHOTO_URL1,
+		CAR_DOC_PHOTO_URL1,
+		AVAILABLE,
+		IS_AVAILABLE
+		)
+		values (
+		<if test="carInventoryId!=null">
+			#{carInventoryId,jdbcType = VARCHAR},
+		</if>
+		#{carModelId,jdbcType = VARCHAR},
+		#{carModelName,jdbcType = VARCHAR},
+		#{carBrandId,jdbcType = VARCHAR},
+		#{carBrandName,jdbcType = VARCHAR},
+		#{parkNo,jdbcType = VARCHAR},
+		#{parkName,jdbcType = VARCHAR},
+		#{cityId,jdbcType = VARCHAR},
+		#{cityName,jdbcType = VARCHAR},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{inventoryDate,jdbcType = TIMESTAMP},
+		#{inventoryTotal,jdbcType =
+		INTEGER},
+		#{leasedQuantity,jdbcType = INTEGER},
+		#{reserveQuantity,jdbcType = INTEGER},
+		#{operatorType,jdbcType =
+		TINYINT},
+		#{operatorId,jdbcType = VARCHAR},
+		#{carPhotoUrl1,jdbcType =
+		VARCHAR},
+		#{carDocPhotoUrl1,jdbcType = VARCHAR},
+		#{available,jdbcType =
+		INTEGER},
+		#{isAvailable,jdbcType =
+		TINYINT}
+		)
+	</insert>
+
+	<update id="update" parameterType="CarInventory">
+		update T_CAR_INVENTORY
+		<set>
+			<if test="carModelId!=null and carModelId!=''">
+				CAR_MODEL_ID=#{carModelId,jdbcType = VARCHAR},
+			</if>
+			<if test="carModelName!=null and carModelName!=''">
+				CAR_MODEL_NAME=#{carModelName,jdbcType = VARCHAR},
+			</if>
+			<if test="carBrandId!=null and carBrandId!=''">
+				CAR_BRAND_ID=#{carBrandId,jdbcType = VARCHAR},
+			</if>
+			<if test="carBrandName!=null and carBrandName!=''">
+				CAR_BRAND_NAME=#{carBrandName,jdbcType = VARCHAR},
+			</if>
+			<if test="parkNo!=null and parkNo!=''">
+				PARK_NO=#{parkNo,jdbcType = VARCHAR},
+			</if>
+			<if test="carPhotoUrl1!=null and carPhotoUrl1!=''">
+				CAR_PHOTO_URL1=#{carPhotoUrl1,jdbcType = VARCHAR},
+			</if>
+			<if test="carDocPhotoUrl1!=null and carDocPhotoUrl1!=''">
+				CAR_DOC_PHOTO_URL1=#{carDocPhotoUrl1,jdbcType = VARCHAR},
+			</if>
+			<if test="parkName!=null and parkName!=''">
+				PARK_NAME=#{parkName,jdbcType = VARCHAR},
+			</if>
+			<if test="cityId!=null and cityId!=''">
+				CITY_ID=#{cityId,jdbcType = VARCHAR},
+			</if>
+			<if test="cityName!=null and cityName!=''">
+				CITY_NAME=#{cityName,jdbcType = VARCHAR},
+			</if>
+			<if test="createTime!=null ">
+				CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+			</if>
+			<if test="updateTime!=null ">
+				UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+			</if>
+			<if test="inventoryDate!=null ">
+				INVENTORY_DATE=#{inventoryDate,jdbcType = TIMESTAMP},
+			</if>
+			<if test="inventoryTotal!=null ">
+				INVENTORY_TOTAL=#{inventoryTotal,jdbcType = INTEGER},
+			</if>
+			<if test="leasedQuantity!=null ">
+				LEASED_QUANTITY=#{leasedQuantity,jdbcType = INTEGER},
+			</if>
+			<if test="available!=null ">
+				AVAILABLE=#{available,jdbcType = INTEGER},
+			</if>
+			<if test="reserveQuantity!=null ">
+				RESERVE_QUANTITY=#{reserveQuantity,jdbcType = INTEGER},
+			</if>
+			<if test="isAvailable!=null ">
+				IS_AVAILABLE=#{isAvailable,jdbcType = TINYINT},
+			</if>
+			<if test="operatorType!=null ">
+				OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+			</if>
+			<if test="operatorId!=null and operatorId!=''">
+				OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+			</if>
+		</set>
+		<where>
+			AND CAR_INVENTORY_ID=#{carInventoryId}
+		</where>
+	</update>
+
+	<delete id="delete">
+		delete from T_CAR_INVENTORY
+		<where>
+			CAR_INVENTORY_ID=#{0}
+		</where>
+	</delete>
+
+	<select id="get" resultMap="CarInventory">
+		select
+		<include refid="AllColumnlist" />
+		from T_CAR_INVENTORY
+		<where>
+			CAR_INVENTORY_ID=#{0}
+		</where>
+	</select>
+	<select id="getCy" resultMap="CarInventory">
+		SELECT CAR_MODEL_ID,CITY_ID
+		FROM
+		t_car_inventory GROUP BY
+		CAR_MODEL_ID
+	</select>
+	<select id="getByCarModelId" resultMap="CarInventory">
+		SELECT * FROM
+		t_car_inventory WHERE car_model_id = #{0} and CITY_ID = #{1} ORDER BY INVENTORY_DATE DESC
+		LIMIT 1
+	</select>
+	<select id="getByInventoryDate" resultMap="CarInventory">
+		SELECT *
+		FROM
+		t_car_inventory where INVENTORY_DATE = #{0} and CAR_MODEL_ID = #{1} and CITY_ID = #{2}
+	</select>
+
+	<select id="getCarByCarTypeNs" parameterType="Query"
+		resultType="cn.com.shopec.core.car.vo.CarDayVo">
+		SELECT
+		y.CAR_PHOTO_URL1 AS carPhotoUrl1,
+		y.CAR_DOC_PHOTO_URL1 AS
+		carDocPhotoUrl1,
+		m.CAR_MODEL_ID AS carModelId,
+		m.CAR_MODEL_NAME AS
+		carModelName,
+		m.CAR_BRAND_ID AS carBrandId,
+		m.CAR_BRAND_NAME AS
+		carBrandName,
+		m.BOX_TYPE AS boxType,
+		m.DISPLACEMENT AS displacement,
+		m.SEAT_NUMBER AS
+		seatNumber,
+		m.STALL AS stall
+		FROM t_car_inventory y
+		LEFT
+		JOIN t_car_model
+		m
+		ON
+		y.CAR_MODEL_ID = m.CAR_MODEL_ID
+		<where>
+			<if test="q!=null">
+				<if test="q.carType!=null">
+					AND m.CAR_TYPE=#{q.carType}
+				</if>
+			</if>
+			AND y.INVENTORY_TOTAL > 0
+		</where>
+	</select>
+
+	<select id="getByIds" resultMap="CarInventory">
+		select
+		<include refid="AllColumnlist" />
+		from T_CAR_INVENTORY
+		<where>
+			CAR_INVENTORY_ID in
+			<foreach item="item" index="index" collection="array" open="("
+				separator="," close=")">#{item}</foreach>
+		</where>
+	</select>
+
+	<select id="getByList" parameterType="java.util.HashMap"
+		resultType="cn.com.shopec.core.car.vo.CarDayVo">
+		SELECT
+
+		m.CAR_PHOTO_URL1 AS carPhotoUrl1,
+		m.CAR_MODEL_ID AS carModelId,
+		m.CAR_MODEL_NAME AS
+		carModelName,
+		m.CAR_BRAND_ID AS carBrandId,
+		m.CAR_BRAND_NAME AS
+		carBrandName,
+		m.BOX_TYPE AS boxType,
+		m.DISPLACEMENT
+		AS displacement,
+		m.SEAT_NUMBER AS
+		seatNumber,
+		m.STALL AS stall
+
+		FROM
+		t_car_inventory y
+
+		LEFT JOIN t_car_model
+		m ON
+		y.CAR_MODEL_ID = m.CAR_MODEL_ID
+		<where>
+			y.INVENTORY_DATE in
+			<foreach item="item" index="index" collection="list" open="("
+				separator="," close=")">#{item}</foreach>
+			<if test="type!=null and type!=''">
+				AND m.CAR_TYPE=#{type}
+			</if>
+			<if test="cityId!=null and cityId!=''">
+				AND y.CITY_ID=#{cityId}
+			</if>
+			<if test="carModelId!=null and carModelId!=''">
+				AND y.CAR_MODEL_ID=#{carModelId}
+			</if>
+			 AND y.AVAILABLE > 0
+		</where>
+		 GROUP BY y.CAR_MODEL_ID 
+	</select>
+
+	<select id="count" parameterType="Query" resultType="Long">
+		select count(CAR_INVENTORY_ID) from T_CAR_INVENTORY
+		<where>
+			<include refid="listCommonWhere" />
+		</where>
+	</select>
+
+	<select id="queryAll" parameterType="Query" resultMap="CarInventory">
+		select
+		<include refid="CommonColumnlist" />
+		from T_CAR_INVENTORY
+		<where>
+			<include refid="listCommonWhere" />
+		</where>
+	</select>
+
+	<select id="pageList" parameterType="Query" resultMap="CarInventory">
+		select
+		<include refid="CommonColumnlist" />
+		from T_CAR_INVENTORY
+		<where>
+			<include refid="listCommonWhere" />
+		</where>
+		order by INVENTORY_DATE desc
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+	</select>
+
+
+	<sql id="listCommonWhere">
+		<if test="q!=null">
+			<if test="q.carInventoryId!=null and q.carInventoryId!=''">
+				AND CAR_INVENTORY_ID=#{q.carInventoryId}
+			</if>
+			<if test="q.carModelId!=null and q.carModelId!=''">
+				AND CAR_MODEL_ID=#{q.carModelId}
+			</if>
+			<if test="q.carModelName!=null and q.carModelName!=''">
+				AND CAR_MODEL_NAME=#{q.carModelName}
+			</if>
+			<if test="q.carBrandId!=null and q.carBrandId!=''">
+				AND CAR_BRAND_ID=#{q.carBrandId}
+			</if>
+			<if test="q.carBrandName!=null and q.carBrandName!=''">
+				AND CAR_BRAND_NAME=#{q.carBrandName}
+			</if>
+			<if test="q.parkNo!=null and q.parkNo!=''">
+				AND PARK_NO=#{q.parkNo}
+			</if>
+			<if test="q.parkName!=null and q.parkName!=''">
+				AND PARK_NAME=#{q.parkName}
+			</if>
+			<if test="q.cityId!=null and q.cityId!=''">
+				AND CITY_ID=#{q.cityId}
+			</if>
+			<if test="q.cityName!=null and q.cityName!=''">
+				AND CITY_NAME=#{q.cityName}
+			</if>
+			<if test="q.createTime!=null ">
+				AND CREATE_TIME=#{q.createTime}
+			</if>
+			<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+			</if>
+			<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+			</if>
+			<if test="q.updateTime!=null ">
+				AND UPDATE_TIME=#{q.updateTime}
+			</if>
+			<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+			</if>
+			<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+			</if>
+			<if test="q.inventoryDate!=null ">
+				AND INVENTORY_DATE=#{q.inventoryDate}
+			</if>
+			<if test="q.inventoryDateStart!=null">
+		<![CDATA[	AND INVENTORY_DATE>=#{q.inventoryDateStart}  ]]>
+			</if>
+			<if test="q.inventoryDateEnd!=null">
+		<![CDATA[	AND INVENTORY_DATE<#{q.inventoryDateEnd}   ]]>
+			</if>
+			<if test="q.inventoryTotal!=null ">
+				AND INVENTORY_TOTAL=#{q.inventoryTotal}
+			</if>
+			<if test="q.leasedQuantity!=null ">
+				AND LEASED_QUANTITY=#{q.leasedQuantity}
+			</if>
+			<if test="q.reserveQuantity!=null ">
+				AND RESERVE_QUANTITY=#{q.reserveQuantity}
+			</if>
+			<if test="q.available!=null ">
+				AND AVAILABLE=#{q.available}
+			</if>
+			<if test="q.isAvailable!=null ">
+				AND IS_AVAILABLE=#{q.isAvailable}
+			</if>
+			<if test="q.operatorType!=null ">
+				AND OPERATOR_TYPE=#{q.operatorType}
+			</if>
+			<if test="q.operatorId!=null and q.operatorId!=''">
+				AND OPERATOR_ID=#{q.operatorId}
+			</if>
+		</if>
+	</sql>
+
+</mapper>

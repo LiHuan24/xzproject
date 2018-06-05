@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.marketing.dao.RedeemRecordDao">
+
+<resultMap type="RedeemRecord" id="RedeemRecord">
+	<id column="ID" property="id" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="REDEEM_CODE" property="redeemCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MEMBER_NO" property="memberNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+ID,REDEEM_CODE,MEMBER_NO,CREATE_TIME
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+ID,REDEEM_CODE,MEMBER_NO,CREATE_TIME
+</sql>
+
+<insert id="add" parameterType="RedeemRecord" useGeneratedKeys="true" keyProperty="id">
+	insert into T_REDEEM_RECORD(
+		<if test="id!=null">
+		ID,
+		</if>
+		REDEEM_CODE,
+		MEMBER_NO,
+		CREATE_TIME
+	) values (
+		<if test="id!=null">
+		#{id,jdbcType = VARCHAR},
+		</if>
+		#{redeemCode,jdbcType = VARCHAR},
+		#{memberNo,jdbcType = VARCHAR},
+		#{createTime,jdbcType = TIMESTAMP}
+	)
+</insert>
+
+<update id="update" parameterType="RedeemRecord">
+	update T_REDEEM_RECORD 
+	<set>
+		<if test="redeemCode!=null and redeemCode!=''">
+			REDEEM_CODE=#{redeemCode,jdbcType = VARCHAR},
+		</if>
+		<if test="memberNo!=null and memberNo!=''">
+			MEMBER_NO=#{memberNo,jdbcType = VARCHAR},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+	</set>
+	<where>
+		AND ID=#{id}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_REDEEM_RECORD 
+	<where>
+		ID=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="RedeemRecord">
+	select <include refid="AllColumnlist"/> from T_REDEEM_RECORD
+	<where>
+		ID=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="RedeemRecord">
+	select <include refid="AllColumnlist"/> from T_REDEEM_RECORD
+	<where>
+		ID in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(ID) from T_REDEEM_RECORD 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="RedeemRecord">
+	select <include refid="CommonColumnlist"/> from T_REDEEM_RECORD 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="RedeemRecord">
+	select <include refid="CommonColumnlist"/> from T_REDEEM_RECORD
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+<select id="getForRedeem" parameterType="Query" resultMap="RedeemRecord">
+	select <include refid="AllColumnlist"/> from T_REDEEM_RECORD
+	<where> 
+		REDEEM_CODE = #{0}  and MEMBER_NO = #{1}
+	</where>
+</select>
+
+<sql id="listCommonWhere">
+	<if test="q!=null">
+		<if test="q.id!=null and q.id!=''">
+			AND ID=#{q.id}
+		</if>
+		<if test="q.redeemCode!=null and q.redeemCode!=''">
+			AND REDEEM_CODE=#{q.redeemCode}
+		</if>
+		<if test="q.memberNo!=null and q.memberNo!=''">
+			AND MEMBER_NO=#{q.memberNo}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+	</if>
+</sql>
+
+</mapper>

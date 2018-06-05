@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.finace.dao.DepositStatusDao">
+
+<resultMap type="DepositStatus" id="DepositStatus">
+	<id column="MEMBER_NO" property="memberNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="DEPOSIT_STATUS" property="depositStatus" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="PAYMENT_TYPE" property="paymentType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+MEMBER_NO,DEPOSIT_STATUS,PAYMENT_TYPE,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID
+
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+MEMBER_NO,DEPOSIT_STATUS,PAYMENT_TYPE,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID
+
+</sql>
+
+<insert id="add" parameterType="DepositStatus" useGeneratedKeys="true" keyProperty="memberNo">
+	insert into T_DEPOSIT_STATUS(
+		<if test="memberNo!=null">
+		MEMBER_NO,
+		</if>
+		DEPOSIT_STATUS,
+		PAYMENT_TYPE,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID
+	) values (
+		<if test="memberNo!=null">
+		#{memberNo,jdbcType = VARCHAR},
+		</if>
+		#{depositStatus,jdbcType = TINYINT},
+		#{paymentType,jdbcType = TINYINT},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR}
+	)
+</insert>
+
+<update id="update" parameterType="DepositStatus">
+	update T_DEPOSIT_STATUS 
+	<set>
+		<if test="depositStatus!=null ">
+			DEPOSIT_STATUS=#{depositStatus,jdbcType = TINYINT},
+		</if>
+		<if test="paymentType!=null ">
+			PAYMENT_TYPE=#{paymentType,jdbcType = TINYINT},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND MEMBER_NO=#{memberNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_DEPOSIT_STATUS 
+	<where>
+		MEMBER_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="DepositStatus">
+	select <include refid="AllColumnlist"/> from T_DEPOSIT_STATUS
+	<where>
+		MEMBER_NO=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="DepositStatus">
+	select <include refid="AllColumnlist"/> from T_DEPOSIT_STATUS
+	<where>
+		MEMBER_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(MEMBER_NO) from T_DEPOSIT_STATUS 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="DepositStatus">
+	select <include refid="CommonColumnlist"/> from T_DEPOSIT_STATUS 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="DepositStatus">
+	select <include refid="CommonColumnlist"/> from T_DEPOSIT_STATUS
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+	<if test="q!=null">
+		<if test="q.memberNo!=null and q.memberNo!=''">
+			AND MEMBER_NO=#{q.memberNo}
+		</if>
+		<if test="q.depositStatus!=null ">
+			AND DEPOSIT_STATUS=#{q.depositStatus}
+		</if>
+		<if test="q.paymentType!=null ">
+			AND PAYMENT_TYPE=#{q.paymentType}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+
+</mapper>

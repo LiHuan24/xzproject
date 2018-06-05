@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+	    
+    <!-- quartz定时任务配置  -->
+    <bean id="scheduler"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="StoreCoursePostedCronTrigger"/> 
+				<ref bean="StoreCourseOutCronTrigger"/> 
+				<ref bean="ThemeOrderRemindCronTrigger"/>  
+				<ref bean="ThemeOrderLineFailCronTrigger"/> 
+				<ref bean="StopCommunityOrderCronTrigger"/> 
+				<ref bean="ThemeOrderOverCronTrigger"/>
+				<ref bean="ThemeOrderNoPayDealCronTrigger"/>
+				<ref bean="ThemeOrderLineFailCronTrigger"/>   
+			</list>
+		</property> 
+	</bean>
+	<!-- quartz定时任务触发  -->
+	<!-- 主题馆订单 未支付订单定时任务30分钟触发一次修改订单状态为已取消 -->
+	<bean id="ThemeOrderNoPayDealCronTrigger" class="cn.com.shopec.quartz.utils.InitCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="ThemeOrderNoPayDealJobDetail"/>
+		</property>
+		<property name="key">
+			<value>ThemeOrderNoPayDealQuartzParam</value>
+		</property>
+	</bean>
+	<bean id="ThemeOrderNoPayDealJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="ThemeOrderNoPayDealQuartz" />
+		<property name="targetMethod" value="execute" />  
+		<property name="arguments" value="${quartz.switch}"/>
+	</bean>
+	<bean id="ThemeOrderNoPayDealQuartz" class="cn.com.shopec.quartz.utils.ThemeOrderNoPayDealQuartz"></bean>
+	<!-- 主题馆订单 订单已预约未上课、进行中的订单如果已经超过课程结束时间，定时任务修改订单状态为已结束 -->
+	<bean id="ThemeOrderOverCronTrigger" class="cn.com.shopec.quartz.utils.InitCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="ThemeOrderOverJobDetail"/>
+		</property>
+		<property name="key">
+			<value>ThemeOrderOverQuartzParam</value>
+		</property>
+	</bean>
+	<bean id="ThemeOrderOverJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="ThemeOrderOverQuartz" />
+		<property name="targetMethod" value="execute" />  
+		<property name="arguments" value="${quartz.switch}"/>
+	</bean>
+	<bean id="ThemeOrderOverQuartz" class="cn.com.shopec.quartz.utils.ThemeOrderOverQuartz"></bean>
+	
+	<!-- 主题馆课程排队订单未预约成功，执行短信提示、支付金额退款操作-->
+	<bean id="ThemeOrderLineFailCronTrigger" class="cn.com.shopec.quartz.utils.InitCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="ThemeOrderLineFailJobDetail"/>
+		</property>
+		<property name="key">
+			<value>ThemeOrderLineFailQuartzParam</value>
+		</property>
+	</bean>
+	<bean id="ThemeOrderLineFailJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="ThemeOrderLineFailQuartz" />
+		<property name="targetMethod" value="execute" />  
+		<property name="arguments" value="${quartz.switch}"/>
+	</bean>
+	<bean id="ThemeOrderLineFailQuartz" class="cn.com.shopec.quartz.utils.ThemeOrderLineFailQuartz"></bean>
+	
+	<!-- 主题订单预约成功后，短信通知会员上课 -->
+	<bean id="ThemeOrderRemindCronTrigger" class="cn.com.shopec.quartz.utils.InitCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="ThemeOrderRemindJobDetail"/>
+		</property>
+		<property name="key">
+			<value>ThemeOrderRemindQuartzParam</value>
+		</property>
+	</bean>
+	<bean id="ThemeOrderRemindJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="ThemeOrderRemindQuartz" />
+		<property name="targetMethod" value="execute" />  
+		<property name="arguments" value="${quartz.switch}"/>
+	</bean>
+	<bean id="ThemeOrderRemindQuartz" class="cn.com.shopec.quartz.utils.ThemeOrderRemindQuartz"></bean>
+	<!-- 主题馆课程定时发布  -->
+	<bean id="StoreCoursePostedCronTrigger" class="cn.com.shopec.quartz.utils.InitCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="StoreCoursePostedJobDetail"/>
+		</property>
+		<property name="key">
+			<value>StoreCoursePostedQuartzParam</value>
+		</property>
+	</bean>
+	<bean id="StoreCoursePostedJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="StoreCoursePostedQuartz" />
+		<property name="targetMethod" value="execute" />  
+		<property name="arguments" value="${quartz.switch}"/>
+	</bean>
+	<bean id="StoreCoursePostedQuartz" class="cn.com.shopec.quartz.utils.StoreCoursePostedQuartz"></bean>
+	<!-- 定时任务设置主题馆本周课程过期 -->
+	<bean id="StoreCourseOutCronTrigger" class="cn.com.shopec.quartz.utils.InitCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="StoreCourseOutJobDetail"/>
+		</property>
+		<property name="key">
+			<value>StoreCourseOutQuartzParam</value>
+		</property>
+	</bean>
+	<bean id="StopCommunityOrderCronTrigger" class="cn.com.shopec.quartz.utils.InitCronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="StopCommunityOrderJobDetail"/>
+		</property>
+		<property name="key">
+			<value>ThemeOrderLineFailQuartzParam</value>
+		</property>
+	</bean>
+	<bean id="StoreCourseOutJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="StoreCourseOutQuartz" />
+		<property name="targetMethod" value="execute" />  
+		<property name="arguments" value="${quartz.switch}"/>
+	</bean>
+	<bean id="StopCommunityOrderJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="StopCommunityOrderQuartz" />
+		<property name="targetMethod" value="execute" />  
+		<property name="arguments" value="${quartz.switch}"/>
+	</bean>
+	<bean id="StoreCourseOutQuartz" class="cn.com.shopec.quartz.utils.StoreCourseOutQuartz"></bean>
+	<bean id="StopCommunityOrderQuartz" class="cn.com.shopec.quartz.utils.StopCommunityOrderQuartz"></bean>
+	
+</beans>

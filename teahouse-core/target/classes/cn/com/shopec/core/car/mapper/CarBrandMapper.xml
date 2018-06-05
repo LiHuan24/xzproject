@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.car.dao.CarBrandDao">
+
+<resultMap type="CarBrand" id="CarBrand">
+	<id column="CAR_BRAND_ID" property="carBrandId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CAR_BRAND_NAME" property="carBrandName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="BRAND_CODE" property="brandCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CAR_WEBSITE" property="carWebsite" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MEMO" property="memo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+CAR_BRAND_ID,CAR_BRAND_NAME,BRAND_CODE,CREATE_TIME,UPDATE_TIME,OPERATOR_ID,OPERATOR_TYPE,CAR_WEBSITE,MEMO
+
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+CAR_BRAND_ID,CAR_BRAND_NAME,BRAND_CODE,CREATE_TIME,UPDATE_TIME,OPERATOR_ID,OPERATOR_TYPE,CAR_WEBSITE,MEMO
+
+</sql>
+
+<insert id="add" parameterType="CarBrand" useGeneratedKeys="true" keyProperty="carBrandId">
+	insert into T_CAR_BRAND(
+		<if test="carBrandId!=null">
+		CAR_BRAND_ID,
+		</if>
+		CAR_BRAND_NAME,
+		BRAND_CODE,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_ID,
+		OPERATOR_TYPE,
+		CAR_WEBSITE,
+		MEMO
+	) values (
+		<if test="carBrandId!=null">
+		#{carBrandId,jdbcType = VARCHAR},
+		</if>
+		#{carBrandName,jdbcType = VARCHAR},
+		#{brandCode,jdbcType = VARCHAR},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorId,jdbcType = VARCHAR},
+		#{operatorType,jdbcType = TINYINT},
+		#{carWebsite,jdbcType = VARCHAR},
+		#{memo,jdbcType = VARCHAR}
+	)
+</insert>
+
+<update id="update" parameterType="CarBrand">
+	update T_CAR_BRAND 
+	<set>
+		<if test="carBrandName!=null and carBrandName!=''">
+			CAR_BRAND_NAME=#{carBrandName,jdbcType = VARCHAR},
+		</if>
+		<if test="brandCode!=null and brandCode!=''">
+			BRAND_CODE=#{brandCode,jdbcType = VARCHAR},
+		</if>
+		<if test="memo!=null and memo!=''">
+			MEMO=#{memo,jdbcType = VARCHAR},
+		</if>
+		<if test="carWebsite!=null and carWebsite!=''">
+			CAR_WEBSITE=#{carWebsite,jdbcType = VARCHAR},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+	</set>
+	<where>
+		AND CAR_BRAND_ID=#{carBrandId}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_CAR_BRAND 
+	<where>
+		CAR_BRAND_ID=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="CarBrand">
+	select <include refid="AllColumnlist"/> from T_CAR_BRAND
+	<where>
+		CAR_BRAND_ID=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="CarBrand">
+	select <include refid="AllColumnlist"/> from T_CAR_BRAND
+	<where>
+		CAR_BRAND_ID in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(CAR_BRAND_ID) from T_CAR_BRAND 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="CarBrand">
+	select <include refid="CommonColumnlist"/> from T_CAR_BRAND 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="CarBrand">
+	select <include refid="CommonColumnlist"/> from T_CAR_BRAND
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+	<if test="q!=null">
+		<if test="q.carBrandId!=null and q.carBrandId!=''">
+			AND CAR_BRAND_ID=#{q.carBrandId}
+		</if>
+		<if test="q.carBrandName!=null and q.carBrandName!=''">
+			AND CAR_BRAND_NAME like '%${q.carBrandName}%' 
+		</if>
+		<if test="q.carBrandNameCk!=null and q.carBrandNameCk!=''">
+			AND CAR_BRAND_NAME = #{q.carBrandNameCk}
+		</if>
+		<if test="q.carWebsite!=null and q.carWebsite!=''">
+			AND CAR_WEBSITE = #{q.carWebsite}
+		</if>
+		<if test="q.memo!=null and q.memo!=''">
+			AND MEMO = #{q.memo}
+		</if>
+		<if test="q.brandCode!=null and q.brandCode!=''">
+			AND BRAND_CODE=#{q.brandCode}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+	</if>
+</sql>
+
+</mapper>

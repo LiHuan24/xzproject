@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.car.dao.CarModelDao">
+
+<resultMap type="CarModel" id="CarModel">
+	<id column="CAR_MODEL_ID" property="carModelId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CAR_MODEL_NAME" property="carModelName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CAR_BRAND_ID" property="carBrandId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CAR_BRAND_NAME" property="carBrandName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CAR_TYPE" property="carType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="SEAT_NUMBER" property="seatNumber" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="STALL" property="stall" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="BOND" property="bond" javaType="java.lang.Double" jdbcType="DOUBLE"/>
+	<result column="BOX_TYPE" property="boxType" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="DISPLACEMENT" property="displacement" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CAR_PHOTO_URL1" property="carPhotoUrl1" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CAR_PHOTO_URL2" property="carPhotoUrl2" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CAR_PHOTO_URL3" property="carPhotoUrl3" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CAR_PHOTO_URL4" property="carPhotoUrl4" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+CAR_MODEL_ID,CAR_MODEL_NAME,CAR_BRAND_ID,CAR_BRAND_NAME,CAR_TYPE,SEAT_NUMBER,STALL,
+BOX_TYPE,DISPLACEMENT,CAR_PHOTO_URL1,CAR_PHOTO_URL2,CAR_PHOTO_URL3,CAR_PHOTO_URL4,
+CREATE_TIME,UPDATE_TIME,OPERATOR_ID,OPERATOR_TYPE,BOND
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+CAR_MODEL_ID,CAR_MODEL_NAME,CAR_BRAND_ID,CAR_BRAND_NAME,CAR_TYPE,SEAT_NUMBER,STALL,
+BOX_TYPE,DISPLACEMENT,CAR_PHOTO_URL1,CAR_PHOTO_URL2,CAR_PHOTO_URL3,CAR_PHOTO_URL4,
+CREATE_TIME,UPDATE_TIME,OPERATOR_ID,OPERATOR_TYPE,BOND
+</sql>
+
+<insert id="add" parameterType="CarModel" useGeneratedKeys="true" keyProperty="carModelId">
+	insert into T_CAR_MODEL(
+		<if test="carModelId!=null">
+		CAR_MODEL_ID,
+		</if>
+		CAR_MODEL_NAME,
+		CAR_BRAND_ID,
+		CAR_BRAND_NAME,
+		CAR_TYPE,
+		SEAT_NUMBER,
+		STALL,
+		BOX_TYPE,
+		DISPLACEMENT,
+		CAR_PHOTO_URL1,
+		CAR_PHOTO_URL2,
+		CAR_PHOTO_URL3,
+		CAR_PHOTO_URL4,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_ID,
+		OPERATOR_TYPE,
+		BOND
+	) values (
+		<if test="carModelId!=null">
+		#{carModelId,jdbcType = VARCHAR},
+		</if>
+		#{carModelName,jdbcType = VARCHAR},
+		#{carBrandId,jdbcType = VARCHAR},
+		#{carBrandName,jdbcType = VARCHAR},
+		#{carType,jdbcType = TINYINT},
+		#{seatNumber,jdbcType = TINYINT},
+		#{stall,jdbcType = TINYINT},
+		#{boxType,jdbcType = VARCHAR},
+		#{displacement,jdbcType = VARCHAR},
+		#{carPhotoUrl1,jdbcType = VARCHAR},
+		#{carPhotoUrl2,jdbcType = VARCHAR},
+		#{carPhotoUrl3,jdbcType = VARCHAR},
+		#{carPhotoUrl4,jdbcType = VARCHAR},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorId,jdbcType = VARCHAR},
+		#{operatorType,jdbcType = TINYINT},
+		#{bond,jdbcType = DOUBLE}
+	)
+</insert>
+
+<update id="update" parameterType="CarModel">
+	update T_CAR_MODEL 
+	<set>
+		<if test="carModelName!=null and carModelName!=''">
+			CAR_MODEL_NAME=#{carModelName,jdbcType = VARCHAR},
+		</if>
+		<if test="carBrandId!=null and carBrandId!=''">
+			CAR_BRAND_ID=#{carBrandId,jdbcType = VARCHAR},
+		</if>
+		<if test="carBrandName!=null and carBrandName!=''">
+			CAR_BRAND_NAME=#{carBrandName,jdbcType = VARCHAR},
+		</if>
+		<if test="carType!=null ">
+			CAR_TYPE=#{carType,jdbcType = TINYINT},
+		</if>
+		<if test="seatNumber!=null ">
+			SEAT_NUMBER=#{seatNumber,jdbcType = TINYINT},
+		</if>
+		<if test="stall!=null ">
+			STALL=#{stall,jdbcType = TINYINT},
+		</if>
+		<if test="bond!=null ">
+			BOND=#{bond,jdbcType = DOUBLE},
+		</if>
+		<if test="boxType!=null and boxType!=''">
+			BOX_TYPE=#{boxType,jdbcType = VARCHAR},
+		</if>
+		<if test="displacement!=null and displacement!=''">
+			DISPLACEMENT=#{displacement,jdbcType = VARCHAR},
+		</if>
+		<if test="carPhotoUrl1!=null and carPhotoUrl1!=''">
+			CAR_PHOTO_URL1=#{carPhotoUrl1,jdbcType = VARCHAR},
+		</if>
+		<if test="carPhotoUrl2!=null and carPhotoUrl2!=''">
+			CAR_PHOTO_URL2=#{carPhotoUrl2,jdbcType = VARCHAR},
+		</if>
+		<if test="carPhotoUrl3!=null and carPhotoUrl3!=''">
+			CAR_PHOTO_URL3=#{carPhotoUrl3,jdbcType = VARCHAR},
+		</if>
+		<if test="carPhotoUrl4!=null and carPhotoUrl4!=''">
+			CAR_PHOTO_URL4=#{carPhotoUrl4,jdbcType = VARCHAR},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+	</set>
+	<where>
+		AND CAR_MODEL_ID=#{carModelId}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_CAR_MODEL 
+	<where>
+		CAR_MODEL_ID=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="CarModel">
+	select <include refid="AllColumnlist"/> from T_CAR_MODEL
+	<where>
+		CAR_MODEL_ID=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="CarModel">
+	select <include refid="AllColumnlist"/> from T_CAR_MODEL
+	<where>
+		CAR_MODEL_ID in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(CAR_MODEL_ID) from T_CAR_MODEL 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="CarModel">
+	select <include refid="CommonColumnlist"/> from T_CAR_MODEL 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="CarModel">
+	select <include refid="CommonColumnlist"/> from T_CAR_MODEL
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+	<if test="q!=null">
+		<if test="q.carModelId!=null and q.carModelId!=''">
+			AND CAR_MODEL_ID=#{q.carModelId}
+		</if>
+		<if test="q.carModelName!=null and q.carModelName!=''">
+			AND CAR_MODEL_NAME=#{q.carModelName}
+		</if>
+		<if test="q.carBrandId!=null and q.carBrandId!=''">
+			AND CAR_BRAND_ID=#{q.carBrandId}
+		</if>
+		<if test="q.carBrandName!=null and q.carBrandName!=''">
+			AND CAR_BRAND_NAME=#{q.carBrandName}
+		</if>
+		<if test="q.carBrandNameck!=null and q.carBrandNameck!=''">
+			AND CAR_BRAND_NAME like '%${q.carBrandNameck}%' 
+		</if>
+		<if test="q.carModelNameck!=null and q.carModelNameck!=''">
+			AND CAR_MODEL_NAME like '%${q.carModelNameck}%' 
+		</if>
+		<if test="q.carType!=null ">
+			AND CAR_TYPE=#{q.carType}
+		</if>
+		<if test="q.seatNumber!=null ">
+			AND SEAT_NUMBER=#{q.seatNumber}
+		</if>
+		<if test="q.stall!=null ">
+			AND STALL=#{q.stall}
+		</if>
+		<if test="q.boxType!=null and q.boxType!=''">
+			AND BOX_TYPE=#{q.boxType}
+		</if>
+		<if test="q.displacement!=null and q.displacement!=''">
+			AND DISPLACEMENT=#{q.displacement}
+		</if>
+		<if test="q.carPhotoUrl1!=null and q.carPhotoUrl1!=''">
+			AND CAR_PHOTO_URL1=#{q.carPhotoUrl1}
+		</if>
+		<if test="q.carPhotoUrl2!=null and q.carPhotoUrl2!=''">
+			AND CAR_PHOTO_URL2=#{q.carPhotoUrl2}
+		</if>
+		<if test="q.carPhotoUrl3!=null and q.carPhotoUrl3!=''">
+			AND CAR_PHOTO_URL3=#{q.carPhotoUrl3}
+		</if>
+		<if test="q.carPhotoUrl4!=null and q.carPhotoUrl4!=''">
+			AND CAR_PHOTO_URL4=#{q.carPhotoUrl4}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+	</if>
+</sql>
+
+</mapper>

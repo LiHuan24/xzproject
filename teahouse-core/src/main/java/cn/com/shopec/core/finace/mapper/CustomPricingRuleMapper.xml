@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.finace.dao.CustomPricingRuleDao">
+
+<resultMap type="CustomPricingRule" id="CustomPricingRule">
+	<id column="CUSTOM_NO" property="customNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="RULE_NO" property="ruleNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="RULE_NAME" property="ruleName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CITY_ID" property="cityId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CITY_NAME" property="cityName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="HOUR_PRICE" property="hourPrice" javaType="java.lang.Double" jdbcType="DOUBLE"/>
+	<result column="CUSTOM_DATE" property="customDate" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="IS_DELETED" property="isDeleted" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+CUSTOM_NO,RULE_NO,RULE_NAME,CITY_ID,CITY_NAME,HOUR_PRICE,CUSTOM_DATE,
+IS_DELETED,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+CUSTOM_NO,RULE_NO,RULE_NAME,CITY_ID,CITY_NAME,HOUR_PRICE,CUSTOM_DATE,
+IS_DELETED,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID
+</sql>
+
+<insert id="add" parameterType="CustomPricingRule" useGeneratedKeys="true" keyProperty="customNo">
+	insert into T_CUSTOM_PRICING_RULE(
+		<if test="customNo!=null">
+		CUSTOM_NO,
+		</if>
+		RULE_NO,
+		RULE_NAME,
+		CITY_ID,
+		CITY_NAME,
+		HOUR_PRICE,
+		CUSTOM_DATE,
+		IS_DELETED,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID
+	) values (
+		<if test="customNo!=null">
+		#{customNo,jdbcType = VARCHAR},
+		</if>
+		#{ruleNo,jdbcType = VARCHAR},
+		#{ruleName,jdbcType = VARCHAR},
+		#{cityId,jdbcType = VARCHAR},
+		#{cityName,jdbcType = VARCHAR},
+		#{hourPrice,jdbcType = DOUBLE},
+		#{customDate,jdbcType = TIMESTAMP},
+		#{isDeleted,jdbcType = TINYINT},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR}
+	)
+</insert>
+
+<update id="update" parameterType="CustomPricingRule">
+	update T_CUSTOM_PRICING_RULE 
+	<set>
+		<if test="ruleNo!=null and ruleNo!=''">
+			RULE_NO=#{ruleNo,jdbcType = VARCHAR},
+		</if>
+		<if test="ruleName!=null and ruleName!=''">
+			RULE_NAME=#{ruleName,jdbcType = VARCHAR},
+		</if>
+		<if test="cityId!=null and cityId!=''">
+			CITY_ID=#{cityId,jdbcType = VARCHAR},
+		</if>
+		<if test="cityName!=null and cityName!=''">
+			CITY_NAME=#{cityName,jdbcType = VARCHAR},
+		</if>
+		<if test="hourPrice!=null ">
+			HOUR_PRICE=#{hourPrice,jdbcType = DOUBLE},
+		</if>
+		<if test="customDate!=null ">
+			CUSTOM_DATE=#{customDate,jdbcType = TIMESTAMP},
+		</if>
+		<if test="isDeleted!=null ">
+			IS_DELETED=#{isDeleted,jdbcType = TINYINT},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND CUSTOM_NO=#{customNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_CUSTOM_PRICING_RULE 
+	<where>
+		CUSTOM_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="CustomPricingRule">
+	select <include refid="AllColumnlist"/> from T_CUSTOM_PRICING_RULE
+	<where>
+		CUSTOM_NO=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="CustomPricingRule">
+	select <include refid="AllColumnlist"/> from T_CUSTOM_PRICING_RULE
+	<where>
+		CUSTOM_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(CUSTOM_NO) from T_CUSTOM_PRICING_RULE 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="CustomPricingRule">
+	select <include refid="CommonColumnlist"/> from T_CUSTOM_PRICING_RULE 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="CustomPricingRule">
+	select <include refid="CommonColumnlist"/> from T_CUSTOM_PRICING_RULE
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+    <if test="q==null"><!-- 无传入参数时默认查未删除的 -->
+       AND IS_DELETED=0
+    </if>
+	<if test="q!=null">
+		<if test="q.customNo!=null and q.customNo!=''">
+			AND CUSTOM_NO=#{q.customNo}
+		</if>
+		<if test="q.ruleNo!=null and q.ruleNo!=''">
+			AND RULE_NO=#{q.ruleNo}
+		</if>
+		<if test="q.ruleName!=null and q.ruleName!=''">
+			AND RULE_NAME=#{q.ruleName}
+		</if>
+		<if test="q.cityId!=null and q.cityId!=''">
+			AND CITY_ID=#{q.cityId}
+		</if>
+		<if test="q.cityName!=null and q.cityName!=''">
+			AND CITY_NAME=#{q.cityName}
+		</if>
+		<if test="q.hourPrice!=null ">
+			AND HOUR_PRICE=#{q.hourPrice}
+		</if>
+		<if test="q.customDate!=null ">
+			AND CUSTOM_DATE=#{q.customDate}
+		</if>
+		<if test="q.customDateStart!=null">
+		<![CDATA[	AND CUSTOM_DATE>=#{q.customDateStart}  ]]>
+		</if>
+		<if test="q.customDateEnd!=null">
+		<![CDATA[	AND CUSTOM_DATE<#{q.customDateEnd}   ]]>
+		</if>
+		<if test="q.isDeleted!=null ">
+			AND IS_DELETED=#{q.isDeleted}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+
+</mapper>

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.themepavilion.dao.CoachDao">
+
+<resultMap type="Coach" id="Coach">
+	<id column="COACH_NO" property="coachNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COACH_NAME" property="coachName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COACH_NICK" property="coachNick" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="SYNOPSIS" property="synopsis" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MEMBER_PHOTO_URL" property="memberPhotoUrl" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MOBILE_PHONE" property="mobilePhone" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="SEX" property="sex" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="ID_CARD" property="idCard" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="REGISTER_TIME" property="registerTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="CENSOR_STATUS" property="censorStatus" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CENCOR_TIME" property="cencorTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="CENCOR_ID" property="cencorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CENCOR_MEMO" property="cencorMemo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COACH_QR_CODE" property="coachQrCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COACH_STATUS" property="coachStatus" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+COACH_NO,COACH_NAME,COACH_NICK,SYNOPSIS,MEMBER_PHOTO_URL,MOBILE_PHONE,SEX,
+ID_CARD,REGISTER_TIME,CENSOR_STATUS,CENCOR_TIME,CENCOR_ID,CENCOR_MEMO,
+CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID,COACH_QR_CODE,COACH_STATUS
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+COACH_NO,COACH_NAME,COACH_NICK,MEMBER_PHOTO_URL,MOBILE_PHONE,SEX,
+ID_CARD,REGISTER_TIME,CENSOR_STATUS,CENCOR_TIME,CENCOR_ID,CENCOR_MEMO,
+CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID,COACH_QR_CODE,COACH_STATUS
+</sql>
+
+<insert id="add" parameterType="Coach" useGeneratedKeys="true" keyProperty="coachNo">
+	insert into T_COACH(
+		<if test="coachNo!=null">
+		COACH_NO,
+		</if>
+		COACH_NAME,
+		COACH_NICK,
+		SYNOPSIS,
+		MEMBER_PHOTO_URL,
+		MOBILE_PHONE,
+		SEX,
+		ID_CARD,
+		REGISTER_TIME,
+		CENSOR_STATUS,
+		CENCOR_TIME,
+		CENCOR_ID,
+		CENCOR_MEMO,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID,
+		COACH_QR_CODE,
+		COACH_STATUS
+	) values (
+		<if test="coachNo!=null">
+		#{coachNo,jdbcType = VARCHAR},
+		</if>
+		#{coachName,jdbcType = VARCHAR},
+		#{coachNick,jdbcType = VARCHAR},
+		#{synopsis,jdbcType = VARCHAR},
+		#{memberPhotoUrl,jdbcType = VARCHAR},
+		#{mobilePhone,jdbcType = VARCHAR},
+		#{sex,jdbcType = TINYINT},
+		#{idCard,jdbcType = VARCHAR},
+		#{registerTime,jdbcType = TIMESTAMP},
+		#{censorStatus,jdbcType = TINYINT},
+		#{cencorTime,jdbcType = TIMESTAMP},
+		#{cencorId,jdbcType = VARCHAR},
+		#{cencorMemo,jdbcType = VARCHAR},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR},
+		#{coachQrCode,jdbcType = VARCHAR},
+		#{coachStatus,jdbcType = TINYINT}
+	)
+</insert>
+
+<update id="update" parameterType="Coach">
+	update T_COACH 
+	<set>
+		<if test="coachName!=null and coachName!=''">
+			COACH_NAME=#{coachName,jdbcType = VARCHAR},
+		</if>
+		<if test="coachNick!=null and coachNick!=''">
+			COACH_NICK=#{coachNick,jdbcType = VARCHAR},
+		</if>
+		<if test="synopsis!=null and synopsis!=''">
+			SYNOPSIS=#{synopsis,jdbcType = VARCHAR},
+		</if>
+		<if test="memberPhotoUrl!=null and memberPhotoUrl!=''">
+			MEMBER_PHOTO_URL=#{memberPhotoUrl,jdbcType = VARCHAR},
+		</if>
+		<if test="mobilePhone!=null and mobilePhone!=''">
+			MOBILE_PHONE=#{mobilePhone,jdbcType = VARCHAR},
+		</if>
+		<if test="sex!=null ">
+			SEX=#{sex,jdbcType = TINYINT},
+		</if>
+		<if test="idCard!=null and idCard!=''">
+			ID_CARD=#{idCard,jdbcType = VARCHAR},
+		</if>
+		<if test="registerTime!=null ">
+			REGISTER_TIME=#{registerTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="censorStatus!=null ">
+			CENSOR_STATUS=#{censorStatus,jdbcType = TINYINT},
+		</if>
+		<if test="coachStatus!=null ">
+			COACH_STATUS=#{coachStatus,jdbcType = TINYINT},
+		</if>
+		<if test="cencorTime!=null ">
+			CENCOR_TIME=#{cencorTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="cencorId!=null and cencorId!=''">
+			CENCOR_ID=#{cencorId,jdbcType = VARCHAR},
+		</if>
+		<if test="cencorMemo!=null and cencorMemo!=''">
+			CENCOR_MEMO=#{cencorMemo,jdbcType = VARCHAR},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+		<if test="coachQrCode!=null and coachQrCode!=''">
+			COACH_QR_CODE=#{coachQrCode,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND COACH_NO=#{coachNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_COACH 
+	<where>
+		COACH_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="Coach">
+	select <include refid="AllColumnlist"/> from T_COACH
+	<where>
+		COACH_NO=#{0}
+	</where>
+</select>
+
+<select id="getCoachByMemberPhone" resultMap="Coach">
+	select <include refid="AllColumnlist"/> from T_COACH
+	<where>
+		MOBILE_PHONE=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="Coach">
+	select <include refid="AllColumnlist"/> from T_COACH
+	<where>
+		COACH_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(COACH_NO) from T_COACH 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="Coach">
+	select <include refid="CommonColumnlist"/> from T_COACH 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="Coach">
+	select <include refid="CommonColumnlist"/> from T_COACH
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC,CREATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+	<if test="q!=null">
+		<if test="q.coachNo!=null and q.coachNo!=''">
+			AND COACH_NO=#{q.coachNo}
+		</if>
+		<if test="q.coachName!=null and q.coachName!=''">
+			AND COACH_NAME=#{q.coachName}
+		</if>
+		<if test="q.coachNick!=null and q.coachNick!=''">
+			AND COACH_NICK=#{q.coachNick}
+		</if>
+		<if test="q.synopsis!=null and q.synopsis!=''">
+			AND SYNOPSIS=#{q.synopsis}
+		</if>
+		<if test="q.memberPhotoUrl!=null and q.memberPhotoUrl!=''">
+			AND MEMBER_PHOTO_URL=#{q.memberPhotoUrl}
+		</if>
+		<if test="q.mobilePhone!=null and q.mobilePhone!=''">
+			AND MOBILE_PHONE=#{q.mobilePhone}
+		</if>
+		<if test="q.sex!=null ">
+			AND SEX=#{q.sex}
+		</if>
+		<if test="q.idCard!=null and q.idCard!=''">
+			AND ID_CARD=#{q.idCard}
+		</if>
+		<if test="q.registerTime!=null ">
+			AND REGISTER_TIME=#{q.registerTime}
+		</if>
+		<if test="q.registerTimeStart!=null">
+		<![CDATA[	AND REGISTER_TIME>=#{q.registerTimeStart}  ]]>
+		</if>
+		<if test="q.registerTimeEnd!=null">
+		<![CDATA[	AND REGISTER_TIME<#{q.registerTimeEnd}   ]]>
+		</if>
+		<if test="q.censorStatus!=null ">
+			AND CENSOR_STATUS=#{q.censorStatus}
+		</if>
+		<if test="q.cencorTime!=null ">
+			AND CENCOR_TIME=#{q.cencorTime}
+		</if>
+		<if test="q.cencorTimeStart!=null">
+		<![CDATA[	AND CENCOR_TIME>=#{q.cencorTimeStart}  ]]>
+		</if>
+		<if test="q.cencorTimeEnd!=null">
+		<![CDATA[	AND CENCOR_TIME<#{q.cencorTimeEnd}   ]]>
+		</if>
+		<if test="q.cencorId!=null and q.cencorId!=''">
+			AND CENCOR_ID=#{q.cencorId}
+		</if>
+		<if test="q.cencorMemo!=null and q.cencorMemo!=''">
+			AND CENCOR_MEMO=#{q.cencorMemo}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+		<if test="q.coachQrCode!=null and q.coachQrCode!=''">
+			AND COACH_QR_CODE=#{q.coachQrCode}
+		</if>
+		<if test="q.coachStatus!=null ">
+			AND COACH_STATUS=#{q.coachStatus}
+		</if>
+	</if>
+</sql>
+
+</mapper>

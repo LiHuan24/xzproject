@@ -1,0 +1,960 @@
+define([],function() {
+	var templateCourse = {
+		appPath : getPath("app"),
+		init : function() {
+			$("#addTemplateTr").click(function(){
+				templateCourse.addtemplateCourse();
+			});
+			
+			//************************************排课日期、课程和教练新增
+			//加载课程列表
+			$("#selectCourse").click(function() {
+				$("#courselistModal").modal("show");
+				templateCourse.pageCourseList();
+			});
+			
+			//加载教练列表
+			$("#selectCoach").click(function() {
+				$("#coachlistModal").modal("show");
+				templateCourse.pageCoachList();
+			});
+			//选择日期数据后保存提交
+			$("#selectDateSub").click(function(){
+				templateCourse.addTemplateCourseDate();
+			});
+			
+			//取消选择日期弹出层
+			$("#onCancelBtn").click(function(){
+				$("#dateDivModal").modal("hide");
+	        });
+			
+			//选择完教练、课程及课程人数后保存提交
+			$("#onFormBtn").click(function(){
+				templateCourse.addTemplateCourse();
+			});
+			//返回
+			$("#cancelCourseBtn").click(function(){
+				$("#courseAndCoachModal").modal("hide");
+				$(".modal-backdrop").remove();
+	        });
+			
+			//***********************************排课日期、选择课程、教练编辑
+			//选择日期数据后保存提交
+			$("#editDateSub").click(function(){
+				templateCourse.editTemplateCourseDate();
+			});
+			
+			//取消选择日期弹出层
+			$("#cancelEditBtn").click(function(){
+				$("#editDateDivModal").modal("hide");
+	        });
+			
+			//选择完教练、课程及课程人数后保存提交
+			$("#editCourseBtn").click(function(){
+				templateCourse.editTemplateCourse();
+			});
+			//返回
+			$("#cancelEditCourseBtn").click(function(){
+				$("#editCourseAndCoachModal").modal("hide");
+	        });
+			
+			//加载课程列表
+			$("#selectEditCourse").click(function() {
+				$("#courseEditListModal").modal("show");
+				templateCourse.pageCourseEditList();
+			});
+			
+			//加载教练列表
+			$("#selectEditCoach").click(function() {
+				$("#coachEditListModal").modal("show");
+				templateCourse.pageCoachEditList();
+			});
+			
+			//查询
+			$("#temPlateCourseSearch").click(function(){
+				var form = $("form[name=templateCourseSerachForm]");
+				var storeNo = form.find("select[name='storeNo']").val();
+				closeTab("排课模板");
+				addTab("排课模板",templateCourse.appPath+ "/templateCourse/queryTemplateCourseList.do?storeNo="+storeNo);
+			});
+		},
+		//添加表格行
+		addtemplateCourse:function(){
+			//获取选中的门店
+			var form = $("form[name=templateCourseSerachForm]");
+			var selectStore = form.find("select[name=storeNo]").val();
+			if(selectStore == ""){
+				bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请选择主题馆！");
+			}else{
+				$("#testMs").append("<tr>" +
+						"<td onclick='getDateDiv(0);' class='dataDiv'><input type='text' value='' style='border:0;outline:none;padding-left:20%;'/></td>" +
+						"<td onclick='getCourseAndCoach(1,0);' ><input type='text' value='' style='border:0;outline:none;padding-left:20%;'/></td>" +
+						"<td onclick='getCourseAndCoach(2,0);' ><input type='text' value='' style='border:0;outline:none;padding-left:20%;'/></td>" +
+						"<td onclick='getCourseAndCoach(3,0);' ><input type='text' value='' style='border:0;outline:none;padding-left:20%;'/></td>" +
+						"<td onclick='getCourseAndCoach(4,0);' ><input type='text' value='' style='border:0;outline:none;padding-left:20%;'/></td>" +
+						"<td onclick='getCourseAndCoach(5,0);' ><input type='text' value='' style='border:0;outline:none;padding-left:20%;'/></td>" +
+						"<td onclick='getCourseAndCoach(6,0);' ><input type='text' value='' style='border:0;outline:none;padding-left:20%;'/></td>" +
+						"<td onclick='getCourseAndCoach(7,0);' ><input type='text' value='' style='border:0;outline:none;padding-left:20%;'/></td>" +
+						"<td id='delTemplate' onclick='delTemplate(this);'>删除</td>" +
+						"</tr>");
+			}
+		},
+		
+		//jquery格式化时间 时分 比较前后日期大小
+		comptime:function(a,b){
+			var dateA = new Date("1900/1/1 " + a);   
+			var dateB = new Date("1900/1/1 " + b);   
+			if(isNaN(dateA) || isNaN(dateB)) return null;   
+			if(dateA > dateB) return 1;   
+			if(dateA < dateB) return -1;   
+			return 0; 
+		},
+		
+		//保存排课模板表数据
+		addTemplateCourseDate:function(){
+			var form = $("form[name=dateForm]");
+			form.ajaxSubmit({
+				url : templateCourse.appPath + "/templateCourse/saveOrUpDateTemplateCourse.do",
+				type : "post",
+				success : function(res) {
+					var msg = res.msg;
+					var code = res.code;
+					var courseData = res.data;
+					if (code == "1") {
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;"+"新增成功！", function() {
+							$("#dateDivModal").modal("hide");
+							var i = courseData.ftlRow-1;
+							$("#testMs tr:eq("+i+") > td:eq(0)").find('input').val(courseData.showDate);
+							
+							$(".modal-backdrop").remove();//手动去掉遮罩层
+							closeTab("排课模板");
+							addTab("排课模板",templateCourse.appPath+ "/templateCourse/queryTemplateCourseList.do?storeNo="+courseData.storeNo);
+						});
+					} else {
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;"+"新增失败！");
+					}
+				},
+				beforeSubmit : function(formData, jqForm, options) {// 提交表单前数据验证
+					 var beginDate=form.find("input[name=courseStart]").val();  
+					 var endDate=form.find("input[name=courseEnd]").val();  
+					 
+					 if(templateCourse.comptime(beginDate,endDate) != -1){
+						 bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "开始时间不能大于结束时间！");  
+						 return false;  
+					 }
+					 if(beginDate == ""){
+						 bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请输入开始日期！");
+						 return false;
+					 }
+					 if(endDate == ""){
+						 bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请输入结束日期！");
+						 return false;
+					 }
+				}
+			});
+		},
+		
+		//编辑排课时间
+		editTemplateCourseDate:function(){
+			var form = $("form[name=editDateForm]");
+			form.ajaxSubmit({
+				url : templateCourse.appPath + "/templateCourse/saveOrUpDateTemplateCourse.do",
+				type : "post",
+				success : function(res) {
+					var msg = res.msg;
+					var code = res.code;
+					var courseData = res.data;
+					if (code == "1") {
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;"+"编辑成功！", function() {
+							$("#editDateDivModal").modal("hide");
+							var i = courseData.ftlRow-1;
+							$("#testMs tr:eq("+i+") > td:eq(0)").find('input').val(courseData.showDate);
+						});
+					} else {
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;"+"编辑失败！");
+					}
+				},
+				beforeSubmit : function(formData, jqForm, options) {// 提交表单前数据验证
+					 var beginDate=form.find("input[name=courseStart]").val();  
+					 var endDate=form.find("input[name=courseEnd]").val();  
+					 
+					 if(templateCourse.comptime(beginDate,endDate) != -1){
+						 bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "开始时间不能大于结束时间！");  
+						 return false;  
+					 }
+					 if(beginDate == ""){
+						 bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请输入开始日期！");
+						 return false;
+					 }
+					 if(endDate == ""){
+						 bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请输入结束日期！");
+						 return false;
+					 }
+				}
+			});
+		},
+		
+		//保存排课模板表数据
+		addTemplateCourse:function(){
+			var form = $("form[name=courseAndCoachForm]");
+			form.ajaxSubmit({
+				url : templateCourse.appPath + "/templateCourse/saveOrUpDateTemplateCourse.do",
+				type : "post",
+				success : function(res) {
+					var msg = res.msg;
+					var code = res.code;
+					var courseData = res.data;
+					if (code == "1") {
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;"+"新增成功！", function() {
+							$("#courseAndCoachModal").modal("hide");
+							var i = courseData.ftlRow-1;
+							var trList = $("#testMs").children("tr:eq("+i+")");
+							
+							for (var i=0;i<trList.length;i++) {
+						        var tdArr = trList.eq(i).find("td");
+						        //set课程名称
+						        if(courseData.courseWeek == '周一'){
+						        	tdArr.eq(1).find('input').val(courseData.chineseName);
+						        }else if(courseData.courseWeek == '周二'){
+						        	tdArr.eq(2).find('input').val(courseData.chineseName);
+						        }else if(courseData.courseWeek == '周三'){
+						        	tdArr.eq(3).find('input').val(courseData.chineseName);
+						        }else if(courseData.courseWeek == '周四'){
+						        	tdArr.eq(4).find('input').val(courseData.chineseName);
+						        }else if(courseData.courseWeek == '周五'){
+						        	tdArr.eq(5).find('input').val(courseData.chineseName);
+						        }else if(courseData.courseWeek == '周六'){
+						        	tdArr.eq(6).find('input').val(courseData.chineseName);
+						        }else if(courseData.courseWeek == '周日'){
+						        	tdArr.eq(7).find('input').val(courseData.chineseName);
+						        }else{
+						        	return ;
+						        }
+						    }
+							
+							$(".modal-backdrop").remove();//手动去掉遮罩层
+							closeTab("排课模板");
+							addTab("排课模板",templateCourse.appPath+ "/templateCourse/queryTemplateCourseList.do?storeNo="+courseData.storeNo);
+						});
+					} else {
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;"+"新增失败！");
+					}
+				},
+				beforeSubmit : function(formData, jqForm, options) {// 提交表单前数据验证
+					var chineseName = form.find("input[name=chineseName]").val();
+					var coachName = form.find("input[name=coachName]").val();
+					var peopleNumber = form.find("input[name=peopleNumber]").val();
+					
+					var numberReg = /^[1-9]\d*$/;
+					
+					if(chineseName == ""){
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请选择课程！");
+						return false;
+					}
+					if(coachName == ""){
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请选择教练！");
+						return false;
+					}
+					if(peopleNumber == ""){
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请输入人数！");
+						return false;
+					}
+					if(!numberReg.test(peopleNumber)){
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "对不起、输入人数格式不对（正确格式为正整数）！");
+						return false;
+					}
+				}
+			});
+		},
+		
+		//编辑排课课程、教练和人数
+		editTemplateCourse:function(){
+			var form = $("form[name=editCourseAndCoachForm]");
+			form.ajaxSubmit({
+				url : templateCourse.appPath + "/templateCourse/saveOrUpDateTemplateCourse.do",
+				type : "post",
+				success : function(res) {
+					var msg = res.msg;
+					var code = res.code;
+					var courseData = res.data;
+					if (code == "1") {
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;"+"编辑成功！", function() {
+							$("#editCourseAndCoachModal").modal("hide");
+							var i = courseData.ftlRow-1;
+							var trList = $("#testMs").children("tr:eq("+i+")");
+							
+							for (var i=0;i<=trList.length;i++) {
+						        var tdArr = trList.eq(i).find("td");
+						        //set课程名称
+						        if(courseData.courseWeek == '周一'){
+						        	tdArr.eq(1).find('input').val(courseData.chineseName);
+						        }else if(courseData.courseWeek == '周二'){
+						        	tdArr.eq(2).find('input').val(courseData.chineseName);
+						        }else if(courseData.courseWeek == '周三'){
+						        	tdArr.eq(3).find('input').val(courseData.chineseName);
+						        }else if(courseData.courseWeek == '周四'){
+						        	tdArr.eq(4).find('input').val(courseData.chineseName);
+						        }else if(courseData.courseWeek == '周五'){
+						        	tdArr.eq(5).find('input').val(courseData.chineseName);
+						        }else if(courseData.courseWeek == '周六'){
+						        	tdArr.eq(6).find('input').val(courseData.chineseName);
+						        }else if(courseData.courseWeek == '周日'){
+						        	tdArr.eq(7).find('input').val(courseData.chineseName);
+						        }else{
+						        	return ;
+						        }
+						    }
+							//$(".modal-backdrop").remove();//手动去掉遮罩层
+							//closeTab("排课模板");
+							//addTab("排课模板",templateCourse.appPath+ "/templateCourse/toTemplateCourseList.do?storeNo="+courseData.storeNo);
+						});
+					} else {
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;"+"编辑失败！");
+					}
+				},
+				beforeSubmit : function(formData, jqForm, options) {// 提交表单前数据验证
+					var chineseName = form.find("input[name=chineseName]").val();
+					var coachName = form.find("input[name=coachName]").val();
+					var peopleNumber = form.find("input[name=peopleNumber]").val();
+					
+					var numberReg =/^[1-9]\d*$/;
+					
+					if(chineseName == ""){
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请选择课程！");
+						return false;
+					}
+					if(coachName == ""){
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请选择教练！");
+						return false;
+					}
+					if(peopleNumber == ""){
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请输入人数！");
+						return false;
+					}
+					if(!numberReg.test(peopleNumber)){
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "对不起、输入人数格式不对（正确格式为正整数）！");
+						return false;
+					}
+				}
+			});
+		},
+		
+		//已经审核认证的教练列表
+		pageCoachList:function(){
+			var coachBtnTplAdd = $("#coachBtnTplAdd").html();
+			// 预编译模板
+			var template = Handlebars.compile(coachBtnTplAdd);
+			var table = $('#coachListAdd').dataTable({
+				searching : false,
+				destroy : true,  
+				"ajax" : {
+					"type" : "POST",
+					"url" : templateCourse.appPath+"/templateCourse/pageListAuditCoach.do",
+					"data" : function(d) {
+						return $.extend({},d,
+							{"pageNo" : (d.start / d.length) + 1,
+							 "pageSize" : d.length
+							});
+					},
+					"dataSrc" : function(json) {
+						json.recordsTotal = json.rowCount;
+						json.recordsFiltered = json.rowCount;
+						json.data = json.data;
+						return json.data;
+					},
+					error : function(xhr, error, thrown) {
+					}
+				},
+				"columns" : [ 
+				{ "title":"","data": "coachNo","width":"5px"},
+				{
+					"title" : "手机号",
+					"data" : "mobilePhone"
+				},{
+					"title" : "姓名",
+					"data" : "coachName"
+				},{
+					"title" : "性别",
+					"data" : "sex"
+				},{
+					"title" : "注册时间",
+					"data" : "registerTime"
+				},{
+					"title" : "审核状态",
+					"data" : "censorStatus"
+				}],
+				"dom" : "<'row'<'#coachToolssssAdd.col-xs-6'><'col-xs-6'f>r>"
+						+ "t"
+						+ "<'row'<'col-xs-3'l><'col-xs-3'i><'col-xs-6'p>>",
+				  initComplete: function () {
+						$(this).find("thead tr th:first-child").prepend('');
+						$("#coachToolssssAdd").append('<button type="button"  class="btn btn-default btn-sm sysworkerMgCar-batch-adddel">选择</button>');
+						$("#coachToolssssAdd").append('<button type="button"  class="btn btn-default btn-sm sysworkerMgCar-batch-addclose">关闭</button>');
+						$(".sysworkerMgCar-batch-adddel").on("click",function(){
+							var ids=[];
+							var coachName="";
+							var len=$('#coachListAdd tbody input[type="checkbox"]:checked');
+							if(len.length==0){
+								bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请选择教练！")
+							}else{
+								$("#coachListAdd tbody").find("input:checked").each(function(){
+		        					ids.push($(this).val());
+		        					coachName = $(this).next('input').val();
+		        				});
+								if(ids.length>1){
+	        						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "教练只能选择一个！")
+	        					}else{
+	        						var form = $("form[name=courseAndCoachForm]");
+	        	     				form.find("input[name='coachNo']").val(ids);
+	        	     				form.find("input[name='coachName']").val(coachName);
+	        	     				$("#coachlistModal").modal("hide");
+	        	     				$(".modal-backdrop").hide();
+	        					}
+							}
+							
+							$('#coachListAdd thead input[type="checkbox"]').on("click",function(e){
+		        				if(this.checked){
+		        			         $('#coachListAdd tbody input[type="checkbox"]:not(:checked)').prop("checked",true);
+		        			      } else {
+		        			         $('#coachListAdd tbody input[type="checkbox"]:checked').prop("checked",false);
+		        			      }
+		        			});
+						});
+						$(".sysworkerMgCar-batch-addclose").on("click",function(){
+							$("#coachlistModal").modal("hide");
+							$(".modal-backdrop").hide();
+							$('#coachListAdd tbody input[type="checkbox"]:checked').prop("checked",false);
+						});
+				  },
+				"columnDefs" : [
+						{
+							"targets" : [ 3],
+							"render" : function(a, b, c, d) {
+								var sexName;
+								//性别（0、女，1、男）
+								if(a==0){
+									sexName="女";
+								}else if(a==1){
+									sexName="男";
+								}else{
+									return "--";
+								}
+								return sexName;
+							}
+						},
+						{
+							"targets" : [ 5 ],
+							"render" : function(a, b, c, d) {
+								var censorName;
+								//（0、未审核/未认证，1、已审核/已认证，2、待审核/待认证，3、未通过，默认0）
+								if(a==0){
+									censorName="未审核/未认证";
+								}else if(a==1){
+									censorName="已审核/已认证";
+								}else if(a==2){
+									censorName="待审核/待认证";
+								}else if(a==3){
+									censorName="未通过";
+								}else{
+									return "--";
+								}
+								return censorName;
+							}
+						},
+					   {
+						"targets" : [0],
+						 "orderable":false,
+						"render" : function(data, type, full, meta) {
+							  return '<input type="checkbox" name="coachNo" value="' + full.coachNo + '"><input type="hidden" value="' + full.coachName + '">';
+						}
+					   }
+					   ]
+			});
+		},
+		
+		//已启用的课程列表
+		pageCourseList:function(){
+			var courseBtnTplAdd = $("#courseBtnTplAdd").html();
+			// 预编译模板
+			var template = Handlebars.compile(courseBtnTplAdd);
+			var table = $('#courseListAdd').dataTable({
+				searching : false,
+				destroy : true,  
+				"ajax" : {
+					"type" : "POST",
+					"url" : templateCourse.appPath+"/templateCourse/pageListAuditCourse.do",
+					"data" : function(d) {
+						return $.extend({},d,
+							{"pageNo" : (d.start / d.length) + 1,
+							 "pageSize" : d.length
+							});
+					},
+					"dataSrc" : function(json) {
+						json.recordsTotal = json.rowCount;
+						json.recordsFiltered = json.rowCount;
+						json.data = json.data;
+						return json.data;
+					},
+					error : function(xhr, error, thrown) {
+					}
+				},
+				"columns" : [ 
+				{ "title":"","data": "courseNo","width":"5px"},
+				{
+					"title" : "课程中文名称",
+					"data" : "chineseName"
+				},{
+					"title" : "课程英文名称",
+					"data" : "englishName"
+				},{
+					"title" : "标签",
+					"data" : "labelName"
+				},{
+					"title" : "分类",
+					"data" : "sortName"
+				},{
+					"title" : "价格",
+					"data" : "price"
+				},{
+					"title" : "启用状态",
+					"data" : "isEnable"
+				}],
+				"dom" : "<'row'<'#courseToolssssAdd.col-xs-6'><'col-xs-6'f>r>"
+						+ "t"
+						+ "<'row'<'col-xs-3'l><'col-xs-3'i><'col-xs-6'p>>",
+				  initComplete: function () {
+						$(this).find("thead tr th:first-child").prepend('');
+						$("#courseToolssssAdd").append('<button type="button"  class="btn btn-default btn-sm sysworkerMgCar-batch-adddel">选择</button>');
+						$("#courseToolssssAdd").append('<button type="button"  class="btn btn-default btn-sm sysworkerMgCar-batch-addclose">关闭</button>');
+						$(".sysworkerMgCar-batch-adddel").on("click",function(){
+							var ids=[];
+							var chineseName="";
+							var len=$('#courseListAdd tbody input[type="checkbox"]:checked');
+							if(len.length==0){
+								bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请选择课程！")
+							}else{
+								$("#courseListAdd tbody").find("input:checked").each(function(){
+		        					ids.push($(this).val());
+		        					chineseName = $(this).next('input').val();
+		        				});
+								if(ids.length>1){
+	        						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "课程只能选择一个！")
+	        					}else{
+	        						var form = $("form[name=courseAndCoachForm]");
+	        	     				form.find("input[name='courseNo']").val(ids);
+	        	     				form.find("input[name='chineseName']").val(chineseName);
+	        	     				$("#courselistModal").modal("hide");
+	        	     				$(".modal-backdrop").hide();
+	        					}
+							}
+							
+							$('#courseListAdd thead input[type="checkbox"]').on("click",function(e){
+		        				if(this.checked){
+		        			         $('#courseListAdd tbody input[type="checkbox"]:not(:checked)').prop("checked",true);
+		        			      } else {
+		        			         $('#courseListAdd tbody input[type="checkbox"]:checked').prop("checked",false);
+		        			      }
+		        			});
+						});
+						$(".sysworkerMgCar-batch-addclose").on("click",function(){
+							$("#courselistModal").modal("hide");
+							$(".modal-backdrop").hide();
+							$('#courseListAdd tbody input[type="checkbox"]:checked').prop("checked",false);
+						});
+				  },
+				"columnDefs" : [
+						{
+							"targets" : [ 6 ],
+							"render" : function(a, b, c, d) {
+								var enableName;
+								//（0、未删除，1、已删除）
+								if(a==0){
+									enableName="停用";
+								}else if(a==1){
+									enableName="启用";
+								}else{
+									return "--";
+								}
+								return enableName;
+							}
+						},
+					   {
+						"targets" : [0],
+						 "orderable":false,
+						"render" : function(data, type, full, meta) {
+							  return '<input type="checkbox" name="courseNo" value="' + full.courseNo + '"><input type="hidden" value="' + full.chineseName + '">';
+						}
+					   }
+					   ]
+			});
+		},
+		
+		
+		
+		//************编辑时选择
+		//已经审核认证的教练列表
+		pageCoachEditList:function(){
+			var coachBtnTplEdit = $("#coachBtnTplEdit").html();
+			// 预编译模板
+			var template = Handlebars.compile(coachBtnTplEdit);
+			var table = $('#coachListEdit').dataTable({
+				searching : false,
+				destroy : true,  
+				"ajax" : {
+					"type" : "POST",
+					"url" : templateCourse.appPath+"/templateCourse/pageListAuditCoach.do",
+					"data" : function(d) {
+						return $.extend({},d,
+							{"pageNo" : (d.start / d.length) + 1,
+							 "pageSize" : d.length
+							});
+					},
+					"dataSrc" : function(json) {
+						json.recordsTotal = json.rowCount;
+						json.recordsFiltered = json.rowCount;
+						json.data = json.data;
+						return json.data;
+					},
+					error : function(xhr, error, thrown) {
+					}
+				},
+				"columns" : [ 
+				{ "title":"","data": "coachNo","width":"5px"},
+				{
+					"title" : "手机号",
+					"data" : "mobilePhone"
+				},{
+					"title" : "姓名",
+					"data" : "coachName"
+				},{
+					"title" : "性别",
+					"data" : "sex"
+				},{
+					"title" : "注册时间",
+					"data" : "registerTime"
+				},{
+					"title" : "审核状态",
+					"data" : "censorStatus"
+				}],
+				"dom" : "<'row'<'#coachToolssssEdit.col-xs-6'><'col-xs-6'f>r>"
+						+ "t"
+						+ "<'row'<'col-xs-3'l><'col-xs-3'i><'col-xs-6'p>>",
+				  initComplete: function () {
+						$(this).find("thead tr th:first-child").prepend('');
+						$("#coachToolssssEdit").append('<button type="button"  class="btn btn-default btn-sm sysworkerMgCar-batch-adddel">选择</button>');
+						$("#coachToolssssEdit").append('<button type="button"  class="btn btn-default btn-sm sysworkerMgCar-batch-addclose">关闭</button>');
+						$(".sysworkerMgCar-batch-adddel").on("click",function(){
+							var ids=[];
+							var coachName="";
+							var len=$('#coachListEdit tbody input[type="checkbox"]:checked');
+							if(len.length==0){
+								bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请选择教练！")
+							}else{
+								$("#coachListEdit tbody").find("input:checked").each(function(){
+		        					ids.push($(this).val());
+		        					coachName = $(this).next('input').val();
+		        				});
+								if(ids.length>1){
+	        						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "教练只能选择一个！")
+	        					}else{
+	        						var form = $("form[name=editDateForm]");
+	        	     				form.find("input[name='coachNo']").val(ids);
+	        	     				form.find("input[name='coachName']").val(coachName);
+	        	     				$("#coachEditListModal").modal("hide");
+	        	     				$(".modal-backdrop").hide();
+	        					}
+							}
+							
+							$('#coachListEdit thead input[type="checkbox"]').on("click",function(e){
+		        				if(this.checked){
+		        			         $('#coachListEdit tbody input[type="checkbox"]:not(:checked)').prop("checked",true);
+		        			      } else {
+		        			         $('#coachListEdit tbody input[type="checkbox"]:checked').prop("checked",false);
+		        			      }
+		        			});
+						});
+						$(".sysworkerMgCar-batch-addclose").on("click",function(){
+							$("#coachEditListModal").modal("hide");
+							$(".modal-backdrop").hide();
+							$('#coachListEdit tbody input[type="checkbox"]:checked').prop("checked",false);
+						});
+				  },
+				"columnDefs" : [
+						{
+							"targets" : [ 3],
+							"render" : function(a, b, c, d) {
+								var sexName;
+								//性别（0、女，1、男）
+								if(a==0){
+									sexName="女";
+								}else if(a==1){
+									sexName="男";
+								}else{
+									return "--";
+								}
+								return sexName;
+							}
+						},{
+							"targets" : [ 5 ],
+							"render" : function(a, b, c, d) {
+								var censorName;
+								//（0、未审核/未认证，1、已审核/已认证，2、待审核/待认证，3、未通过，默认0）
+								if(a==0){
+									censorName="未审核/未认证";
+								}else if(a==1){
+									censorName="已审核/已认证";
+								}else if(a==2){
+									censorName="待审核/待认证";
+								}else if(a==3){
+									censorName="未通过";
+								}else{
+									return "--";
+								}
+								return censorName;
+							}
+						},{
+						"targets" : [0],
+						 "orderable":false,
+						"render" : function(data, type, full, meta) {
+							  return '<input type="checkbox" name="coachNo" value="' + full.coachNo + '"><input type="hidden" value="' + full.coachName + '">';
+						}
+					   }
+					   ]
+			});
+		},
+		
+		//已启用的课程列表
+		pageCourseEditList:function(){
+			var courseBtnTplEdit = $("#courseBtnTplEdit").html();
+			// 预编译模板
+			var template = Handlebars.compile(courseBtnTplEdit);
+			var table = $('#courseListEdit').dataTable({
+				searching : false,
+				destroy : true,  
+				"ajax" : {
+					"type" : "POST",
+					"url" : templateCourse.appPath+"/templateCourse/pageListAuditCourse.do",
+					"data" : function(d) {
+						return $.extend({},d,
+							{"pageNo" : (d.start / d.length) + 1,
+							 "pageSize" : d.length
+							});
+					},
+					"dataSrc" : function(json) {
+						json.recordsTotal = json.rowCount;
+						json.recordsFiltered = json.rowCount;
+						json.data = json.data;
+						return json.data;
+					},
+					error : function(xhr, error, thrown) {
+					}
+				},
+				"columns" : [ 
+				{ "title":"","data": "courseNo","width":"5px"},
+				{
+					"title" : "课程中文名称",
+					"data" : "chineseName"
+				},{
+					"title" : "课程英文名称",
+					"data" : "englishName"
+				},{
+					"title" : "标签",
+					"data" : "labelName"
+				},{
+					"title" : "分类",
+					"data" : "sortName"
+				},{
+					"title" : "价格",
+					"data" : "price"
+				},{
+					"title" : "启用状态",
+					"data" : "isEnable"
+				}],
+				"dom" : "<'row'<'#courseToolsEdit.col-xs-6'><'col-xs-6'f>r>"
+						+ "t"
+						+ "<'row'<'col-xs-3'l><'col-xs-3'i><'col-xs-6'p>>",
+				  initComplete: function () {
+						$(this).find("thead tr th:first-child").prepend('');
+						$("#courseToolsEdit").append('<button type="button"  class="btn btn-default btn-sm sysworkerMgCar-batch-adddel">选择</button>');
+						$("#courseToolsEdit").append('<button type="button"  class="btn btn-default btn-sm sysworkerMgCar-batch-addclose">关闭</button>');
+						$(".sysworkerMgCar-batch-adddel").on("click",function(){
+							var ids=[];
+							var chineseName="";
+							var len=$('#courseListEdit tbody input[type="checkbox"]:checked');
+							if(len.length==0){
+								bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "请选择课程！")
+							}else{
+								$("#courseListEdit tbody").find("input:checked").each(function(){
+		        					ids.push($(this).val());
+		        					chineseName = $(this).next('input').val();
+		        				});
+								if(ids.length>1){
+	        						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "课程只能选择一个！")
+	        					}else{
+	        						var form = $("form[name=editCourseAndCoachForm]");
+	        	     				form.find("input[name='courseNo']").val(ids);
+	        	     				form.find("input[name='chineseName']").val(chineseName);
+	        	     				$("#courseEditListModal").modal("hide");
+	        	     				$(".modal-backdrop").hide();
+	        					}
+							}
+							
+							$('#courseListEdit thead input[type="checkbox"]').on("click",function(e){
+		        				if(this.checked){
+		        			         $('#courseListEdit tbody input[type="checkbox"]:not(:checked)').prop("checked",true);
+		        			      } else {
+		        			         $('#courseListEdit tbody input[type="checkbox"]:checked').prop("checked",false);
+		        			      }
+		        			});
+						});
+						$(".sysworkerMgCar-batch-addclose").on("click",function(){
+							$("#courseEditListModal").modal("hide");
+							$(".modal-backdrop").hide();
+							$('#courseListEdit tbody input[type="checkbox"]:checked').prop("checked",false);
+						});
+				  },
+				"columnDefs" : [
+						{
+							"targets" : [ 6 ],
+							"render" : function(a, b, c, d) {
+								var enableName;
+								//（0、未删除，1、已删除）
+								if(a==0){
+									enableName="停用";
+								}else if(a==1){
+									enableName="启用";
+								}else{
+									return "--";
+								}
+								return enableName;
+							}
+						},{
+						"targets" : [0],
+						 "orderable":false,
+						"render" : function(data, type, full, meta) {
+							  return '<input type="checkbox" name="courseNo" value="' + full.courseNo + '"><input type="hidden" value="' + full.chineseName + '">';
+						}
+					   }
+					   ]
+			});
+		},
+		
+	};
+	return templateCourse;
+})
+function getDateDiv(dateId){
+	var form = $("form[name=templateCourseSerachForm]");
+	var selectStore = form.find("select[name=storeNo]").val();
+	if(dateId == '0'){
+		$("#dateDivModal").modal("show");
+		var form = $("form[name=dateForm]");
+		form.find("input[name=courseDateStart]").val("");
+		form.find("input[name=courseDateEnd]").val("");
+		$("#courseAndCoachModal").modal("hide");
+		//获取当前是第几行
+		$("#testMs tr").off().click(function(){
+			var row = $(this).index()+1;//这个前面得到的是tr的序号，从0开始，要得到第几行，+1即可
+			form.find("input[name=ftlRow]").val(row);
+			form.find("input[name=storeNo]").val(selectStore);
+		})
+	}
+	else{
+		$.post('templateCourse/getTemplateCourse.do', {id:dateId}, 
+				function(result) {
+					var dataInfo = result.data;
+					if(result.code == '1'){
+						$("#editDateDivModal").modal("show");
+						$("#courseAndCoachModal").modal("hide");
+						var form = $("form[name=editDateForm]");
+						form.find("input[name=templateCourseNo]").val(dataInfo.templateCourseNo);
+						var courseStart = moment(dataInfo.courseStart);
+						form.find("input[name=courseStart]").val(courseStart.format('HH:mm'));
+						var courseEnd = moment(dataInfo.courseEnd);
+						form.find("input[name=courseEnd]").val(courseEnd.format('HH:mm'));
+						//获取当前是第几行
+						$("#testMs tr").off().click(function(){
+							var row = $(this).index()+1;//这个前面得到的是tr的序号，从0开始，要得到第几行，+1即可
+							form.find("input[name=ftlRow]").val(row);
+						})
+					}
+			},"json");
+	}
+	
+}
+function getCourseAndCoach(weekNo,courseId){
+	var v = "";
+	var form = $("form[name=templateCourseSerachForm]");
+	var selectStore = form.find("select[name=storeNo]").val();
+	if(courseId == "0" || courseId == ""){
+		$("#testMs tr").off().click(function() {
+		       v = $(this).children('td').eq(0).find('input').val();
+		       if(v == ""){
+		    	   alert("请先添加课程时间！");
+		    	   return false;
+		       }else{
+		    	   $("#courseAndCoachModal").modal("show");
+		    	   
+		    	   var row = $(this).index()+1;//当前第几行
+		    	   
+		   		   var form = $("form[name=courseAndCoachForm]");
+		   		   form.find("input[name=ftlRow]").val(row);
+		   		   form.find("input[name=courseWeek]").val(weekNo);
+		   		   form.find("input[name=storeNo]").val(selectStore);
+		       }
+		});
+	}else{
+		$.post('templateCourse/getTemplateCourse.do', {id:courseId}, 
+				function(result) {
+					var dataInfo = result.data;
+					if(result.code == '1'){
+					   $("#courseAndCoachModal").modal("hide");
+					   $(".modal-backdrop").remove();
+					   $("#editCourseAndCoachModal").modal("show");
+					   var form = $("form[name=editCourseAndCoachForm]");
+					   form.find("input[name=courseWeek]").val(weekNo);
+			   		   form.find("input[name=templateCourseNo]").val(dataInfo.templateCourseNo);
+			   		   form.find("input[name=chineseName]").val(dataInfo.chineseName);
+			   		   form.find("input[name=coachName]").val(dataInfo.coachName);
+			   		   form.find("input[name=peopleNumber]").val(dataInfo.peopleNumber);
+						//获取当前是第几行
+						$("#testMs tr").off().click(function() {
+						       v = $(this).children('td').eq(0).find('input').val();
+						       if(v == ""){
+						    	   alert("请先添加课程时间！");
+						    	   return false;
+						       }else{
+						    	   var row = $(this).index()+1;
+						   		   form.find("input[name=ftlRow]").val(row);
+						       }
+						});
+					}
+			},"json");
+	}
+}
+//删除
+function delTemplate(sub){
+	bootbox.confirm("<img src='res/img/wen.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "确定要删除吗？", function(result) {
+		if(result){
+			var row = $(sub).parent("tr").prevAll().size()+1;//行号
+			var courseTime = $(sub).siblings(".dataDiv").children("input").val();
+			//获取门店编号
+			var form = $("form[name=templateCourseSerachForm]");
+			var storeNo =  form.find("select[name=storeNo]").val();
+			//若该行没有选择排课时间则直接删除行信息
+			if(courseTime == ""){
+				$(sub).parent().remove();
+			}else{
+				//否则进行逻辑删除，直接从数据库删除。
+				$.post("templateCourse/delTemplateCourse.do",{rowNo:row,storeNo:storeNo},function(res){	
+					if(res.code==1){
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "删除成功！",function(){
+							$(sub).parent().remove();
+						 });
+					}else{
+						bootbox.alert("<img src='res/img/tan.png' style='width: 29px;height: 29px;margin-top: -4px'>&nbsp;&nbsp;" + "删除失败！");
+					}
+				});
+			}
+		}						
+	});
+}

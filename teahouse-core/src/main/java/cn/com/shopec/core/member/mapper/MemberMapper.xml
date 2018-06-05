@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.member.dao.MemberDao">
+	<resultMap id="Member" type="Member">
+		<id column="MEMBER_NO" jdbcType="VARCHAR" property="memberNo" />
+		<result column="MEMBER_PHOTO_URL" jdbcType="VARCHAR" property="memberPhotoUrl" />
+		<result column="MEMBER_NAME" jdbcType="VARCHAR" property="memberName" />
+		<result column="MEMBER_NICK" jdbcType="VARCHAR" property="memberNick" />
+		<result column="SERIALNUMBER" jdbcType="VARCHAR" property="serialNumber" />
+		<result column="YJXTOKEN" jdbcType="VARCHAR" property="yjxToken" />
+		<result column="MOBILE_PHONE" jdbcType="VARCHAR" property="mobilePhone" />
+		<result column="SEX" jdbcType="TINYINT" property="sex" />
+		<result column="ID_CARD" jdbcType="VARCHAR" property="idCard" />
+		<result column="HEIGHT" property="height" javaType="java.lang.Integer"
+			jdbcType="INTEGER" />
+		<result column="BIRTHDAY" property="birthday" javaType="java.util.Date"
+			jdbcType="TIMESTAMP" />
+		<result column="WEIGHT" property="weight" javaType="java.lang.Integer"
+			jdbcType="INTEGER" />
+		<result column="HABIT" property="habit" javaType="java.lang.String"
+			jdbcType="VARCHAR" />
+		<result column="MEMBER_CREDIT_LEVEL" jdbcType="TINYINT"
+			property="memberCreditLevel" />
+		<result column="MEMBER_LEVEL_ID" jdbcType="VARCHAR" property="memberLevelId" />
+		<result column="MEMBER_POINTS_VALUE" jdbcType="INTEGER"
+			property="memberPointsValue" />
+		<result column="REGISTER_TIME" jdbcType="TIMESTAMP" property="registerTime" />
+		<result column="IS_BLACKLIST" jdbcType="TINYINT" property="isBlacklist" />
+		<result column="BLACKLIST_MEMO" jdbcType="VARCHAR" property="blacklistMemo" />
+		<result column="INVITATION_CODE" jdbcType="VARCHAR" property="invitationCode" />
+		<result column="REFEREE_ID" jdbcType="VARCHAR" property="refereeId" />
+		<result column="TOKEN" jdbcType="VARCHAR" property="token" />
+		<result column="TOKEN_GENERATE_TIME" jdbcType="TIMESTAMP"
+			property="tokenGenerateTime" />
+		<result column="PAYABLE_DEPOSIT" jdbcType="DOUBLE" property="payableDeposit" />
+		<result column="SURPLUS_DEPOSIT" jdbcType="DOUBLE" property="surplusDeposit" />
+		<result column="MID" jdbcType="VARCHAR" property="mid" />
+		<result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="OPERATOR_TYPE" jdbcType="TINYINT" property="operatorType" />
+		<result column="OPERATOR_ID" jdbcType="VARCHAR" property="operatorId" />
+		<result column="USERS_TYPE" property="usersType" javaType="java.lang.Integer"
+			jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap id="MemberBalanceVo" type="cn.com.shopec.core.member.vo.MemberBalanceVo">
+		<id column="MEMBER_NO" jdbcType="VARCHAR" property="memberNo" />
+		<result column="MEMBER_NAME" jdbcType="VARCHAR" property="memberName" />
+		<result column="MEMBER_NICK" jdbcType="VARCHAR" property="memberNick" />
+		<result column="MOBILE_PHONE" jdbcType="VARCHAR" property="mobilePhone" />
+		<result column="SEX" jdbcType="TINYINT" property="sex" />
+		<result column="MEMBER_CREDIT_LEVEL" jdbcType="TINYINT"
+			property="memberCreditLevel" />
+		<result column="MEMBER_LEVEL_ID" jdbcType="VARCHAR" property="memberLevelId" />
+		<result column="MEMBER_POINTS_VALUE" jdbcType="INTEGER"
+			property="memberPointsValue" />
+		<result column="REGISTER_TIME" jdbcType="TIMESTAMP" property="registerTime" />
+		<result column="IS_BLACKLIST" jdbcType="TINYINT" property="isBlacklist" />
+		<result column="MEMBER_BALANCE" jdbcType="DOUBLE" property="memberBalance" />
+		<result column="MEMBER_DEPOSIT" jdbcType="DOUBLE" property="memberDeposit" />
+		<result column="USERS_TYPE" property="usersType" javaType="java.lang.Integer"
+			jdbcType="INTEGER" />
+	</resultMap>
+
+
+	<!-- 全部字段，一般用于明细查询 -->
+	<sql id="AllColumnlist">
+		MEMBER_NO, MEMBER_PHOTO_URL, MEMBER_NAME, MEMBER_NICK,
+		MOBILE_PHONE, SEX,
+		ID_CARD,
+		MEMBER_CREDIT_LEVEL, MEMBER_LEVEL_ID,
+		MEMBER_POINTS_VALUE, REGISTER_TIME, IS_BLACKLIST,
+		BLACKLIST_MEMO,
+		INVITATION_CODE, REFEREE_ID, TOKEN,
+		TOKEN_GENERATE_TIME,
+		PAYABLE_DEPOSIT,
+		SURPLUS_DEPOSIT, MID,PASSWORD, CREATE_TIME,
+		UPDATE_TIME, OPERATOR_TYPE, OPERATOR_ID,HEIGHT,WEIGHT,HABIT,BIRTHDAY,
+		USERS_TYPE,SERIALNUMBER,YJXTOKEN
+	</sql>
+
+	<select id="queryAll" parameterType="Query" resultMap="Member">
+		select
+		<include refid="AllColumnlist" />
+		from t_member
+		<where>
+			<include refid="listCommonWhere" />
+		</where>
+	</select>
+
+	<select id="count" parameterType="Query" resultType="Long">
+		select count(MEMBER_NO) from t_member
+		<where>
+			<include refid="listCommonWhere" />
+		</where>
+	</select>
+
+	<select id="pageList" parameterType="Query" resultMap="Member">
+		select
+		<include refid="AllColumnlist" />
+		from t_member
+		<where>
+			<include refid="listCommonWhere" />
+		</where>
+		ORDER BY UPDATE_TIME DESC,CREATE_TIME DESC
+		<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+	</select>
+
+	<select id="getMemberByToken" resultMap="Member">
+		select
+		<include refid="AllColumnlist" />
+		from t_member
+		<where>
+			TOKEN=#{0}
+		</where>
+	</select>
+
+	<select id="queryMemberList" parameterType="Query" resultMap="Member">
+		select
+		<include refid="AllColumnlist" />
+		from t_member
+		<where>
+			<include refid="listCommonWhere" />
+		</where>
+		ORDER BY REGISTER_TIME ASC
+	</select>
+
+	<select id="getByIds" resultMap="Member">
+		select
+		<include refid="AllColumnlist" />
+		from t_member
+		<where>
+			MEMBER_NO in
+			<foreach item="item" index="index" collection="array" open="("
+				separator="," close=")">#{item}</foreach>
+		</where>
+	</select>
+
+
+	<select id="getMemberByMid" resultMap="Member">
+		select
+		<include refid="AllColumnlist" />
+		from t_member
+		<where>
+			MID=#{0}
+		</where>
+	</select>
+	<select id="get" resultMap="Member">
+		select
+		<include refid="AllColumnlist" />
+		from t_member
+		<where>
+			MEMBER_NO=#{0}
+		</where>
+	</select>
+	<delete id="delete">
+		delete from t_member
+		<where>
+			MEMBER_NO=#{0}
+		</where>
+	</delete>
+
+	<!-- 按年统计会员注册量 -->
+	<select id="statYearMemberRegisterList" parameterType="Query"
+		resultType="cn.com.shopec.core.member.model.MemberStatisticVo">
+		select
+		DATE_FORMAT(m.REGISTER_TIME,'%Y') As years,
+		count(MEMBER_NO) AS memberNo from t_member m
+		where
+		m.IS_BLACKLIST = 0 
+		<![CDATA[ AND DATE_FORMAT(m.REGISTER_TIME,'%Y') >= #{0}  ]]>
+		<![CDATA[ AND DATE_FORMAT(m.REGISTER_TIME,'%Y') <=#{1}  ]]>
+		group by years
+	</select>
+
+	<!-- 按月统计会员注册量 -->
+	<select id="statMonthMemberRegisterList" parameterType="Query"
+		resultType="cn.com.shopec.core.member.model.MemberStatisticVo">
+		select
+		DATE_FORMAT(m.REGISTER_TIME,'%Y-%m') As months,
+		count(MEMBER_NO) AS memberNo from t_member m
+		where
+		m.IS_BLACKLIST = 0 
+		<![CDATA[ AND DATE_FORMAT(m.REGISTER_TIME,'%Y-%m') >= #{0}  ]]>
+		<![CDATA[ AND DATE_FORMAT(m.REGISTER_TIME,'%Y-%m') <=#{1}  ]]>
+		group by months
+	</select>
+
+	<!-- 按天统计会员注册数量 -->
+	<select id="statDaysMemberRegisterList" parameterType="Query"
+		resultType="cn.com.shopec.core.member.model.MemberStatisticVo">
+		select
+		DATE_FORMAT(m.REGISTER_TIME,'%Y-%m-%d') As days,
+		count(MEMBER_NO) AS memberNo from t_member m
+		where
+		m.IS_BLACKLIST = 0 
+		<![CDATA[ AND DATE_FORMAT(m.REGISTER_TIME,'%Y-%m-%d') >= #{0}  ]]>
+		<![CDATA[ AND DATE_FORMAT(m.REGISTER_TIME,'%Y-%m-%d') <=#{1}  ]]>
+		group by days
+	</select>
+
+	<insert id="add" parameterType="Member" useGeneratedKeys="true"
+		keyProperty="memberNo">
+		insert into t_member (
+		<if test="memberNo!=null">
+			MEMBER_NO,
+		</if>
+		MEMBER_PHOTO_URL,
+		MEMBER_NAME,
+		MEMBER_NICK,
+		MOBILE_PHONE,
+		SEX,
+		ID_CARD,
+		MEMBER_CREDIT_LEVEL,
+		MEMBER_LEVEL_ID,
+		MEMBER_POINTS_VALUE,
+		REGISTER_TIME,
+		IS_BLACKLIST,
+		BLACKLIST_MEMO,
+		INVITATION_CODE,
+		REFEREE_ID,
+		TOKEN,
+		TOKEN_GENERATE_TIME,
+		PAYABLE_DEPOSIT,
+		SURPLUS_DEPOSIT,
+		MID,
+		PASSWORD,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID,
+		HEIGHT,
+		WEIGHT,
+		HABIT,
+		BIRTHDAY,
+		USERS_TYPE,
+		SERIALNUMBER,
+		YJXTOKEN
+		)
+		values(
+		<if test="memberNo!=null">
+			#{memberNo,jdbcType = VARCHAR},
+		</if>
+		#{memberPhotoUrl,jdbcType=VARCHAR},
+		#{memberName,jdbcType=VARCHAR},
+		#{memberNick,jdbcType=VARCHAR},
+		#{mobilePhone,jdbcType=VARCHAR},
+		#{sex,jdbcType=TINYINT},
+		#{idCard,jdbcType=VARCHAR},
+		#{memberCreditLevel,jdbcType=TINYINT},
+		#{memberLevelId,jdbcType=VARCHAR},
+		#{memberPointsValue,jdbcType=INTEGER},
+		#{registerTime,jdbcType=TIMESTAMP},
+		#{isBlacklist,jdbcType=TINYINT},
+		#{blacklistMemo,jdbcType=VARCHAR},
+		#{invitationCode,jdbcType=VARCHAR},
+		#{refereeId,jdbcType=VARCHAR},
+		#{token,jdbcType=VARCHAR},
+		#{tokenGenerateTime,jdbcType=TIMESTAMP},
+		#{payableDeposit,jdbcType=DOUBLE},
+		#{surplusDeposit,jdbcType=DOUBLE},
+		#{mid,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{operatorType,jdbcType=TINYINT},
+		#{operatorId,jdbcType=VARCHAR},
+		#{height,jdbcType = INTEGER},
+		#{weight,jdbcType =INTEGER},
+		#{habit,jdbcType=VARCHAR},
+		#{birthday,jdbcType=TIMESTAMP},
+		#{usersType,jdbcType = INTEGER},
+		#{serialNumber,jdbcType=VARCHAR},
+		#{yjxToken,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="update" parameterType="Member">
+		update t_member
+		<set>
+			<if test="memberPhotoUrl != null">
+				MEMBER_PHOTO_URL = #{memberPhotoUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="memberName != null">
+				MEMBER_NAME = #{memberName,jdbcType=VARCHAR},
+			</if>
+			<if test="memberNick != null">
+				MEMBER_NICK = #{memberNick,jdbcType=VARCHAR},
+			</if>
+			<if test="height!=null ">
+				HEIGHT=#{height,jdbcType = INTEGER},
+			</if>
+			<if test="birthday!=null ">
+				BIRTHDAY=#{birthday,jdbcType = INTEGER},
+			</if>
+			<if test="weight!=null ">
+				WEIGHT=#{weight,jdbcType = INTEGER},
+			</if>
+			<if test="habit!=null and habit!=''">
+				HABIT=#{habit,jdbcType = VARCHAR},
+			</if>
+			<if test="yjxToken!=null and yjxToken!=''">
+				YJXTOKEN=#{yjxToken,jdbcType = VARCHAR},
+			</if>
+
+			SERIALNUMBER=#{serialNumber,jdbcType = VARCHAR},
+
+			<if test="mobilePhone != null">
+				MOBILE_PHONE = #{mobilePhone,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				SEX = #{sex,jdbcType=TINYINT},
+			</if>
+			<if test="idCard != null">
+				ID_CARD = #{idCard,jdbcType=VARCHAR},
+			</if>
+			<if test="memberCreditLevel != null">
+				MEMBER_CREDIT_LEVEL =
+				#{memberCreditLevel,jdbcType=TINYINT},
+			</if>
+			<if test="memberLevelId != null">
+				MEMBER_LEVEL_ID = #{memberLevelId,jdbcType=VARCHAR},
+			</if>
+			<if test="memberPointsValue != null">
+				MEMBER_POINTS_VALUE =
+				#{memberPointsValue,jdbcType=INTEGER},
+			</if>
+			<if test="isBlacklist != null">
+				IS_BLACKLIST = #{isBlacklist,jdbcType=TINYINT},
+			</if>
+			<if test="blacklistMemo != null">
+				BLACKLIST_MEMO = #{blacklistMemo,jdbcType=VARCHAR},
+			</if>
+			<if test="invitationCode != null">
+				INVITATION_CODE = #{invitationCode,jdbcType=VARCHAR},
+			</if>
+			<if test="refereeId != null">
+				REFEREE_ID = #{refereeId,jdbcType=VARCHAR},
+			</if>
+			<if test="token != null">
+				TOKEN = #{token,jdbcType=VARCHAR},
+			</if>
+			<if test="tokenGenerateTime != null">
+				TOKEN_GENERATE_TIME =
+				#{tokenGenerateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="payableDeposit != null">
+				PAYABLE_DEPOSIT = #{payableDeposit,jdbcType=DOUBLE},
+			</if>
+			<if test="surplusDeposit != null">
+				SURPLUS_DEPOSIT = #{surplusDeposit,jdbcType=DOUBLE},
+			</if>
+			<if test="mid != null">
+				MID = #{mid,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				PASSWORD = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operatorType != null">
+				OPERATOR_TYPE = #{operatorType,jdbcType=TINYINT},
+			</if>
+			<if test="operatorId != null">
+				OPERATOR_ID = #{operatorId,jdbcType=VARCHAR},
+			</if>
+			<if test="usersType != null">
+				USERS_TYPE = #{usersType,jdbcType=TINYINT},
+			</if>
+		</set>
+		where MEMBER_NO = #{memberNo,jdbcType=VARCHAR}
+	</update>
+	<select id="getByPhone" resultType="String" resultMap="Member">
+		select
+		<include refid="AllColumnlist" />
+		from T_MEMBER
+		<where>
+			MOBILE_PHONE=#{phone}
+		</where>
+	</select>
+
+	<sql id="listCommonWhere">
+		<if test="q!=null">
+			<if test="q.memberNo!=null and q.memberNo!=''">
+				AND MEMBER_NO=#{q.memberNo}
+			</if>
+			<if test="q.memberPhotoUrl!=null and q.memberPhotoUrl!=''">
+				AND MEMBER_PHOTO_URL=#{q.memberPhotoUrl}
+			</if>
+			<if test="q.memberName!=null and q.memberName!=''">
+				AND MEMBER_NAME like '%${q.memberName}%'
+			</if>
+			<if test="q.memberNick!=null and q.memberNick!=''">
+				AND MEMBER_NICK=#{q.memberNick}
+			</if>
+			<if test="q.mobilePhone!=null and q.mobilePhone!=''">
+				AND MOBILE_PHONE like '%${q.mobilePhone}%'
+			</if>
+			<if test="q.password!=null and q.password!=''">
+				AND PASSWORD=#{q.password}
+			</if>
+			<if test="q.sex!=null ">
+				AND SEX=#{q.sex}
+			</if>
+			<if test="q.birthday!=null ">
+				AND BIRTHDAY=#{q.birthday}
+			</if>
+			<if test="q.height!=null ">
+				AND HEIGHT=#{q.height}
+			</if>
+			<if test="q.weight!=null ">
+				AND WEIGHT=#{q.weight}
+			</if>
+			<if test="q.habit!=null and q.habit!=''">
+				AND HABIT=#{q.habit}
+			</if>
+			<if test="q.serialNumber!=null and q.serialNumber!=''">
+				AND SERIALNUMBER=#{q.serialNumber}
+			</if>
+			<if test="q.yjxToken!=null and q.yjxToken!=''">
+				AND YJXTOKEN=#{q.yjxToken}
+			</if>
+			<if test="q.idCard!=null and q.idCard!=''">
+				AND ID_CARD like '%${q.idCard}%'
+			</if>
+			<if test="q.memberCreditLevel!=null ">
+				AND MEMBER_CREDIT_LEVEL=#{q.memberCreditLevel}
+			</if>
+			<if test="q.memberLevelId!=null and q.memberLevelId!=''">
+				AND MEMBER_LEVEL_ID=#{q.memberLevelId}
+			</if>
+			<if test="q.memberPointsValue!=null and q.memberPointsValue!=''">
+				AND MEMBER_POINTS_VALUE=#{q.memberPointsValue}
+			</if>
+			<if test="q.registerTime!=null ">
+				AND REGISTER_TIME=#{q.registerTime}
+			</if>
+			<if test="q.registerTimeStart!=null">
+		<![CDATA[	AND REGISTER_TIME>=#{q.registerTimeStart}  ]]>
+			</if>
+			<if test="q.registerTimeEnd!=null">
+		<![CDATA[	AND REGISTER_TIME<#{q.registerTimeEnd}   ]]>
+			</if>
+			<if test="q.isBlacklist!=null ">
+				AND IS_BLACKLIST=#{q.isBlacklist}
+			</if>
+			<if test="q.blacklistMemo!=null and q.blacklistMemo!=''">
+				AND BLACKLIST_MEMO=#{q.blacklistMemo}
+			</if>
+			<if test="q.createTime!=null ">
+				AND CREATE_TIME=#{q.createTime}
+			</if>
+			<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+			</if>
+			<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+			</if>
+			<if test="q.updateTime!=null ">
+				AND UPDATE_TIME=#{q.updateTime}
+			</if>
+			<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+			</if>
+			<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+			</if>
+			<if test="q.operatorType!=null ">
+				AND OPERATOR_TYPE=#{q.operatorType}
+			</if>
+			<if test="q.operatorId!=null and q.operatorId!=''">
+				AND OPERATOR_ID=#{q.operatorId}
+			</if>
+			<if test="q.invitationCode!=null and q.invitationCode!=''">
+				AND INVITATION_CODE like '%${q.invitationCode}%'
+			</if>
+			<if test="q.refereeId!=null and q.refereeId!=''">
+				AND REFEREE_ID=#{q.refereeId}
+			</if>
+			<if test="q.token!=null and q.token!=''">
+				AND TOKEN=#{q.token}
+			</if>
+			<if test="q.tokenGenerateTime!=null">
+				AND TOKEN_GENERATE_TIME=#{q.tokenGenerateTime}
+			</if>
+			<if test="q.mid != null and q.mid !=''">
+				AND MID = #{q.mid,jdbcType=VARCHAR}
+			</if>
+			<if test="q.usersType != null">
+				AND USERS_TYPE = #{q.usersType,jdbcType=VARCHAR}
+			</if>
+		</if>
+	</sql>
+
+
+	<!-- //根据 邀请码 查出 推荐人 -->
+	<select id="getInvitationCode" resultMap="Member">
+		select
+		<include refid="AllColumnlist" />
+		from T_MEMBER
+		<where>
+			INVITATION_CODE=#{0}
+		</where>
+	</select>
+
+	<select id="getMemberBalancePageList" parameterType="Query"
+		resultMap="MemberBalanceVo">
+		select
+		tm.*,tmb.member_deposit,tmb.member_balance
+		from t_member tm
+		left join t_member_balance tmb on tm.MEMBER_NO = tmb.MEMBER_NO
+		<where>
+			<include refid="MemberBalanceVoListCommonWhere" />
+		</where>
+		<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+	</select>
+
+	<select id="countNs" parameterType="Query" resultType="Long">
+		select
+		count(tm.MEMBER_NO)
+		from t_member tm
+		left join t_member_balance tmb on tm.MEMBER_NO = tmb.MEMBER_NO
+		<where>
+			<include refid="MemberBalanceVoListCommonWhere" />
+		</where>
+		<!-- <![CDATA[LIMIT #{rowIndex},#{pageSize} ]]> -->
+	</select>
+
+	<sql id="MemberBalanceVoListCommonWhere">
+		<if test="q!=null">
+			<if test="q.memberNo!=null and q.memberNo!=''">
+				AND TM.MEMBER_NO=#{q.memberNo}
+			</if>
+			<if test="q.memberName!=null and q.memberName!=''">
+				AND TM.MEMBER_NAME like '%${q.memberName}%'
+			</if>
+			<if test="q.memberNick!=null and q.memberNick!=''">
+				AND TM.MEMBER_NICK=#{q.memberNick}
+			</if>
+			<if test="q.mobilePhone!=null and q.mobilePhone!=''">
+				AND TM.MOBILE_PHONE like '%${q.mobilePhone}%'
+			</if>
+			<if test="q.sex!=null ">
+				AND TM.SEX=#{q.sex}
+			</if>
+			<if test="q.memberCreditLevel!=null ">
+				AND TM.MEMBER_CREDIT_LEVEL=#{q.memberCreditLevel}
+			</if>
+			<if test="q.memberLevelId!=null and q.memberLevelId!=''">
+				AND TM.MEMBER_LEVEL_ID=#{q.memberLevelId}
+			</if>
+			<if test="q.memberPointsValue!=null and q.memberPointsValue!=''">
+				AND TM.MEMBER_POINTS_VALUE=#{q.memberPointsValue}
+			</if>
+			<if test="q.registerTime!=null ">
+				AND TM.REGISTER_TIME=#{q.registerTime}
+			</if>
+			<if test="q.registerTimeStart!=null">
+		<![CDATA[	AND TM.REGISTER_TIME>=#{q.registerTimeStart}  ]]>
+			</if>
+			<if test="q.registerTimeEnd!=null">
+		<![CDATA[	AND TM.REGISTER_TIME<#{q.registerTimeEnd}   ]]>
+			</if>
+			<if test="q.isBlacklist!=null ">
+				AND TM.IS_BLACKLIST=#{q.isBlacklist}
+			</if>
+			<if test="q.usersType!=null ">
+				AND TM.USERS_TYPE=#{q.usersType}
+			</if>
+		</if>
+	</sql>
+</mapper>

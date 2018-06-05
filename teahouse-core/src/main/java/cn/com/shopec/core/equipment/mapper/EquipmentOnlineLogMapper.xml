@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.equipment.dao.EquipmentOnlineLogDao">
+
+<resultMap type="EquipmentOnlineLog" id="EquipmentOnlineLog">
+	<id column="LOG_NO" property="logNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="FITNESS_EQUIPMENT_NO" property="fitnessEquipmentNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="OP_TYPE" property="opType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="UPDOWN_WHY" property="updownWhy" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MEMO" property="memo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="IS_DELETED" property="isDeleted" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+LOG_NO,FITNESS_EQUIPMENT_NO,OP_TYPE,UPDOWN_WHY,MEMO,IS_DELETED,CREATE_TIME,
+UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+LOG_NO,FITNESS_EQUIPMENT_NO,OP_TYPE,UPDOWN_WHY,IS_DELETED,CREATE_TIME,
+UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID
+</sql>
+
+<insert id="add" parameterType="EquipmentOnlineLog" useGeneratedKeys="true" keyProperty="logNo">
+	insert into T_EQUIPMENT_ONLINE_LOG(
+		<if test="logNo!=null">
+		LOG_NO,
+		</if>
+		FITNESS_EQUIPMENT_NO,
+		OP_TYPE,
+		UPDOWN_WHY,
+		MEMO,
+		IS_DELETED,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID
+	) values (
+		<if test="logNo!=null">
+		#{logNo,jdbcType = VARCHAR},
+		</if>
+		#{fitnessEquipmentNo,jdbcType = VARCHAR},
+		#{opType,jdbcType = TINYINT},
+		#{updownWhy,jdbcType = VARCHAR},
+		#{memo,jdbcType = VARCHAR},
+		#{isDeleted,jdbcType = TINYINT},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR}
+	)
+</insert>
+
+<update id="update" parameterType="EquipmentOnlineLog">
+	update T_EQUIPMENT_ONLINE_LOG 
+	<set>
+		<if test="fitnessEquipmentNo!=null and fitnessEquipmentNo!=''">
+			FITNESS_EQUIPMENT_NO=#{fitnessEquipmentNo,jdbcType = VARCHAR},
+		</if>
+		<if test="opType!=null ">
+			OP_TYPE=#{opType,jdbcType = TINYINT},
+		</if>
+		<if test="updownWhy!=null and updownWhy!=''">
+			UPDOWN_WHY=#{updownWhy,jdbcType = VARCHAR},
+		</if>
+		<if test="memo!=null and memo!=''">
+			MEMO=#{memo,jdbcType = VARCHAR},
+		</if>
+		<if test="isDeleted!=null ">
+			IS_DELETED=#{isDeleted,jdbcType = TINYINT},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND LOG_NO=#{logNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_EQUIPMENT_ONLINE_LOG 
+	<where>
+		LOG_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="EquipmentOnlineLog">
+	select <include refid="AllColumnlist"/> from T_EQUIPMENT_ONLINE_LOG
+	<where>
+		LOG_NO=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="EquipmentOnlineLog">
+	select <include refid="AllColumnlist"/> from T_EQUIPMENT_ONLINE_LOG
+	<where>
+		LOG_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(LOG_NO) from T_EQUIPMENT_ONLINE_LOG 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="EquipmentOnlineLog">
+	select <include refid="CommonColumnlist"/> from T_EQUIPMENT_ONLINE_LOG 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="EquipmentOnlineLog">
+	select eo.*,u.USER_name AS userName FROM T_EQUIPMENT_ONLINE_LOG eo LEFT JOIN t_sys_user u
+    ON u.user_ID = eo.operator_Id 
+	<where>
+	 eo.IS_DELETED=0 <include refid="listCommonWhere"/>
+	</where>order by CREATE_TIME desc
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+	
+</select>
+
+
+<sql id="listCommonWhere">
+	<if test="q!=null">
+		<if test="q.logNo!=null and q.logNo!=''">
+			AND LOG_NO=#{q.logNo}
+		</if>
+		<if test="q.fitnessEquipmentNo!=null and q.fitnessEquipmentNo!=''">
+			AND FITNESS_EQUIPMENT_NO LIKE '%${q.fitnessEquipmentNo}%'
+		</if>
+		<if test="q.opType!=null ">
+			AND OP_TYPE=#{q.opType}
+		</if>
+		<if test="q.updownWhy!=null and q.updownWhy!=''">
+			AND UPDOWN_WHY=#{q.updownWhy}
+		</if>
+		<if test="q.memo!=null and q.memo!=''">
+			AND MEMO=#{q.memo}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+
+</mapper>

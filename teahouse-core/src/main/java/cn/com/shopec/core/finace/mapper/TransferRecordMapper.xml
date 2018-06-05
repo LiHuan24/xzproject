@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.finace.dao.TransferRecordDao">
+
+<resultMap type="TransferRecord" id="TransferRecord">
+	<id column="TRANSFER_NO" property="transferNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MEMBER_NO" property="memberNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MEMBER_NAME" property="memberName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MOBILE_PHONE" property="mobilePhone" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="APPLY_TIME" property="applyTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="TRANSFER_AMOUNT" property="transferAmount" javaType="java.lang.Double" jdbcType="DOUBLE"/>
+	<result column="TRANSFER_METHOD" property="transferMethod" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="TRANSFER_TIME" property="transferTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="TRANSFER_STATUS" property="transferStatus" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="FLOW_NO" property="flowNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="ERROR_CODE" property="errorCode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="ERROR_MSG" property="errorMsg" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CENCOR_ID" property="cencorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CENCOR_STATUS" property="cencorStatus" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CENCOR_MEMO" property="cencorMemo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="TRANSFER_ACCOUNT" property="transferAccount" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CANCEL_REASON" property="cancelReason" javaType="java.lang.String" jdbcType="VARCHAR"/>
+
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+TRANSFER_NO,MEMBER_NO,MEMBER_NAME,MOBILE_PHONE,APPLY_TIME,TRANSFER_AMOUNT,TRANSFER_METHOD,
+TRANSFER_TIME,TRANSFER_STATUS,FLOW_NO,ERROR_CODE,ERROR_MSG,CENCOR_ID,TRANSFER_ACCOUNT,CANCEL_REASON,
+CENCOR_STATUS,CENCOR_MEMO,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID
+
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+TRANSFER_NO,MEMBER_NO,MEMBER_NAME,MOBILE_PHONE,APPLY_TIME,TRANSFER_AMOUNT,TRANSFER_METHOD,
+TRANSFER_TIME,TRANSFER_STATUS,FLOW_NO,ERROR_CODE,ERROR_MSG,CENCOR_ID,
+CENCOR_STATUS,CENCOR_MEMO,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID
+
+</sql>
+
+<insert id="add" parameterType="TransferRecord" useGeneratedKeys="true" keyProperty="transferNo">
+	insert into T_TRANSFER_RECORD(
+		<if test="transferNo!=null">
+		TRANSFER_NO,
+		</if>
+		MEMBER_NO,
+		MEMBER_NAME,
+		MOBILE_PHONE,
+		APPLY_TIME,
+		TRANSFER_AMOUNT,
+		TRANSFER_METHOD,
+		TRANSFER_TIME,
+		TRANSFER_STATUS,
+		CANCEL_REASON,
+		TRANSFER_ACCOUNT,
+		FLOW_NO,
+		ERROR_CODE,
+		ERROR_MSG,
+		CENCOR_ID,
+		CENCOR_STATUS,
+		CENCOR_MEMO,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID
+	) values (
+		<if test="transferNo!=null">
+		#{transferNo,jdbcType = VARCHAR},
+		</if>
+		#{memberNo,jdbcType = VARCHAR},
+		#{memberName,jdbcType = VARCHAR},
+		#{mobilePhone,jdbcType = VARCHAR},
+		#{applyTime,jdbcType = TIMESTAMP},
+		#{transferAmount,jdbcType = DOUBLE},
+		#{transferMethod,jdbcType = TINYINT},
+		#{transferTime,jdbcType = TIMESTAMP},
+		#{transferStatus,jdbcType = TINYINT},
+		#{cancelReason,jdbcType = TIMESTAMP},
+		#{transferAccount,jdbcType = VARCHAR},
+		#{flowNo,jdbcType = VARCHAR},
+		#{errorCode,jdbcType = VARCHAR},
+		#{errorMsg,jdbcType = VARCHAR},
+		#{cencorId,jdbcType = VARCHAR},
+		#{cencorStatus,jdbcType = TINYINT},
+		#{cencorMemo,jdbcType = VARCHAR},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR}
+	)
+</insert>
+
+<update id="update" parameterType="TransferRecord">
+	update T_TRANSFER_RECORD 
+	<set>
+		<if test="memberNo!=null and memberNo!=''">
+			MEMBER_NO=#{memberNo,jdbcType = VARCHAR},
+		</if>
+		<if test="memberName!=null and memberName!=''">
+			MEMBER_NAME=#{memberName,jdbcType = VARCHAR},
+		</if>
+		<if test="mobilePhone!=null and mobilePhone!=''">
+			MOBILE_PHONE=#{mobilePhone,jdbcType = VARCHAR},
+		</if>
+		<if test="applyTime!=null ">
+			APPLY_TIME=#{applyTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="transferAmount!=null ">
+			TRANSFER_AMOUNT=#{transferAmount,jdbcType = DOUBLE},
+		</if>
+		<if test="transferMethod!=null ">
+			TRANSFER_METHOD=#{transferMethod,jdbcType = TINYINT},
+		</if>
+		<if test="transferTime!=null ">
+			TRANSFER_TIME=#{transferTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="transferStatus!=null ">
+			TRANSFER_STATUS=#{transferStatus,jdbcType = TINYINT},
+		</if>
+		<if test="cancelReason!=null and cancelReason!=''">
+			CANCEL_REASON=#{cancelReason,jdbcType = VARCHAR},
+		</if>
+		<if test="transferAccount!=null and transferAccount!=''">
+			TRANSFER_ACCOUNT=#{transferAccount,jdbcType = VARCHAR},
+		</if>
+		<if test="flowNo!=null and flowNo!=''">
+			FLOW_NO=#{flowNo,jdbcType = VARCHAR},
+		</if>
+		<if test="errorCode!=null and errorCode!=''">
+			ERROR_CODE=#{errorCode,jdbcType = VARCHAR},
+		</if>
+		<if test="errorMsg!=null and errorMsg!=''">
+			ERROR_MSG=#{errorMsg,jdbcType = VARCHAR},
+		</if>
+		<if test="cencorId!=null and cencorId!=''">
+			CENCOR_ID=#{cencorId,jdbcType = VARCHAR},
+		</if>
+		<if test="cencorStatus!=null ">
+			CENCOR_STATUS=#{cencorStatus,jdbcType = TINYINT},
+		</if>
+		<if test="cencorMemo!=null and cencorMemo!=''">
+			CENCOR_MEMO=#{cencorMemo,jdbcType = VARCHAR},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND TRANSFER_NO=#{transferNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_TRANSFER_RECORD 
+	<where>
+		TRANSFER_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="TransferRecord">
+	select <include refid="AllColumnlist"/> from T_TRANSFER_RECORD
+	<where>
+		TRANSFER_NO=#{0}
+	</where>
+</select>
+
+<select id="getMemberLastTransferRecord" resultMap="TransferRecord">
+	select <include refid="AllColumnlist"/> from T_TRANSFER_RECORD
+	<where>
+		MEMBER_NO=#{0}
+	</where>
+	ORDER BY APPLY_TIME DESC
+	LIMIT 1
+</select>
+
+
+<select id="getByIds" resultMap="TransferRecord">
+	select <include refid="AllColumnlist"/> from T_TRANSFER_RECORD
+	<where>
+		TRANSFER_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(TRANSFER_NO) from T_TRANSFER_RECORD 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="TransferRecord">
+	select <include refid="CommonColumnlist"/> from T_TRANSFER_RECORD 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="TransferRecord">
+	select <include refid="AllColumnlist"/> from T_TRANSFER_RECORD
+	<where>
+	 <include refid="listCommonWhereWH"/>
+	</where>
+	order by CREATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+	<if test="q!=null">
+		<if test="q.transferNo!=null and q.transferNo!=''">
+			AND TRANSFER_NO=#{q.transferNo}
+		</if>
+		<if test="q.memberNo!=null and q.memberNo!=''">
+			AND MEMBER_NO=#{q.memberNo}
+		</if>
+		<if test="q.memberName!=null and q.memberName!=''">
+			AND MEMBER_NAME=#{q.memberName}
+		</if>
+		<if test="q.mobilePhone!=null and q.mobilePhone!=''">
+			AND MOBILE_PHONE=#{q.mobilePhone}
+		</if>
+		<if test="q.applyTime!=null ">
+			AND APPLY_TIME=#{q.applyTime}
+		</if>
+		<if test="q.applyTimeStart!=null">
+		<![CDATA[	AND APPLY_TIME>=#{q.applyTimeStart}  ]]>
+		</if>
+		<if test="q.applyTimeEnd!=null">
+		<![CDATA[	AND APPLY_TIME<#{q.applyTimeEnd}   ]]>
+		</if>
+		<if test="q.transferAmount!=null ">
+			AND TRANSFER_AMOUNT=#{q.transferAmount}
+		</if>
+		<if test="q.transferMethod!=null ">
+			AND TRANSFER_METHOD=#{q.transferMethod}
+		</if>
+		<if test="q.transferTime!=null ">
+			AND TRANSFER_TIME=#{q.transferTime}
+		</if>
+		<if test="q.transferTimeStart!=null">
+		<![CDATA[	AND TRANSFER_TIME>=#{q.transferTimeStart}  ]]>
+		</if>
+		<if test="q.transferTimeEnd!=null">
+		<![CDATA[	AND TRANSFER_TIME<#{q.transferTimeEnd}   ]]>
+		</if>
+		<if test="q.transferStatus!=null ">
+			AND TRANSFER_STATUS=#{q.transferStatus}
+		</if>
+		<if test="q.flowNo!=null and q.flowNo!=''">
+			AND FLOW_NO=#{q.flowNo}
+		</if>
+		<if test="q.errorCode!=null and q.errorCode!=''">
+			AND ERROR_CODE=#{q.errorCode}
+		</if>
+		<if test="q.errorMsg!=null and q.errorMsg!=''">
+			AND ERROR_MSG=#{q.errorMsg}
+		</if>
+		<if test="q.cencorId!=null and q.cencorId!=''">
+			AND CENCOR_ID=#{q.cencorId}
+		</if>
+		<if test="q.cencorStatus!=null ">
+			AND CENCOR_STATUS=#{q.cencorStatus}
+		</if>
+		<if test="q.cencorMemo!=null and q.cencorMemo!=''">
+			AND CENCOR_MEMO=#{q.cencorMemo}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+
+
+<sql id="listCommonWhereWH">
+	<if test="q!=null">
+		<if test="q.transferNo!=null and q.transferNo!=''">
+			AND TRANSFER_NO like '%${q.transferNo}%'
+		</if>
+		<if test="q.memberNo!=null and q.memberNo!=''">
+			AND MEMBER_NO like '%${q.memberNo}%'
+		</if>
+		<if test="q.memberName!=null and q.memberName!=''">
+			AND MEMBER_NAME like '%${q.memberName}%'
+		</if>
+		<if test="q.mobilePhone!=null and q.mobilePhone!=''">
+			AND MOBILE_PHONE like '%${q.mobilePhone}%'
+		</if>
+		<if test="q.applyTime!=null ">
+			AND APPLY_TIME=#{q.applyTime}
+		</if>
+		<if test="q.applyTimeStart!=null">
+		<![CDATA[	AND APPLY_TIME>=#{q.applyTimeStart}  ]]>
+		</if>
+		<if test="q.applyTimeEnd!=null">
+		<![CDATA[	AND APPLY_TIME<#{q.applyTimeEnd}   ]]>
+		</if>
+		<if test="q.transferAmount!=null ">
+			AND TRANSFER_AMOUNT=#{q.transferAmount}
+		</if>
+		<if test="q.transferMethod!=null ">
+			AND TRANSFER_METHOD=#{q.transferMethod}
+		</if>
+		<if test="q.transferTime!=null ">
+			AND TRANSFER_TIME=#{q.transferTime}
+		</if>
+		<if test="q.transferTimeStart!=null">
+		<![CDATA[	AND TRANSFER_TIME>=#{q.transferTimeStart}  ]]>
+		</if>
+		<if test="q.transferTimeEnd!=null">
+		<![CDATA[	AND TRANSFER_TIME<#{q.transferTimeEnd}   ]]>
+		</if>
+		<if test="q.transferStatus!=null ">
+			AND TRANSFER_STATUS=#{q.transferStatus}
+		</if>
+		<if test="q.flowNo!=null and q.flowNo!=''">
+			AND FLOW_NO like '%${q.flowNo}%'
+		</if>
+		<if test="q.errorCode!=null and q.errorCode!=''">
+			AND ERROR_CODE like '%${q.errorCode}%'
+		</if>
+		<if test="q.errorMsg!=null and q.errorMsg!=''">
+			AND ERROR_MSG=#{q.errorMsg}
+		</if>
+		<if test="q.cencorId!=null and q.cencorId!=''">
+			AND CENCOR_ID=#{q.cencorId}
+		</if>
+		<if test="q.cencorStatus!=null ">
+			AND CENCOR_STATUS=#{q.cencorStatus}
+		</if>
+		<if test="q.cencorMemo!=null and q.cencorMemo!=''">
+			AND CENCOR_MEMO=#{q.cencorMemo}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+</mapper>

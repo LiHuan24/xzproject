@@ -1,0 +1,778 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.order.dao.CommunityOrderDao">
+
+	<resultMap type="CommunityOrder" id="CommunityOrder">
+		<id column="COMMUNITY_ORDER_NO" property="communityOrderNo"
+			javaType="java.lang.String" jdbcType="VARCHAR" />
+		<result column="CITY_ID" jdbcType="VARCHAR" property="cityId"
+			javaType="java.lang.String" />
+		<result column="CITY_NAME" jdbcType="VARCHAR" property="cityName"
+			javaType="java.lang.String" />
+		<result column="STORE_NO" jdbcType="VARCHAR" property="storeNo"
+			javaType="java.lang.String" />
+		<result column="STORE_NAME" jdbcType="VARCHAR" property="storeName"
+			javaType="java.lang.String" />
+		<result column="COUPON_NO" jdbcType="VARCHAR" property="couponNo"
+			javaType="java.lang.String" />
+		<result column="MEMBER_NO" jdbcType="VARCHAR" property="memberNo"
+			javaType="java.lang.String" />
+		<result column="MOBILE_PHONE" jdbcType="VARCHAR" property="mobilePhone"
+			javaType="java.lang.String" />
+		<result column="PART_TRADE_FLOW_NO" jdbcType="VARCHAR"
+			property="partTradeFlowNo" javaType="java.lang.String" />
+		<result column="MEMBER_GYM_CARD_NO" jdbcType="VARCHAR"
+			property="memberGymCardNo" javaType="java.lang.String" />
+		<result column="START_TIME" jdbcType="TIMESTAMP" property="startTime"
+			javaType="java.util.Date" />
+		<result column="END_TIME" jdbcType="TIMESTAMP" property="endTime"
+			javaType="java.util.Date" />
+		<result column="WHEN_LONG" jdbcType="VARCHAR" property="whenLong"
+			javaType="java.lang.String" />
+		<result column="ORDER_STATUS" jdbcType="TINYINT" property="orderStatus"
+			javaType="java.lang.Integer" />
+		<result column="CONSUMETYPE" jdbcType="TINYINT" property="consumeType"
+			javaType="java.lang.Integer" />
+		<result column="PAY_STATUS" jdbcType="TINYINT" property="payStatus"
+			javaType="java.lang.Integer" />
+		<result column="PAYMENT_METHOD" jdbcType="TINYINT" property="paymentMethod"
+			javaType="java.lang.Integer" />
+		<result column="PAYMENT_TIME" jdbcType="TIMESTAMP" property="paymentTime"
+			javaType="java.util.Date" />
+		<result column="PAYMENT_FLOW_NO" jdbcType="VARCHAR" property="paymentFlowNo"
+			javaType="java.lang.String" />
+		<result column="ORDER_AMOUNT" jdbcType="DOUBLE" property="orderAmount"
+			javaType="java.lang.Double" />
+		<result column="DISCOUNT_AMOUNT" jdbcType="DOUBLE" property="discountAmount"
+			javaType="java.lang.Double" />
+		<result column="BALANCE_DISCOUNT_AMOUNT" jdbcType="DOUBLE"
+			property="balanceDiscountAmount" />
+		<result column="PAYABLE_AMOUNT" jdbcType="DOUBLE" property="payableAmount"
+			javaType="java.lang.Double" />
+		<result column="IS_NEED_INVOICE" jdbcType="TINYINT" property="isNeedInvoice"
+			javaType="java.lang.Integer" />
+		<result column="IS_INVOICE_ISSUED" jdbcType="TINYINT" property="isInvoiceIssued"
+			javaType="java.lang.Integer" />
+		<result column="INVOICE_TIME" jdbcType="TIMESTAMP" property="invoiceTime"
+			javaType="java.util.Date" />
+		<result column="INVIOCE_ID" jdbcType="VARCHAR" property="invioceId"
+			javaType="java.lang.String" />
+		<result column="INVIOCE_NO" jdbcType="VARCHAR" property="invioceNo"
+			javaType="java.lang.String" />
+		<result column="MEMO" jdbcType="VARCHAR" property="memo"
+			javaType="java.lang.String" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"
+			javaType="java.util.Date" />
+		<result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime"
+			javaType="java.util.Date" />
+		<result column="OPERATOR_TYPE" jdbcType="TINYINT" property="operatorType"
+			javaType="java.lang.Integer" />
+		<result column="OPERATOR_ID" jdbcType="VARCHAR" property="operatorId"
+			javaType="java.lang.String" />
+		<result column="IS_DELETED" property="isDeleted" javaType="java.lang.Integer"
+			jdbcType="TINYINT" />
+	</resultMap>
+
+	<!-- 全部字段，一般用于明细查询 -->
+	<sql id="AllColumnlist">
+
+		COMMUNITY_ORDER_NO, CITY_ID, CITY_NAME, STORE_NO,
+		STORE_NAME, MEMBER_NO, MOBILE_PHONE,
+		MEMBER_GYM_CARD_NO, START_TIME,
+		END_TIME, WHEN_LONG, ORDER_STATUS,
+		PAY_STATUS, PAYMENT_METHOD,
+		PAYMENT_TIME, PAYMENT_FLOW_NO, ORDER_AMOUNT, DISCOUNT_AMOUNT,
+		BALANCE_DISCOUNT_AMOUNT,
+		PAYABLE_AMOUNT, IS_NEED_INVOICE,
+		IS_INVOICE_ISSUED, INVOICE_TIME, INVIOCE_ID,
+		INVIOCE_NO,
+		MEMO,
+		IS_DELETED, CREATE_TIME, UPDATE_TIME, OPERATOR_TYPE,
+		OPERATOR_ID,PART_TRADE_FLOW_NO,CONSUMETYPE,COUPON_NO
+	</sql>
+
+	<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+	<sql id="CommonColumnlist">
+		COMMUNITY_ORDER_NO, CITY_ID, CITY_NAME, STORE_NO,
+		STORE_NAME, MEMBER_NO, MOBILE_PHONE,
+		MEMBER_GYM_CARD_NO, START_TIME,
+		END_TIME, WHEN_LONG, ORDER_STATUS,
+		PAY_STATUS, PAYMENT_METHOD,
+		PAYMENT_TIME, PAYMENT_FLOW_NO, ORDER_AMOUNT, DISCOUNT_AMOUNT,
+		BALANCE_DISCOUNT_AMOUNT,
+		PAYABLE_AMOUNT,PART_TRADE_FLOW_NO,CONSUMETYPE,COUPON_NO
+	</sql>
+
+	<insert id="add" parameterType="CommunityOrder"
+		useGeneratedKeys="true" keyProperty="memberNo">
+		insert into T_COMMUNITY_ORDER(
+		<if test="communityOrderNo!=null">
+			COMMUNITY_ORDER_NO,
+		</if>
+		CITY_ID,
+		CITY_NAME,
+		STORE_NO,
+		STORE_NAME,
+		MEMBER_NO,
+		MOBILE_PHONE,
+		MEMBER_GYM_CARD_NO,
+		START_TIME,
+		END_TIME,
+		WHEN_LONG,
+		ORDER_STATUS,
+		PAY_STATUS,
+		PAYMENT_METHOD,
+		PAYMENT_TIME,
+		PAYMENT_FLOW_NO,
+		ORDER_AMOUNT,
+		DISCOUNT_AMOUNT,
+		BALANCE_DISCOUNT_AMOUNT,
+		PAYABLE_AMOUNT,
+		IS_NEED_INVOICE,
+		IS_INVOICE_ISSUED,
+		INVOICE_TIME,
+		INVIOCE_ID,
+		INVIOCE_NO,
+		MEMO, IS_DELETED,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID,
+		PART_TRADE_FLOW_NO,
+		CONSUMETYPE,
+		COUPON_NO
+		) values (
+		<if test="communityOrderNo!=null">
+			#{communityOrderNo,jdbcType=VARCHAR},
+		</if>
+		#{cityId,jdbcType=VARCHAR},
+		#{cityName,jdbcType=VARCHAR},
+		#{storeNo,jdbcType=VARCHAR},
+		#{storeName,jdbcType=VARCHAR},
+		#{memberNo,jdbcType=VARCHAR},
+		#{mobilePhone,jdbcType=VARCHAR},
+		#{memberGymCardNo,jdbcType=VARCHAR},
+		#{startTime,jdbcType=TIMESTAMP},
+		#{endTime,jdbcType=TIMESTAMP},
+		#{whenLong,jdbcType=VARCHAR},
+		#{orderStatus,jdbcType=TINYINT},
+		#{payStatus,jdbcType=TINYINT},
+		#{paymentMethod,jdbcType=TINYINT},
+		#{paymentTime,jdbcType=TIMESTAMP},
+		#{paymentFlowNo,jdbcType=VARCHAR},
+		#{orderAmount,jdbcType=DOUBLE},
+		#{discountAmount,jdbcType=DOUBLE},
+		#{balanceDiscountAmount,jdbcType=DOUBLE},
+		#{payableAmount,jdbcType=DOUBLE},
+		#{isNeedInvoice,jdbcType=TINYINT},
+		#{isInvoiceIssued,jdbcType=TINYINT},
+		#{invoiceTime,jdbcType=TIMESTAMP},
+		#{invioceId,jdbcType=VARCHAR},
+		#{invioceNo,jdbcType=VARCHAR},
+		#{memo,jdbcType=VARCHAR},
+		#{isDeleted,jdbcType=TINYINT},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{operatorType,jdbcType=TINYINT},
+		#{operatorId,jdbcType=VARCHAR},
+		#{partTradeFlowNo,jdbcType=VARCHAR},
+		#{consumeType,jdbcType=TINYINT},
+		#{couponNo,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="CommunityOrder">
+		update T_COMMUNITY_ORDER
+		<set>
+			<if test="cityId != null and cityId != ''">
+				CITY_ID = #{cityId,jdbcType=VARCHAR},
+			</if>
+			<if test="cityName != null and cityName != ''">
+				CITY_NAME = #{cityName,jdbcType=VARCHAR},
+			</if>
+			<if test="storeNo != null and storeNo != ''">
+				STORE_NO = #{storeNo,jdbcType=VARCHAR},
+			</if>
+			<if test="storeName != null and storeName != ''">
+				STORE_NAME = #{storeName,jdbcType=VARCHAR},
+			</if>
+			<if test="couponNo != null and couponNo != ''">
+				COUPON_NO = #{couponNo,jdbcType=VARCHAR},
+			</if>
+			<if test="memberNo != null and memberNo != ''">
+				MEMBER_NO = #{memberNo,jdbcType=VARCHAR},
+			</if>
+			<if test="mobilePhone != null and mobilePhone != ''">
+				MOBILE_PHONE = #{mobilePhone,jdbcType=VARCHAR},
+			</if>
+			<if test="memberGymCardNo != null and memberGymCardNo != ''">
+				MEMBER_GYM_CARD_NO = #{memberGymCardNo,jdbcType=VARCHAR},
+			</if>
+			<if test="partTradeFlowNo != null and partTradeFlowNo != ''">
+				PART_TRADE_FLOW_NO = #{partTradeFlowNo,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				START_TIME = #{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				END_TIME = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="whenLong != null and whenLong != ''">
+				WHEN_LONG = #{whenLong,jdbcType=VARCHAR},
+			</if>
+			<if test="orderStatus != null">
+				ORDER_STATUS = #{orderStatus,jdbcType=TINYINT},
+			</if>
+			<if test="consumeType != null">
+				CONSUMETYPE = #{consumeType,jdbcType=TINYINT},
+			</if>
+			<if test="payStatus != null">
+				PAY_STATUS = #{payStatus,jdbcType=TINYINT},
+			</if>
+			<if test="paymentMethod != null">
+				PAYMENT_METHOD = #{paymentMethod,jdbcType=TINYINT},
+			</if>
+			<if test="paymentTime != null">
+				PAYMENT_TIME = #{paymentTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="paymentFlowNo != null and paymentFlowNo != ''">
+				PAYMENT_FLOW_NO = #{paymentFlowNo,jdbcType=VARCHAR},
+			</if>
+			<if test="orderAmount != null">
+				ORDER_AMOUNT = #{orderAmount,jdbcType=DOUBLE},
+			</if>
+			<if test="discountAmount != null">
+				DISCOUNT_AMOUNT = #{discountAmount,jdbcType=DOUBLE},
+			</if>
+			<if test="balanceDiscountAmount != null">
+				BALANCE_DISCOUNT_AMOUNT =
+				#{balanceDiscountAmount,jdbcType=DOUBLE},
+			</if>
+			<if test="payableAmount != null">
+				PAYABLE_AMOUNT = #{payableAmount,jdbcType=DOUBLE},
+			</if>
+			<if test="isNeedInvoice != null">
+				IS_NEED_INVOICE = #{isNeedInvoice,jdbcType=TINYINT},
+			</if>
+			<if test="isInvoiceIssued != null">
+				IS_INVOICE_ISSUED = #{isInvoiceIssued,jdbcType=TINYINT},
+			</if>
+			<if test="invoiceTime != null">
+				INVOICE_TIME = #{invoiceTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="invioceId != null and invioceId != ''">
+				INVIOCE_ID = #{invioceId,jdbcType=VARCHAR},
+			</if>
+			<if test="invioceNo != null and invioceNo != ''">
+				INVIOCE_NO = #{invioceNo,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null and memo != ''">
+				MEMO = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="isDeleted != null">
+				IS_DELETED = #{isDeleted,jdbcType=TINYINT},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operatorType != null">
+				OPERATOR_TYPE = #{operatorType,jdbcType=TINYINT},
+			</if>
+			<if test="operatorId != null and operatorId != ''">
+				OPERATOR_ID = #{operatorId,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<where>
+			AND COMMUNITY_ORDER_NO = #{communityOrderNo,jdbcType=VARCHAR}
+		</where>
+	</update>
+
+	<delete id="delete">
+		delete from T_COMMUNITY_ORDER
+		<where>
+			COMMUNITY_ORDER_NO=#{0}
+		</where>
+	</delete>
+
+	<select id="get" resultMap="CommunityOrder">
+		select
+		<include refid="AllColumnlist" />
+		from T_COMMUNITY_ORDER
+		<where>
+			COMMUNITY_ORDER_NO=#{0}
+		</where>
+	</select>
+
+	<select id="getOrderList" parameterType="Query"
+		resultType="cn.com.shopec.core.order.vo.OrderListVo">
+		SELECT
+		COMMUNITY_ORDER_NO AS communityOrderNo,
+		STORE_NAME AS storeName,
+		date_format(CREATE_TIME, '%Y-%c-%d %H:%i' ) AS createTime,
+		ORDER_STATUS AS orderStatus,
+		PAY_STATUS AS payStatus
+		FROM
+		t_community_order
+		<where>
+			<if test="q!=null">
+				<if test="q.memberNo!=null and q.memberNo!=''">
+					AND MEMBER_NO=#{q.memberNo}
+				</if>
+			</if>
+		</where>
+		ORDER BY CREATE_TIME DESC
+		<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+	</select>
+
+	<select id="getOrderDetails" resultType="cn.com.shopec.core.order.vo.OrderDetailsVo">
+		SELECT
+		COMMUNITY_ORDER_NO AS communityOrderNo,
+		STORE_NAME AS storeName,
+		CONSUMETYPE AS consumeType,
+		date_format(CREATE_TIME, '%Y-%c-%d %H:%i' )
+		AS createTime,
+		date_format(END_TIME, '%Y-%c-%d %H:%i' ) AS endTime,
+		WHEN_LONG AS whenLong,
+		DISCOUNT_AMOUNT AS discountAmount,
+		BALANCE_DISCOUNT_AMOUNT AS balanceDiscountAmount,
+		PAY_STATUS AS
+		payStatus,
+		ORDER_AMOUNT AS orderAmount,
+		PAYABLE_AMOUNT AS payableAmount,
+		ORDER_STATUS AS orderStatus
+		FROM
+		t_community_order
+		<where>
+			COMMUNITY_ORDER_NO=#{0}
+		</where>
+	</select>
+
+	<select id="getByIds" resultMap="CommunityOrder">
+		select
+		<include refid="AllColumnlist" />
+		from T_COMMUNITY_ORDER
+		<where>
+			COMMUNITY_ORDER_NO in
+			<foreach item="item" index="index" collection="array" open="("
+				separator="," close=")">#{item}</foreach>
+		</where>
+	</select>
+
+	<select id="count" parameterType="Query" resultType="Long">
+		select count(MEMBER_NO) from T_COMMUNITY_ORDER
+		<where>
+			<include refid="listCommonWhere" />
+		</where>
+	</select>
+
+	<select id="queryAll" parameterType="Query" resultMap="CommunityOrder">
+		select
+		<include refid="CommonColumnlist" />
+		from T_COMMUNITY_ORDER
+		<where>
+			<include refid="listCommonWhere" />
+		</where>
+		ORDER BY UPDATE_TIME DESC, CREATE_TIME DESC
+	</select>
+
+	<select id="pageList" parameterType="Query" resultMap="CommunityOrder">
+		select
+		<include refid="CommonColumnlist" />
+		from T_COMMUNITY_ORDER
+		<where>
+			<include refid="listCommonWhereWH" />
+		</where>
+		ORDER BY UPDATE_TIME DESC,CREATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+	</select>
+
+
+	<!-- 后台管理端页面展示数量查询 -->
+	<select id="countForManagePage" parameterType="Query"
+		resultType="Long">
+		select count(MEMBER_NO) from T_COMMUNITY_ORDER tco
+		left join (
+		select
+		member_no memberno,member_name memberName from t_member
+		) tm on
+		tco.member_no = tm.memberno
+		<where>
+			<include refid="listCommonWhere" />
+			<if test="q!=null">
+				<if test="q.memberName != null and q.memberName != ''">
+					AND memberName like '%${q.memberName}%'
+				</if>
+			</if>
+		</where>
+	</select>
+
+	<!-- 后台管理端导出Excel功能的列表查询 -->
+	<select id="queryAllForManagePage" parameterType="Query"
+		resultMap="CommunityOrder">
+		<include refid="queryListForManagePage" />
+	</select>
+
+	<!-- 后台管理端页面展示的列表查询 -->
+	<select id="pageListForManagePage" parameterType="Query"
+		resultMap="CommunityOrder">
+		<include refid="queryListForManagePage" />
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+	</select>
+
+	<!-- 后台管理端页面展示,以及导出Excel功能共用部分的查询列表语句 -->
+	<sql id="queryListForManagePage">
+		select
+		<include refid="CommonColumnlist" />
+		,memberName from T_COMMUNITY_ORDER tco
+		left join (
+		select member_no
+		memberno,member_name memberName from t_member
+		) tm on tco.member_no =
+		tm.memberno
+		<where>
+			<include refid="listCommonWhereWH" />
+			<if test="q!=null">
+				<if test="q.memberName != null and q.memberName != ''">
+					AND memberName like '%${q.memberName}%'
+				</if>
+			</if>
+		</where>
+		ORDER BY UPDATE_TIME DESC,CREATE_TIME DESC
+	</sql>
+
+	<!-- 按天统计社区馆订单数据 -->
+	<select id="statDaysCommunityOrderList" parameterType="Query" resultType="cn.com.shopec.core.order.vo.CommunityOrderStatisticVo">
+		SELECT DATE_FORMAT(c.PAYMENT_TIME,'%Y-%m-%d') As days,
+		COUNT(c.COMMUNITY_ORDER_NO) AS communityOrderNo,
+		ROUND(SUM(c.ORDER_AMOUNT), 2) AS orderAmount,
+		COALESCE(SUM(c.DISCOUNT_AMOUNT),0)  AS discountAmount,
+		ROUND(SUM(c.BALANCE_DISCOUNT_AMOUNT), 2) AS balanceAmount,
+		ROUND(SUM(c.PAYABLE_AMOUNT), 2) AS payableAmount,
+		SUM(c.WHEN_LONG) AS whenLong
+		FROM t_community_order c WHERE c.PAY_STATUS = 1 
+		<![CDATA[ AND DATE_FORMAT(c.PAYMENT_TIME,'%Y-%m-%d') >= #{0}  ]]>
+		<![CDATA[ AND DATE_FORMAT(c.PAYMENT_TIME,'%Y-%m-%d') <=#{1}  ]]>
+        group by days
+	</select>
+	
+	<!-- 按月统计社区馆订单数据 -->
+	<select id="statMonthsCommunityOrderList" parameterType="Query" resultType="cn.com.shopec.core.order.vo.CommunityOrderStatisticVo">
+		SELECT DATE_FORMAT(c.PAYMENT_TIME,'%Y-%m') As months,
+		COUNT(c.COMMUNITY_ORDER_NO) AS communityOrderNo,
+		ROUND(SUM(c.ORDER_AMOUNT), 2) AS orderAmount,
+		COALESCE(SUM(c.DISCOUNT_AMOUNT),0)  AS discountAmount,
+		ROUND(SUM(c.BALANCE_DISCOUNT_AMOUNT), 2) AS balanceAmount,
+		ROUND(SUM(c.PAYABLE_AMOUNT), 2) AS payableAmount,
+		SUM(c.WHEN_LONG) AS whenLong
+		FROM t_community_order c WHERE c.PAY_STATUS = 1 
+		<![CDATA[ AND DATE_FORMAT(c.PAYMENT_TIME,'%Y-%m') >= #{0}  ]]>
+		<![CDATA[ AND DATE_FORMAT(c.PAYMENT_TIME,'%Y-%m') <=#{1}  ]]>
+        group by months
+	</select>
+		
+	<!-- 按年统计社区馆订单数据 -->
+	<select id="statYearsCommunityOrderList" parameterType="Query" resultType="cn.com.shopec.core.order.vo.CommunityOrderStatisticVo">
+		SELECT DATE_FORMAT(c.PAYMENT_TIME,'%Y') As years,
+		COUNT(c.COMMUNITY_ORDER_NO) AS communityOrderNo,
+		ROUND(SUM(c.ORDER_AMOUNT), 2) AS orderAmount,
+		COALESCE(SUM(c.DISCOUNT_AMOUNT),0)  AS discountAmount,
+		ROUND(SUM(c.BALANCE_DISCOUNT_AMOUNT), 2) AS balanceAmount,
+		ROUND(SUM(c.PAYABLE_AMOUNT), 2) AS payableAmount,
+		SUM(c.WHEN_LONG) AS whenLong
+		FROM t_community_order c WHERE c.PAY_STATUS = 1 
+		<![CDATA[ AND DATE_FORMAT(c.PAYMENT_TIME,'%Y') >= #{0}  ]]>
+		<![CDATA[ AND DATE_FORMAT(c.PAYMENT_TIME,'%Y') <=#{1}  ]]>
+        group by years
+	</select>
+	
+	<sql id="listCommonWhere">
+		<if test="q==null"><!-- 无传入参数时默认查未删除的 -->
+			AND IS_DELETED=0
+		</if>
+		<if test="q!=null">
+			<if test="q.communityOrderNo!=null and q.communityOrderNo!=''">
+				AND COMMUNITY_ORDER_NO=#{q.communityOrderNo}
+			</if>
+			<if test="q.cityId!=null and q.cityId!=''">
+				AND CITY_ID=#{q.cityId}
+			</if>
+			<if test="q.cityName!=null and q.cityName!=''">
+				AND CITY_NAME=#{q.cityName}
+			</if>
+			<if test="q.storeNo!=null and q.storeNo!=''">
+				AND STORE_NO=#{q.storeNo}
+			</if>
+			<if test="q.storeName!=null and q.storeName!=''">
+				AND STORE_NAME=#{q.storeName}
+			</if>
+			<if test="q.couponNo!=null and q.couponNo!=''">
+				AND COUPON_NO=#{q.couponNo}
+			</if>
+			<if test="q.memberNo!=null and q.memberNo!=''">
+				AND MEMBER_NO=#{q.memberNo}
+			</if>
+			<if test="q.mobilePhone!=null and q.mobilePhone!=''">
+				AND MOBILE_PHONE=#{q.mobilePhone}
+			</if>
+			<if test="q.memberGymCardNo!=null and q.memberGymCardNo!=''">
+				AND MEMBER_GYM_CARD_NO=#{q.memberGymCardNo}
+			</if>
+			<if test="q.startTime!=null ">
+				AND START_TIME=#{q.startTime}
+			</if>
+			<if test="q.startTimeStart!=null">
+		<![CDATA[	AND START_TIME>=#{q.startTimeStart}  ]]>
+			</if>
+			<if test="q.startTimeEnd!=null">
+		<![CDATA[	AND START_TIME<#{q.startTimeEnd}   ]]>
+			</if>
+			<if test="q.endTime!=null ">
+				AND END_TIME=#{q.endTime}
+			</if>
+			<if test="q.endTimeStart!=null">
+		<![CDATA[	AND END_TIME>=#{q.endTimeStart}  ]]>
+			</if>
+			<if test="q.endTimeEnd!=null">
+		<![CDATA[	AND END_TIME<#{q.endTimeEnd}   ]]>
+			</if>
+			<if test="q.whenLong!=null and q.whenLong!=''">
+				AND WHEN_LONG=#{q.whenLong}
+			</if>
+			<if test="q.orderStatus!=null ">
+				AND ORDER_STATUS=#{q.orderStatus}
+			</if>
+			<if test="q.consumeType!=null ">
+				AND CONSUMETYPE=#{q.consumeType}
+			</if>
+			<if test="q.payStatus!=null ">
+				AND PAY_STATUS=#{q.payStatus}
+			</if>
+			<if test="q.paymentMethod!=null ">
+				AND PAYMENT_METHOD=#{q.paymentMethod}
+			</if>
+			<if test="q.paymentTime!=null ">
+				AND PAYMENT_TIME=#{q.paymentTime}
+			</if>
+			<if test="q.paymentTimeStart!=null">
+		<![CDATA[	AND PAYMENT_TIME>=#{q.paymentTimeStart}  ]]>
+			</if>
+			<if test="q.paymentTimeEnd!=null">
+		<![CDATA[	AND PAYMENT_TIME<#{q.paymentTimeEnd}   ]]>
+			</if>
+			<if test="q.paymentFlowNo!=null and q.paymentFlowNo!=''">
+				AND PAYMENT_FLOW_NO=#{q.paymentFlowNo}
+			</if>
+			<if test="q.partTradeFlowNo!=null and q.partTradeFlowNo!=''">
+				AND PART_TRADE_FLOW_NO=#{q.partTradeFlowNo}
+			</if>
+			<if test="q.orderAmount!=null ">
+				AND ORDER_AMOUNT=#{q.orderAmount}
+			</if>
+			<if test="q.discountAmount!=null ">
+				AND DISCOUNT_AMOUNT=#{q.discountAmount}
+			</if>
+			<if test="q.balanceDiscountAmount!=null ">
+				AND BALANCE_DISCOUNT_AMOUNT=#{q.balanceDiscountAmount}
+			</if>
+			<if test="q.payableAmount!=null ">
+				AND PAYABLE_AMOUNT=#{q.payableAmount}
+			</if>
+			<if test="q.isNeedInvoice!=null ">
+				AND IS_NEED_INVOICE=#{q.isNeedInvoice}
+			</if>
+			<if test="q.isInvoiceIssued!=null ">
+				AND IS_INVOICE_ISSUED=#{q.isInvoiceIssued}
+			</if>
+			<if test="q.invoiceTime!=null ">
+				AND INVOICE_TIME=#{q.invoiceTime}
+			</if>
+			<if test="q.invoiceTimeStart!=null">
+		<![CDATA[	AND INVOICE_TIME>=#{q.invoiceTimeStart}  ]]>
+			</if>
+			<if test="q.invoiceTimeEnd!=null">
+		<![CDATA[	AND INVOICE_TIME<#{q.invoiceTimeEnd}   ]]>
+			</if>
+			<if test="q.invioceId!=null and q.invioceId!=''">
+				AND INVIOCE_ID=#{q.invioceId}
+			</if>
+			<if test="q.invioceNo!=null and q.invioceNo!=''">
+				AND INVIOCE_NO=#{q.invioceNo}
+			</if>
+			<if test="q.memo!=null and q.memo!=''">
+				AND MEMO=#{q.memo}
+			</if>
+			<if test="q.isDeleted!=null ">
+				AND IS_DELETED=#{q.isDeleted}
+			</if>
+			<if test="q.createTime!=null ">
+				AND CREATE_TIME=#{q.createTime}
+			</if>
+			<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+			</if>
+			<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+			</if>
+			<if test="q.updateTime!=null ">
+				AND UPDATE_TIME=#{q.updateTime}
+			</if>
+			<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+			</if>
+			<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+			</if>
+			<if test="q.operatorType!=null ">
+				AND OPERATOR_TYPE=#{q.operatorType}
+			</if>
+			<if test="q.operatorId!=null and q.operatorId!=''">
+				AND OPERATOR_ID=#{q.operatorId}
+			</if>
+		</if>
+	</sql>
+
+
+	<sql id="listCommonWhereWH">
+		<if test="q!=null">
+
+			<if test="q.communityOrderNo != null and q.communityOrderNo != ''">
+				AND COMMUNITY_ORDER_NO like '%${q.communityOrderNo}%'
+			</if>
+			<if test="q.cityId != null and q.cityId != ''">
+				AND CITY_ID = #{q.cityId}
+			</if>
+			<if test="q.cityName != null and q.cityName != ''">
+				AND CITY_NAME like '%${q.cityName}%'
+			</if>
+			<if test="q.storeNo != null and q.storeNo != ''">
+				AND STORE_NO = #{q.storeNo}
+			</if>
+			<if test="q.partTradeFlowNo != null and q.partTradeFlowNo != ''">
+				AND PART_TRADE_FLOW_NO = #{q.partTradeFlowNo}
+			</if>
+			<if test="q.storeName != null and q.storeName != ''">
+				AND STORE_NAME like '%${q.storeName}%'
+			</if>
+			<if test="q.memberNo != null and q.memberNo != ''">
+				AND MEMBER_NO = #{q.memberNo}
+			</if>
+			<if test="q.mobilePhone!=null and q.mobilePhone!=''">
+				AND MOBILE_PHONE like '%${q.mobilePhone}%'
+			</if>
+			<if test="q.memberGymCardNo != null and q.memberGymCardNo != ''">
+				AND MEMBER_GYM_CARD_NO = #{q.memberGymCardNo}
+			</if>
+			<if test="q.whenLong != null and q.whenLong != ''">
+				AND WHEN_LONG = #{q.whenLong}
+			</if>
+			<if test="q.orderStatus != null">
+				AND ORDER_STATUS = #{q.orderStatus}
+			</if>
+			<if test="q.payStatus != null">
+				AND PAY_STATUS = #{q.payStatus}
+			</if>
+			<if test="q.couponNo!=null and q.couponNo!=''">
+				AND COUPON_NO=#{q.couponNo}
+			</if>
+			<if test="q.paymentMethod != null">
+				AND PAYMENT_METHOD = #{q.paymentMethod}
+			</if>
+			<if test="q.paymentFlowNo != null and q.paymentFlowNo != ''">
+				AND PAYMENT_FLOW_NO = #{q.paymentFlowNo}
+			</if>
+			<if test="q.orderAmount != null">
+				AND ORDER_AMOUNT = #{q.orderAmount}
+			</if>
+			<if test="q.discountAmount != null">
+				AND DISCOUNT_AMOUNT = #{q.discountAmount}
+			</if>
+			<if test="q.balanceDiscountAmount != null">
+				AND BALANCE_DISCOUNT_AMOUNT = #{q.balanceDiscountAmount}
+			</if>
+			<if test="q.payableAmount != null">
+				AND PAYABLE_AMOUNT = #{q.payableAmount}
+			</if>
+			<if test="q.isNeedInvoice != null">
+				AND IS_NEED_INVOICE = #{q.isNeedInvoice}
+			</if>
+			<if test="q.isInvoiceIssued != null">
+				AND IS_INVOICE_ISSUED = #{q.isInvoiceIssued}
+			</if>
+			<if test="q.invioceId != null and q.invioceId != ''">
+				AND INVIOCE_ID = #{q.invioceId}
+			</if>
+			<if test="q.invioceNo != null and q.invioceNo != ''">
+				AND INVIOCE_NO = #{q.invioceNo}
+			</if>
+			<if test="q.memo != null and q.memo != ''">
+				AND MEMO = #{q.memo}
+			</if>
+			<if test="q.isDeleted != null">
+				AND IS_DELETED = #{q.isDeleted}
+			</if>
+			<if test="q.operatorType != null">
+				AND OPERATOR_TYPE = #{q.operatorType}
+			</if>
+			<if test="q.operatorId != null and q.operatorId != ''">
+				AND OPERATOR_ID = #{q.operatorId}
+			</if>
+			<if test="q.createTime!=null ">
+				AND CREATE_TIME=#{q.createTime}
+			</if>
+			<if test="q.createTimeStart!=null">
+			<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+			</if>
+			<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+			</if>
+			<if test="q.updateTime!=null ">
+				AND UPDATE_TIME=#{q.updateTime}
+			</if>
+			<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+			</if>
+			<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+			</if>
+			<if test="q.startTime!=null ">
+				AND START_TIME=#{q.startTime}
+			</if>
+			<if test="q.startTimeStart!=null">
+			<![CDATA[	AND START_TIME>=#{q.startTimeStart}  ]]>
+			</if>
+			<if test="q.startTimeEnd!=null">
+			<![CDATA[	AND START_TIME<#{q.startTimeEnd}   ]]>
+			</if>
+			<if test="q.endTime!=null ">
+				AND END_TIME=#{q.endTime}
+			</if>
+			<if test="q.endTimeStart!=null">
+			<![CDATA[	AND END_TIME>=#{q.endTimeStart}  ]]>
+			</if>
+			<if test="q.startTimeEnd!=null">
+			<![CDATA[	AND END_TIME<#{q.endTimeEnd}   ]]>
+			</if>
+			<if test="q.paymentTime != null">
+				AND PAYMENT_TIME = #{q.paymentTime}
+			</if>
+			<if test="q.paymentTimeStart !=null">
+			<![CDATA[	AND PAYMENT_TIME>=#{q.paymentTimeStart}  ]]>
+			</if>
+			<if test="q.paymentTimeEnd !=null">
+			<![CDATA[	AND PAYMENT_TIME<#{q.paymentTimeEnd}   ]]>
+			</if>
+			<if test="q.invoiceTime != null">
+				AND INVOICE_TIME = #{q.invoiceTime}
+			</if>
+			<if test="q.invoiceTimeStart !=null">
+			<![CDATA[	AND INVOICE_TIME>=#{q.invoiceTimeStart}  ]]>
+			</if>
+			<if test="q.invoiceTimeEnd !=null">
+			<![CDATA[	AND INVOICE_TIME<#{q.invoiceTimeEnd}   ]]>
+			</if>
+		</if>
+	</sql>
+</mapper>

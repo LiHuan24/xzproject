@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.themepavilion.dao.CourseDao">
+
+<resultMap type="Course" id="Course">
+	<id column="COURSE_NO" property="courseNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CITY_ID" property="cityId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CITY_NAME" property="cityName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="IS_ENABLE" property="isEnable" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="COURSE_SORT_NO" property="courseSortNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="SORT_NAME" property="sortName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COURSE_LABEL_NO" property="courseLabelNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="LABEL_NAME" property="labelName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CHINESE_NAME" property="chineseName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="ENGLISH_NAME" property="englishName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="PRICE" property="price" javaType="java.lang.Double" jdbcType="DOUBLE"/>
+	<result column="CHINESE_DIFFICULTY" property="chineseDifficulty" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="SYNOPSIS" property="synopsis" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="EFFECT" property="effect" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="SUIT" property="suit" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="BE_CAREFUL" property="beCareful" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COURSE_PICTURE_URL1" property="coursePictureUrl1" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COURSE_PICTURE_URL2" property="coursePictureUrl2" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COURSE_PICTURE_URL3" property="coursePictureUrl3" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="IS_DELETED" property="isDeleted" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MEMO" property="memo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+COURSE_NO,CITY_ID,CITY_NAME,IS_ENABLE,COURSE_SORT_NO,SORT_NAME,COURSE_LABEL_NO,
+LABEL_NAME,CHINESE_NAME,ENGLISH_NAME,PRICE,CHINESE_DIFFICULTY,SYNOPSIS,
+EFFECT,SUIT,BE_CAREFUL,COURSE_PICTURE_URL1,COURSE_PICTURE_URL2,COURSE_PICTURE_URL3,
+IS_DELETED,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID,MEMO
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+COURSE_NO,CITY_ID,CITY_NAME,IS_ENABLE,COURSE_SORT_NO,SORT_NAME,CHINESE_NAME,ENGLISH_NAME,PRICE,CHINESE_DIFFICULTY,COURSE_PICTURE_URL1,COURSE_PICTURE_URL2,COURSE_PICTURE_URL3,
+IS_DELETED,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID,MEMO
+</sql>
+
+<insert id="add" parameterType="Course" useGeneratedKeys="true" keyProperty="courseNo">
+	insert into T_COURSE(
+		<if test="courseNo!=null">
+		COURSE_NO,
+		</if>
+		CITY_ID,
+		CITY_NAME,
+		IS_ENABLE,
+		COURSE_SORT_NO,
+		SORT_NAME,
+		COURSE_LABEL_NO,
+		LABEL_NAME,
+		CHINESE_NAME,
+		ENGLISH_NAME,
+		PRICE,
+		CHINESE_DIFFICULTY,
+		SYNOPSIS,
+		EFFECT,
+		SUIT,
+		BE_CAREFUL,
+		COURSE_PICTURE_URL1,
+		COURSE_PICTURE_URL2,
+		COURSE_PICTURE_URL3,
+		IS_DELETED,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID,
+		MEMO
+	) values (
+		<if test="courseNo!=null">
+		#{courseNo,jdbcType = VARCHAR},
+		</if>
+		#{cityId,jdbcType = VARCHAR},
+		#{cityName,jdbcType = VARCHAR},
+		#{isEnable,jdbcType = TINYINT},
+		#{courseSortNo,jdbcType = VARCHAR},
+		#{sortName,jdbcType = VARCHAR},
+		#{courseLabelNo,jdbcType = VARCHAR},
+		#{labelName,jdbcType = VARCHAR},
+		#{chineseName,jdbcType = VARCHAR},
+		#{englishName,jdbcType = VARCHAR},
+		#{price,jdbcType = DOUBLE},
+		#{chineseDifficulty,jdbcType = TINYINT},
+		#{synopsis,jdbcType = VARCHAR},
+		#{effect,jdbcType = VARCHAR},
+		#{suit,jdbcType = VARCHAR},
+		#{beCareful,jdbcType = VARCHAR},
+		#{coursePictureUrl1,jdbcType = VARCHAR},
+		#{coursePictureUrl2,jdbcType = VARCHAR},
+		#{coursePictureUrl3,jdbcType = VARCHAR},
+		#{isDeleted,jdbcType = TINYINT},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = TINYINT},
+		#{memo,jdbcType = VARCHAR}
+	)
+</insert>
+
+<update id="update" parameterType="Course">
+	update T_COURSE 
+	<set>
+		<if test="cityId!=null and cityId!=''">
+			CITY_ID=#{cityId,jdbcType = VARCHAR},
+		</if>
+		<if test="cityName!=null and cityName!=''">
+			CITY_NAME=#{cityName,jdbcType = VARCHAR},
+		</if>
+		<if test="isEnable!=null ">
+			IS_ENABLE=#{isEnable,jdbcType = TINYINT},
+		</if>
+		<if test="courseSortNo!=null and courseSortNo!=''">
+			COURSE_SORT_NO=#{courseSortNo,jdbcType = VARCHAR},
+		</if>
+		<if test="sortName!=null and sortName!=''">
+			SORT_NAME=#{sortName,jdbcType = VARCHAR},
+		</if>
+		<if test="courseLabelNo!=null and courseLabelNo!=''">
+			COURSE_LABEL_NO=#{courseLabelNo,jdbcType = VARCHAR},
+		</if>
+		<if test="labelName!=null and labelName!=''">
+			LABEL_NAME=#{labelName,jdbcType = VARCHAR},
+		</if>
+		<if test="chineseName!=null and chineseName!=''">
+			CHINESE_NAME=#{chineseName,jdbcType = VARCHAR},
+		</if>
+		<if test="englishName!=null and englishName!=''">
+			ENGLISH_NAME=#{englishName,jdbcType = VARCHAR},
+		</if>
+		<if test="price!=null ">
+			PRICE=#{price,jdbcType = DOUBLE},
+		</if>
+		<if test="chineseDifficulty!=null ">
+			CHINESE_DIFFICULTY=#{chineseDifficulty,jdbcType = TINYINT},
+		</if>
+		<if test="synopsis!=null and synopsis!=''">
+			SYNOPSIS=#{synopsis,jdbcType = VARCHAR},
+		</if>
+		<if test="effect!=null and effect!=''">
+			EFFECT=#{effect,jdbcType = VARCHAR},
+		</if>
+		<if test="suit!=null and suit!=''">
+			SUIT=#{suit,jdbcType = VARCHAR},
+		</if>
+		<if test="beCareful!=null and beCareful!=''">
+			BE_CAREFUL=#{beCareful,jdbcType = VARCHAR},
+		</if>
+		
+			COURSE_PICTURE_URL1=#{coursePictureUrl1,jdbcType = VARCHAR},
+		
+		<if test="coursePictureUrl2!=null and coursePictureUrl2!=''">
+			COURSE_PICTURE_URL2=#{coursePictureUrl2,jdbcType = VARCHAR},
+		</if>
+		<if test="coursePictureUrl3!=null and coursePictureUrl3!=''">
+			COURSE_PICTURE_URL3=#{coursePictureUrl3,jdbcType = VARCHAR},
+		</if>
+		<if test="isDeleted!=null ">
+			IS_DELETED=#{isDeleted,jdbcType = TINYINT},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+		<if test="memo!=null and memo!=''">
+			MEMO=#{memo,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND COURSE_NO=#{courseNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_COURSE 
+	<where>
+		COURSE_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="Course">
+	select <include refid="AllColumnlist"/> from T_COURSE
+	<where>
+		COURSE_NO=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="Course">
+	select <include refid="AllColumnlist"/> from T_COURSE
+	<where>
+		COURSE_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(COURSE_NO) from T_COURSE 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="Course">
+	select <include refid="AllColumnlist"/> from T_COURSE 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryCourseList" parameterType="Query" resultMap="Course">
+	select <include refid="AllColumnlist"/> from T_COURSE 
+	<where>
+	<include refid="commonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="Course">
+	select <include refid="AllColumnlist"/> from T_COURSE
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC,CREATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+<sql id="commonWhere">
+    <if test="q==null"><!-- 无传入参数时默认查未删除的 -->
+       AND IS_DELETED=0
+    </if>
+	<if test="q!=null">
+		<if test="q.courseNo!=null and q.courseNo!=''">
+			AND COURSE_NO=#{q.courseNo}
+		</if>
+		<if test="q.cityId!=null and q.cityId!=''">
+			AND CITY_ID=#{q.cityId}
+		</if>
+		<if test="q.cityName!=null and q.cityName!=''">
+			AND CITY_NAME=#{q.cityName}
+		</if>
+		<if test="q.isEnable!=null ">
+			AND IS_ENABLE=#{q.isEnable}
+		</if>
+		<if test="q.courseSortNo!=null and q.courseSortNo!=''">
+			AND COURSE_SORT_NO=#{q.courseSortNo}
+		</if>
+		<if test="q.sortName!=null and q.sortName!=''">
+			AND SORT_NAME=#{q.sortName}
+		</if>
+		<if test="q.courseLabelNo!=null and q.courseLabelNo!=''">
+			AND COURSE_LABEL_NO LIKE '%${q.courseLabelNo}%'
+		</if>
+		<if test="q.labelName!=null and q.labelName!=''">
+			AND LABEL_NAME=#{q.labelName}
+		</if>
+		<if test="q.chineseName!=null and q.chineseName!=''">
+			AND CHINESE_NAME=#{q.chineseName}
+		</if>
+		<if test="q.englishName!=null and q.englishName!=''">
+			AND ENGLISH_NAME=#{q.englishName}
+		</if>
+		<if test="q.price!=null ">
+			AND PRICE=#{q.price}
+		</if>
+		<if test="q.chineseDifficulty!=null ">
+			AND CHINESE_DIFFICULTY=#{q.chineseDifficulty}
+		</if>
+		<if test="q.synopsis!=null and q.synopsis!=''">
+			AND SYNOPSIS=#{q.synopsis}
+		</if>
+		<if test="q.effect!=null and q.effect!=''">
+			AND EFFECT=#{q.effect}
+		</if>
+		<if test="q.suit!=null and q.suit!=''">
+			AND SUIT=#{q.suit}
+		</if>
+		<if test="q.beCareful!=null and q.beCareful!=''">
+			AND BE_CAREFUL=#{q.beCareful}
+		</if>
+		<if test="q.coursePictureUrl1!=null and q.coursePictureUrl1!=''">
+			AND COURSE_PICTURE_URL1=#{q.coursePictureUrl1}
+		</if>
+		<if test="q.coursePictureUrl2!=null and q.coursePictureUrl2!=''">
+			AND COURSE_PICTURE_URL2=#{q.coursePictureUrl2}
+		</if>
+		<if test="q.coursePictureUrl3!=null and q.coursePictureUrl3!=''">
+			AND COURSE_PICTURE_URL3=#{q.coursePictureUrl3}
+		</if>
+		<if test="q.isDeleted!=null ">
+			AND IS_DELETED=#{q.isDeleted}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+
+
+<sql id="listCommonWhere">
+    <if test="q==null"><!-- 无传入参数时默认查未删除的 -->
+       AND IS_DELETED=0
+    </if>
+	<if test="q!=null">
+		<if test="q.courseNo!=null and q.courseNo!=''">
+			AND COURSE_NO=#{q.courseNo}
+		</if>
+		<if test="q.cityId!=null and q.cityId!=''">
+			AND CITY_ID=#{q.cityId}
+		</if>
+		<if test="q.cityName!=null and q.cityName!=''">
+			AND CITY_NAME=#{q.cityName}
+		</if>
+		<if test="q.isEnable!=null ">
+			AND IS_ENABLE=#{q.isEnable}
+		</if>
+		<if test="q.courseSortNo!=null and q.courseSortNo!=''">
+			AND COURSE_SORT_NO=#{q.courseSortNo}
+		</if>
+		<if test="q.sortName!=null and q.sortName!=''">
+			AND SORT_NAME=#{q.sortName}
+		</if>
+		<if test="q.courseLabelNo!=null and q.courseLabelNo!=''">
+			AND COURSE_LABEL_NO=#{q.courseLabelNo}
+		</if>
+		<if test="q.labelName!=null and q.labelName!=''">
+			AND LABEL_NAME=#{q.labelName}
+		</if>
+		<if test="q.chineseName!=null and q.chineseName!=''">
+			AND CHINESE_NAME=#{q.chineseName}
+		</if>
+		<if test="q.englishName!=null and q.englishName!=''">
+			AND ENGLISH_NAME=#{q.englishName}
+		</if>
+		<if test="q.price!=null ">
+			AND PRICE=#{q.price}
+		</if>
+		<if test="q.chineseDifficulty!=null ">
+			AND CHINESE_DIFFICULTY=#{q.chineseDifficulty}
+		</if>
+		<if test="q.synopsis!=null and q.synopsis!=''">
+			AND SYNOPSIS=#{q.synopsis}
+		</if>
+		<if test="q.effect!=null and q.effect!=''">
+			AND EFFECT=#{q.effect}
+		</if>
+		<if test="q.suit!=null and q.suit!=''">
+			AND SUIT=#{q.suit}
+		</if>
+		<if test="q.beCareful!=null and q.beCareful!=''">
+			AND BE_CAREFUL=#{q.beCareful}
+		</if>
+		<if test="q.coursePictureUrl1!=null and q.coursePictureUrl1!=''">
+			AND COURSE_PICTURE_URL1=#{q.coursePictureUrl1}
+		</if>
+		<if test="q.coursePictureUrl2!=null and q.coursePictureUrl2!=''">
+			AND COURSE_PICTURE_URL2=#{q.coursePictureUrl2}
+		</if>
+		<if test="q.coursePictureUrl3!=null and q.coursePictureUrl3!=''">
+			AND COURSE_PICTURE_URL3=#{q.coursePictureUrl3}
+		</if>
+		<if test="q.isDeleted!=null ">
+			AND IS_DELETED=#{q.isDeleted}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+
+</mapper>

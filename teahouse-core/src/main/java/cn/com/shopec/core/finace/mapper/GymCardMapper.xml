@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.finace.dao.GymCardDao">
+
+<resultMap type="GymCard" id="GymCard">
+	<id column="GYM_CARD_NO" property="gymCardNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="GYM_CARD_NAME" property="gymCardName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CITY_ID" property="cityId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CITY_NAME" property="cityName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="GYM_CARD_TYPE" property="gymCardType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="PRICE" property="price" javaType="java.lang.Double" jdbcType="DOUBLE"/>
+	<result column="RECHARGE_AMOUNT" property="rechargeAmount" javaType="java.lang.Double" jdbcType="DOUBLE"/>
+	<result column="IS_ENABLE" property="isEnable" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CENCOR_STATUS" property="cencorStatus" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CENCOR_MEMO" property="cencorMemo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CENCOR_TIME" property="cencorTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="CENCOR_ID" property="cencorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="IS_DELETED" property="isDeleted" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+GYM_CARD_NO,GYM_CARD_NAME,CITY_ID,CITY_NAME,GYM_CARD_TYPE,PRICE,RECHARGE_AMOUNT,
+IS_ENABLE,CENCOR_STATUS,CENCOR_MEMO,CENCOR_TIME,CENCOR_ID,IS_DELETED,
+CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+GYM_CARD_NO,GYM_CARD_NAME,CITY_ID,CITY_NAME,GYM_CARD_TYPE,PRICE,RECHARGE_AMOUNT,
+IS_ENABLE,CENCOR_STATUS,CENCOR_MEMO,CENCOR_TIME,CENCOR_ID,IS_DELETED,
+CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID
+</sql>
+
+<insert id="add" parameterType="GymCard" useGeneratedKeys="true" keyProperty="gymCardNo">
+	insert into T_GYM_CARD(
+		<if test="gymCardNo!=null">
+		GYM_CARD_NO,
+		</if>
+		GYM_CARD_NAME,
+		CITY_ID,
+		CITY_NAME,
+		GYM_CARD_TYPE,
+		PRICE,
+		RECHARGE_AMOUNT,
+		IS_ENABLE,
+		CENCOR_STATUS,
+		CENCOR_MEMO,
+		CENCOR_TIME,
+		CENCOR_ID,
+		IS_DELETED,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID
+	) values (
+		<if test="gymCardNo!=null">
+		#{gymCardNo,jdbcType = VARCHAR},
+		</if>
+		#{gymCardName,jdbcType = VARCHAR},
+		#{cityId,jdbcType = VARCHAR},
+		#{cityName,jdbcType = VARCHAR},
+		#{gymCardType,jdbcType = TINYINT},
+		#{price,jdbcType = DOUBLE},
+		#{rechargeAmount,jdbcType = DOUBLE},
+		#{isEnable,jdbcType = TINYINT},
+		#{cencorStatus,jdbcType = TINYINT},
+		#{cencorMemo,jdbcType = VARCHAR},
+		#{cencorTime,jdbcType = TIMESTAMP},
+		#{cencorId,jdbcType = VARCHAR},
+		#{isDeleted,jdbcType = TINYINT},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR}
+	)
+</insert>
+
+<update id="update" parameterType="GymCard">
+	update T_GYM_CARD 
+	<set>
+		<if test="gymCardName!=null and gymCardName!=''">
+			GYM_CARD_NAME=#{gymCardName,jdbcType = VARCHAR},
+		</if>
+		<if test="cityId!=null and cityId!=''">
+			CITY_ID=#{cityId,jdbcType = VARCHAR},
+		</if>
+		<if test="cityName!=null and cityName!=''">
+			CITY_NAME=#{cityName,jdbcType = VARCHAR},
+		</if>
+		<if test="gymCardType!=null ">
+			GYM_CARD_TYPE=#{gymCardType,jdbcType = TINYINT},
+		</if>
+		<if test="price!=null ">
+			PRICE=#{price,jdbcType = DOUBLE},
+		</if>
+		<if test="rechargeAmount!=null ">
+			RECHARGE_AMOUNT=#{rechargeAmount,jdbcType = DOUBLE},
+		</if>
+		<if test="isEnable!=null ">
+			IS_ENABLE=#{isEnable,jdbcType = TINYINT},
+		</if>
+		<if test="cencorStatus!=null ">
+			CENCOR_STATUS=#{cencorStatus,jdbcType = TINYINT},
+		</if>
+		<if test="cencorMemo!=null and cencorMemo!=''">
+			CENCOR_MEMO=#{cencorMemo,jdbcType = VARCHAR},
+		</if>
+		<if test="cencorTime!=null ">
+			CENCOR_TIME=#{cencorTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="cencorId!=null and cencorId!=''">
+			CENCOR_ID=#{cencorId,jdbcType = VARCHAR},
+		</if>
+		<if test="isDeleted!=null ">
+			IS_DELETED=#{isDeleted,jdbcType = TINYINT},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND GYM_CARD_NO=#{gymCardNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_GYM_CARD 
+	<where>
+		GYM_CARD_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="GymCard">
+	select <include refid="AllColumnlist"/> from T_GYM_CARD
+	<where>
+		GYM_CARD_NO=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="GymCard">
+	select <include refid="AllColumnlist"/> from T_GYM_CARD
+	<where>
+		GYM_CARD_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(GYM_CARD_NO) from T_GYM_CARD 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="GymCard">
+	select <include refid="CommonColumnlist"/> from T_GYM_CARD 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="GymCard">
+	select <include refid="CommonColumnlist"/> from T_GYM_CARD
+	<where>
+	 <include refid="listCommonWhereWH"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+    <if test="q==null"><!-- 无传入参数时默认查未删除的 -->
+       AND IS_DELETED=0
+    </if>
+	<if test="q!=null">
+		<if test="q.gymCardNo!=null and q.gymCardNo!=''">
+			AND GYM_CARD_NO=#{q.gymCardNo}
+		</if>
+		<if test="q.gymCardName!=null and q.gymCardName!=''">
+			AND GYM_CARD_NAME=#{q.gymCardName}
+		</if>
+		<if test="q.cityId!=null and q.cityId!=''">
+			AND CITY_ID=#{q.cityId}
+		</if>
+		<if test="q.cityName!=null and q.cityName!=''">
+			AND CITY_NAME=#{q.cityName}
+		</if>
+		<if test="q.gymCardType!=null ">
+			AND GYM_CARD_TYPE=#{q.gymCardType}
+		</if>
+		<if test="q.price!=null ">
+			AND PRICE=#{q.price}
+		</if>
+		<if test="q.rechargeAmount!=null ">
+			AND RECHARGE_AMOUNT=#{q.rechargeAmount}
+		</if>
+		<if test="q.isEnable!=null ">
+			AND IS_ENABLE=#{q.isEnable}
+		</if>
+		<if test="q.cencorStatus!=null ">
+			AND CENCOR_STATUS=#{q.cencorStatus}
+		</if>
+		<if test="q.cencorMemo!=null and q.cencorMemo!=''">
+			AND CENCOR_MEMO=#{q.cencorMemo}
+		</if>
+		<if test="q.cencorTime!=null ">
+			AND CENCOR_TIME=#{q.cencorTime}
+		</if>
+		<if test="q.cencorTimeStart!=null">
+		<![CDATA[	AND CENCOR_TIME>=#{q.cencorTimeStart}  ]]>
+		</if>
+		<if test="q.cencorTimeEnd!=null">
+		<![CDATA[	AND CENCOR_TIME<#{q.cencorTimeEnd}   ]]>
+		</if>
+		<if test="q.cencorId!=null and q.cencorId!=''">
+			AND CENCOR_ID=#{q.cencorId}
+		</if>
+		<if test="q.isDeleted!=null ">
+			AND IS_DELETED=#{q.isDeleted}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+
+<sql id="listCommonWhereWH">
+    <if test="q==null"><!-- 无传入参数时默认查未删除的 -->
+       AND IS_DELETED=0
+    </if>
+	<if test="q!=null">
+		<if test="q.gymCardNo!=null and q.gymCardNo!=''">
+			AND GYM_CARD_NO like '%${q.gymCardNo}%'
+		</if>
+		<if test="q.gymCardName!=null and q.gymCardName!=''">
+			AND GYM_CARD_NAME like '%${q.gymCardName}%'
+		</if>
+		<if test="q.cityId!=null and q.cityId!=''">
+			AND CITY_ID like '%${q.cityId}%'
+		</if>
+		<if test="q.cityName!=null and q.cityName!=''">
+			AND CITY_NAME like '%${q.cityName}%'
+		</if>
+		<if test="q.gymCardType!=null ">
+			AND GYM_CARD_TYPE=#{q.gymCardType}
+		</if>
+		<if test="q.price!=null ">
+			AND PRICE=#{q.price}
+		</if>
+		<if test="q.rechargeAmount!=null ">
+			AND RECHARGE_AMOUNT=#{q.rechargeAmount}
+		</if>
+		<if test="q.isEnable!=null ">
+			AND IS_ENABLE=#{q.isEnable}
+		</if>
+		<if test="q.cencorStatus!=null ">
+			AND CENCOR_STATUS=#{q.cencorStatus}
+		</if>
+		<if test="q.cencorMemo!=null and q.cencorMemo!=''">
+			AND CENCOR_MEMO=#{q.cencorMemo}
+		</if>
+		<if test="q.cencorTime!=null ">
+			AND CENCOR_TIME=#{q.cencorTime}
+		</if>
+		<if test="q.cencorTimeStart!=null">
+		<![CDATA[	AND CENCOR_TIME>=#{q.cencorTimeStart}  ]]>
+		</if>
+		<if test="q.cencorTimeEnd!=null">
+		<![CDATA[	AND CENCOR_TIME<#{q.cencorTimeEnd}   ]]>
+		</if>
+		<if test="q.cencorId!=null and q.cencorId!=''">
+			AND CENCOR_ID=#{q.cencorId}
+		</if>
+		<if test="q.isDeleted!=null ">
+			AND IS_DELETED=#{q.isDeleted}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+
+</mapper>

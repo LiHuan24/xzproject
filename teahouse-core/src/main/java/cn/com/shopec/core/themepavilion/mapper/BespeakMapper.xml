@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.themepavilion.dao.BespeakDao">
+
+<resultMap type="Bespeak" id="Bespeak">
+	<id column="BESPEAK_NO" property="bespeakNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="ARRAY_COURSE_NO" property="arrayCourseNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="BESPEAK_DATE" property="bespeakDate" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="PEOPLE_NUMBER" property="peopleNumber" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result column="RESERVATION" property="reservation" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result column="LINE_UP" property="lineUp" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+BESPEAK_NO,ARRAY_COURSE_NO,BESPEAK_DATE,PEOPLE_NUMBER,RESERVATION,LINE_UP,CREATE_TIME,
+UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+BESPEAK_NO,ARRAY_COURSE_NO,BESPEAK_DATE,PEOPLE_NUMBER,RESERVATION,LINE_UP,CREATE_TIME,
+UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID
+</sql>
+
+<insert id="add" parameterType="Bespeak" useGeneratedKeys="true" keyProperty="bespeakNo">
+	insert into T_BESPEAK(
+		<if test="bespeakNo!=null">
+		BESPEAK_NO,
+		</if>
+		ARRAY_COURSE_NO,
+		BESPEAK_DATE,
+		PEOPLE_NUMBER,
+		RESERVATION,
+		LINE_UP,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID
+	) values (
+		<if test="bespeakNo!=null">
+		#{bespeakNo,jdbcType = VARCHAR},
+		</if>
+		#{arrayCourseNo,jdbcType = VARCHAR},
+		#{bespeakDate,jdbcType = TIMESTAMP},
+		#{peopleNumber,jdbcType = INTEGER},
+		#{reservation,jdbcType = INTEGER},
+		#{lineUp,jdbcType = INTEGER},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR}
+	)
+</insert>
+
+<update id="update" parameterType="Bespeak">
+	update T_BESPEAK 
+	<set>
+		<if test="arrayCourseNo!=null and arrayCourseNo!=''">
+			ARRAY_COURSE_NO=#{arrayCourseNo,jdbcType = VARCHAR},
+		</if>
+		<if test="bespeakDate!=null ">
+			BESPEAK_DATE=#{bespeakDate,jdbcType = TIMESTAMP},
+		</if>
+		<if test="peopleNumber!=null ">
+			PEOPLE_NUMBER=#{peopleNumber,jdbcType = INTEGER},
+		</if>
+		<if test="reservation!=null ">
+			RESERVATION=#{reservation,jdbcType = INTEGER},
+		</if>
+		<if test="lineUp!=null ">
+			LINE_UP=#{lineUp,jdbcType = INTEGER},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND BESPEAK_NO=#{bespeakNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_BESPEAK 
+	<where>
+		BESPEAK_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="Bespeak">
+	select <include refid="AllColumnlist"/> from T_BESPEAK
+	<where>
+		BESPEAK_NO=#{0}
+	</where>
+</select>
+<!-- 根据排课编号查询属于该排课课程的预约记录 -->
+<select id="getBespeakByArrayCourseNo" resultMap="Bespeak">
+	select <include refid="AllColumnlist"/> from T_BESPEAK
+	<where>
+		ARRAY_COURSE_NO=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="Bespeak">
+	select <include refid="AllColumnlist"/> from T_BESPEAK
+	<where>
+		BESPEAK_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(BESPEAK_NO) from T_BESPEAK 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="Bespeak">
+	select <include refid="CommonColumnlist"/> from T_BESPEAK 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="Bespeak">
+	select <include refid="CommonColumnlist"/> from T_BESPEAK
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC,CREATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+	<if test="q!=null">
+		<if test="q.bespeakNo!=null and q.bespeakNo!=''">
+			AND BESPEAK_NO=#{q.bespeakNo}
+		</if>
+		<if test="q.arrayCourseNo!=null and q.arrayCourseNo!=''">
+			AND ARRAY_COURSE_NO=#{q.arrayCourseNo}
+		</if>
+		<if test="q.bespeakDate!=null ">
+			AND BESPEAK_DATE=#{q.bespeakDate}
+		</if>
+		<if test="q.bespeakDateStart!=null">
+		<![CDATA[	AND BESPEAK_DATE>=#{q.bespeakDateStart}  ]]>
+		</if>
+		<if test="q.bespeakDateEnd!=null">
+		<![CDATA[	AND BESPEAK_DATE<#{q.bespeakDateEnd}   ]]>
+		</if>
+		<if test="q.peopleNumber!=null ">
+			AND PEOPLE_NUMBER=#{q.peopleNumber}
+		</if>
+		<if test="q.reservation!=null ">
+			AND RESERVATION=#{q.reservation}
+		</if>
+		<if test="q.lineUp!=null ">
+			AND LINE_UP=#{q.lineUp}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+
+</mapper>

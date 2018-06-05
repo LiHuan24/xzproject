@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.equipment.dao.FitnessEquipmentDao">
+
+<resultMap type="FitnessEquipment" id="FitnessEquipment">
+	<id column="FITNESS_EQUIPMENT_NO" property="fitnessEquipmentNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CITY_ID" property="cityId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CITY_NAME" property="cityName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="STORE_NO" property="storeNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="STORE_NAME" property="storeName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="DEVICE_NO" property="deviceNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="BRAND_NO" property="brandNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="BRAND_NAME" property="brandName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MODEL_NO" property="modelNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MODEL_NAME" property="modelName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="SORT_NO" property="sortNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="SORT_NAME" property="sortName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="ONLINE_STATUS" property="onlineStatus" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="ISONLINE" property="isOnLine" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="USE_STATUS" property="useStatus" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="ON_OFF_LINE_REASON" property="onOffLineReason" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="ONLINE_STATUS_UPDATE_TIME" property="onlineStatusUpdateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="IS_DELETED" property="isDeleted" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="MEMO" property="memo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="DEV_ID" property="devId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+FITNESS_EQUIPMENT_NO,CITY_ID,CITY_NAME,STORE_NO,STORE_NAME,DEVICE_NO,BRAND_NO,
+BRAND_NAME,MODEL_NO,MODEL_NAME,SORT_NO,SORT_NAME,ONLINE_STATUS,
+ON_OFF_LINE_REASON,ONLINE_STATUS_UPDATE_TIME,IS_DELETED,MEMO,CREATE_TIME,UPDATE_TIME,
+OPERATOR_TYPE,OPERATOR_ID,DEV_ID,USE_STATUS,ISONLINE
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+FITNESS_EQUIPMENT_NO,CITY_ID,CITY_NAME,STORE_NO,STORE_NAME,DEVICE_NO,BRAND_NO,
+BRAND_NAME,MODEL_NO,MODEL_NAME,SORT_NO,SORT_NAME,ONLINE_STATUS,
+ON_OFF_LINE_REASON,ONLINE_STATUS_UPDATE_TIME,IS_DELETED,MEMO,CREATE_TIME,UPDATE_TIME,
+OPERATOR_TYPE,OPERATOR_ID,DEV_ID,USE_STATUS,ISONLINE
+</sql>
+
+<insert id="add" parameterType="FitnessEquipment" useGeneratedKeys="true" keyProperty="fitnessEquipmentNo">
+	insert into T_FITNESS_EQUIPMENT(
+		<if test="fitnessEquipmentNo!=null">
+		FITNESS_EQUIPMENT_NO,
+		</if>
+		CITY_ID,
+		CITY_NAME,
+		STORE_NO,
+		STORE_NAME,
+		DEVICE_NO,
+		BRAND_NO,
+		BRAND_NAME,
+		MODEL_NO,
+		MODEL_NAME,
+		SORT_NO,
+		SORT_NAME,
+		ONLINE_STATUS,
+		ON_OFF_LINE_REASON,
+		ONLINE_STATUS_UPDATE_TIME,
+		IS_DELETED,
+		MEMO,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID,
+		DEV_ID,
+		USE_STATUS,
+		ISONLINE
+	) values (
+		<if test="fitnessEquipmentNo!=null">
+		#{fitnessEquipmentNo,jdbcType = VARCHAR},
+		</if>
+		#{cityId,jdbcType = VARCHAR},
+		#{cityName,jdbcType = VARCHAR},
+		#{storeNo,jdbcType = VARCHAR},
+		#{storeName,jdbcType = VARCHAR},
+		#{deviceNo,jdbcType = VARCHAR},
+		#{brandNo,jdbcType = VARCHAR},
+		#{brandName,jdbcType = VARCHAR},
+		#{modelNo,jdbcType = VARCHAR},
+		#{modelName,jdbcType = VARCHAR},
+		#{sortNo,jdbcType = VARCHAR},
+		#{sortName,jdbcType = VARCHAR},
+		#{onlineStatus,jdbcType = TINYINT},
+		#{onOffLineReason,jdbcType = VARCHAR},
+		#{onlineStatusUpdateTime,jdbcType = TIMESTAMP},
+		#{isDeleted,jdbcType = TINYINT},
+		#{memo,jdbcType = VARCHAR},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR},
+		#{devId,jdbcType = VARCHAR},
+		#{useStatus,jdbcType = TINYINT},
+		#{isOnLine,jdbcType = TINYINT}
+	)
+</insert>
+
+<update id="update" parameterType="FitnessEquipment">
+	update T_FITNESS_EQUIPMENT 
+	<set>
+		<if test="cityId!=null and cityId!=''">
+			CITY_ID=#{cityId,jdbcType = VARCHAR},
+		</if>
+		<if test="cityName!=null and cityName!=''">
+			CITY_NAME=#{cityName,jdbcType = VARCHAR},
+		</if>
+		<if test="storeNo!=null and storeNo!=''">
+			STORE_NO=#{storeNo,jdbcType = VARCHAR},
+		</if>
+		<if test="storeName!=null and storeName!=''">
+			STORE_NAME=#{storeName,jdbcType = VARCHAR},
+		</if>
+		<if test="deviceNo!=null and deviceNo!=''">
+			DEVICE_NO=#{deviceNo,jdbcType = VARCHAR},
+		</if>
+		<if test="brandNo!=null and brandNo!=''">
+			BRAND_NO=#{brandNo,jdbcType = VARCHAR},
+		</if>
+		<if test="brandName!=null and brandName!=''">
+			BRAND_NAME=#{brandName,jdbcType = VARCHAR},
+		</if>
+		<if test="modelNo!=null and modelNo!=''">
+			MODEL_NO=#{modelNo,jdbcType = VARCHAR},
+		</if>
+		<if test="modelName!=null and modelName!=''">
+			MODEL_NAME=#{modelName,jdbcType = VARCHAR},
+		</if>
+		<if test="sortNo!=null and sortNo!=''">
+			SORT_NO=#{sortNo,jdbcType = VARCHAR},
+		</if>
+		<if test="sortName!=null and sortName!=''">
+			SORT_NAME=#{sortName,jdbcType = VARCHAR},
+		</if>
+		<if test="onlineStatus!=null ">
+			ONLINE_STATUS=#{onlineStatus,jdbcType = TINYINT},
+		</if>
+		<if test="isOnLine!=null ">
+			ISONLINE=#{isOnLine,jdbcType = TINYINT},
+		</if>
+		<if test="useStatus!=null ">
+			USE_STATUS=#{useStatus,jdbcType = TINYINT},
+		</if>
+		<if test="onOffLineReason!=null and onOffLineReason!=''">
+			ON_OFF_LINE_REASON=#{onOffLineReason,jdbcType = VARCHAR},
+		</if>
+		<if test="onlineStatusUpdateTime!=null ">
+			ONLINE_STATUS_UPDATE_TIME=#{onlineStatusUpdateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="isDeleted!=null ">
+			IS_DELETED=#{isDeleted,jdbcType = TINYINT},
+		</if>
+		<if test="memo!=null and memo!=''">
+			MEMO=#{memo,jdbcType = VARCHAR},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+		<if test="devId!=null and devId!=''">
+			DEV_ID=#{devId,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND FITNESS_EQUIPMENT_NO=#{fitnessEquipmentNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_FITNESS_EQUIPMENT 
+	<where>
+		FITNESS_EQUIPMENT_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="FitnessEquipment">
+	select <include refid="AllColumnlist"/> from T_FITNESS_EQUIPMENT
+	<where>
+		FITNESS_EQUIPMENT_NO=#{0}
+	</where>
+</select>
+
+<select id="getFeByDevId" resultMap="FitnessEquipment">
+	select <include refid="AllColumnlist"/> from T_FITNESS_EQUIPMENT
+	<where>
+		DEV_ID=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="FitnessEquipment">
+	select <include refid="AllColumnlist"/> from T_FITNESS_EQUIPMENT
+	<where>
+		FITNESS_EQUIPMENT_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="getFeBysortNo"  resultType="String">
+	select SORT_NO from T_FITNESS_EQUIPMENT 
+	<where>
+	STORE_NO = #{0} and USE_STATUS = 0 and ONLINE_STATUS = 1
+	</where>
+	GROUP BY SORT_NO
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(FITNESS_EQUIPMENT_NO) from T_FITNESS_EQUIPMENT 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="FitnessEquipment">
+	select <include refid="CommonColumnlist"/> from T_FITNESS_EQUIPMENT 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="FitnessEquipment">
+	select <include refid="CommonColumnlist"/> from T_FITNESS_EQUIPMENT
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+    <if test="q==null"><!-- 无传入参数时默认查未删除的 -->
+       AND IS_DELETED=0
+    </if>
+	<if test="q!=null">
+		<if test="q.fitnessEquipmentNo!=null and q.fitnessEquipmentNo!=''">
+			AND FITNESS_EQUIPMENT_NO=#{q.fitnessEquipmentNo}
+		</if>
+		<if test="q.cityId!=null and q.cityId!=''">
+			AND CITY_ID=#{q.cityId}
+		</if>
+		<if test="q.cityName!=null and q.cityName!=''">
+			AND CITY_NAME=#{q.cityName}
+		</if>
+		<if test="q.storeNo!=null and q.storeNo!=''">
+			AND STORE_NO=#{q.storeNo}
+		</if>
+		<if test="q.storeName!=null and q.storeName!=''">
+			AND STORE_NAME=#{q.storeName}
+		</if>
+		<if test="q.deviceNo!=null and q.deviceNo!=''">
+			AND DEVICE_NO=#{q.deviceNo}
+		</if>
+		<if test="q.brandNo!=null and q.brandNo!=''">
+			AND BRAND_NO=#{q.brandNo}
+		</if>
+		<if test="q.brandName!=null and q.brandName!=''">
+			AND BRAND_NAME=#{q.brandName}
+		</if>
+		<if test="q.modelNo!=null and q.modelNo!=''">
+			AND MODEL_NO=#{q.modelNo}
+		</if>
+		<if test="q.modelName!=null and q.modelName!=''">
+			AND MODEL_NAME=#{q.modelName}
+		</if>
+		<if test="q.sortNo!=null and q.sortNo!=''">
+			AND SORT_NO=#{q.sortNo}
+		</if>
+		<if test="q.sortName!=null and q.sortName!=''">
+			AND SORT_NAME=#{q.sortName}
+		</if>
+		<if test="q.onlineStatus!=null ">
+			AND ONLINE_STATUS=#{q.onlineStatus}
+		</if>
+		<if test="q.isOnLine!=null ">
+			AND ISONLINE=#{q.isOnLine}
+		</if>
+		<if test="q.useStatus!=null ">
+			AND USE_STATUS=#{q.useStatus}
+		</if>
+		<if test="q.onOffLineReason!=null and q.onOffLineReason!=''">
+			AND ON_OFF_LINE_REASON=#{q.onOffLineReason}
+		</if>
+		<if test="q.onlineStatusUpdateTime!=null ">
+			AND ONLINE_STATUS_UPDATE_TIME=#{q.onlineStatusUpdateTime}
+		</if>
+		<if test="q.onlineStatusUpdateTimeStart!=null">
+		<![CDATA[	AND ONLINE_STATUS_UPDATE_TIME>=#{q.onlineStatusUpdateTimeStart}  ]]>
+		</if>
+		<if test="q.onlineStatusUpdateTimeEnd!=null">
+		<![CDATA[	AND ONLINE_STATUS_UPDATE_TIME<#{q.onlineStatusUpdateTimeEnd}   ]]>
+		</if>
+		<if test="q.isDeleted!=null ">
+			AND IS_DELETED=#{q.isDeleted}
+		</if>
+		<if test="q.memo!=null and q.memo!=''">
+			AND MEMO=#{q.memo}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+		<if test="q.devId!=null and q.devId!=''">
+			AND DEV_ID=#{q.devId}
+		</if>
+	</if>
+</sql>
+
+</mapper>

@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.equipment.dao.EquipmentRecordDao">
+
+<resultMap type="EquipmentRecord" id="EquipmentRecord">
+	<id column="RECORD_ID" property="recordId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="ORDER_NO" property="orderNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CITY_ID" property="cityId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CITY_NAME" property="cityName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="STORE_NO" property="storeNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="STORE_NAME" property="storeName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MEMBER_NO" property="memberNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MOBILE_PHONE" property="mobilePhone" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="R_DIST" property="rDist" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="R_CAL" property="rCal" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="WHEN_LONG" property="whenLong" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="FITNESS_EQUIPMENT_NO" property="fitnessEquipmentNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="USESTATUS" property="useStatus" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="SORT_NAME" property="sortName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="START_TIME" property="startTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="END_TIME" property="endTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="USE_TYPE" property="useType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="IS_DELETED" property="isDeleted" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+RECORD_ID,ORDER_NO,CITY_ID,CITY_NAME,STORE_NO,STORE_NAME,MEMBER_NO,
+MOBILE_PHONE,FITNESS_EQUIPMENT_NO,SORT_NAME,START_TIME,END_TIME,USE_TYPE,
+IS_DELETED,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID,USESTATUS,R_DIST,R_CAL,WHEN_LONG
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+RECORD_ID,ORDER_NO,CITY_ID,CITY_NAME,STORE_NO,STORE_NAME,MEMBER_NO,
+MOBILE_PHONE,FITNESS_EQUIPMENT_NO,SORT_NAME,START_TIME,END_TIME,USE_TYPE,
+IS_DELETED,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID,USESTATUS,R_DIST,R_CAL,WHEN_LONG
+</sql>
+
+<insert id="add" parameterType="EquipmentRecord" useGeneratedKeys="true" keyProperty="recordId">
+	insert into T_EQUIPMENT_RECORD(
+		<if test="recordId!=null">
+		RECORD_ID,
+		</if>
+		ORDER_NO,
+		CITY_ID,
+		CITY_NAME,
+		STORE_NO,
+		STORE_NAME,
+		MEMBER_NO,
+		MOBILE_PHONE,
+		FITNESS_EQUIPMENT_NO,
+		SORT_NAME,
+		START_TIME,
+		END_TIME,
+		USE_TYPE,
+		IS_DELETED,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID,
+		USESTATUS,
+		R_DIST,
+		R_CAL,
+		WHEN_LONG
+	) values (
+		<if test="recordId!=null">
+		#{recordId,jdbcType = VARCHAR},
+		</if>
+		#{orderNo,jdbcType = VARCHAR},
+		#{cityId,jdbcType = VARCHAR},
+		#{cityName,jdbcType = VARCHAR},
+		#{storeNo,jdbcType = VARCHAR},
+		#{storeName,jdbcType = VARCHAR},
+		#{memberNo,jdbcType = VARCHAR},
+		#{mobilePhone,jdbcType = VARCHAR},
+		#{fitnessEquipmentNo,jdbcType = VARCHAR},
+		#{sortName,jdbcType = VARCHAR},
+		#{startTime,jdbcType = TIMESTAMP},
+		#{endTime,jdbcType = TIMESTAMP},
+		#{useType,jdbcType = TINYINT},
+		#{isDeleted,jdbcType = TINYINT},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR},
+		#{useStatus,jdbcType = TINYINT},
+		#{rDist,jdbcType = VARCHAR},
+		#{rCal,jdbcType = VARCHAR},
+		#{whenLong,jdbcType = VARCHAR}
+	)
+</insert>
+
+<update id="update" parameterType="EquipmentRecord">
+	update T_EQUIPMENT_RECORD 
+	<set>
+		<if test="orderNo!=null and orderNo!=''">
+			ORDER_NO=#{orderNo,jdbcType = VARCHAR},
+		</if>
+		<if test="cityId!=null and cityId!=''">
+			CITY_ID=#{cityId,jdbcType = VARCHAR},
+		</if>
+		<if test="cityName!=null and cityName!=''">
+			CITY_NAME=#{cityName,jdbcType = VARCHAR},
+		</if>
+		<if test="storeNo!=null and storeNo!=''">
+			STORE_NO=#{storeNo,jdbcType = VARCHAR},
+		</if>
+		<if test="rDist!=null and rDist!=''">
+			R_DIST=#{rDist,jdbcType = VARCHAR},
+		</if>
+		<if test="rCal!=null and rCal!=''">
+			R_CAL=#{rCal,jdbcType = VARCHAR},
+		</if>
+		<if test="whenLong!=null and whenLong!=''">
+			WHEN_LONG=#{whenLong,jdbcType = VARCHAR},
+		</if>
+		<if test="storeName!=null and storeName!=''">
+			STORE_NAME=#{storeName,jdbcType = VARCHAR},
+		</if>
+		<if test="memberNo!=null and memberNo!=''">
+			MEMBER_NO=#{memberNo,jdbcType = VARCHAR},
+		</if>
+		<if test="mobilePhone!=null and mobilePhone!=''">
+			MOBILE_PHONE=#{mobilePhone,jdbcType = VARCHAR},
+		</if>
+		<if test="fitnessEquipmentNo!=null and fitnessEquipmentNo!=''">
+			FITNESS_EQUIPMENT_NO=#{fitnessEquipmentNo,jdbcType = VARCHAR},
+		</if>
+		<if test="sortName!=null and sortName!=''">
+			SORT_NAME=#{sortName,jdbcType = VARCHAR},
+		</if>
+		<if test="startTime!=null ">
+			START_TIME=#{startTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="endTime!=null ">
+			END_TIME=#{endTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="useType!=null ">
+			USE_TYPE=#{useType,jdbcType = TINYINT},
+		</if>
+		<if test="useStatus!=null ">
+			USESTATUS=#{useStatus,jdbcType = TINYINT},
+		</if>
+		<if test="isDeleted!=null ">
+			IS_DELETED=#{isDeleted,jdbcType = TINYINT},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND RECORD_ID=#{recordId}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_EQUIPMENT_RECORD 
+	<where>
+		RECORD_ID=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="EquipmentRecord">
+	select <include refid="AllColumnlist"/> from T_EQUIPMENT_RECORD
+	<where>
+		RECORD_ID=#{0}
+	</where>
+</select>
+
+<select id="getErNs" resultMap="EquipmentRecord">
+	select <include refid="AllColumnlist"/> from T_EQUIPMENT_RECORD
+	<where>
+		MEMBER_NO=#{0} AND FITNESS_EQUIPMENT_NO=#{1}
+	</where>
+	ORDER BY START_TIME DESC LIMIT 1
+</select>
+
+<select id="getErMs" resultMap="EquipmentRecord">
+	select <include refid="AllColumnlist"/> from T_EQUIPMENT_RECORD
+	<where>
+		ORDER_NO=#{0} AND USESTATUS=#{1}
+	</where>
+	ORDER BY START_TIME DESC LIMIT 1
+</select>
+
+<select id="getByIds" resultMap="EquipmentRecord">
+	select <include refid="AllColumnlist"/> from T_EQUIPMENT_RECORD
+	<where>
+		RECORD_ID in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(RECORD_ID) from T_EQUIPMENT_RECORD 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="EquipmentRecord">
+	select <include refid="CommonColumnlist"/> from T_EQUIPMENT_RECORD 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="EquipmentRecord">
+	select <include refid="CommonColumnlist"/> from T_EQUIPMENT_RECORD
+	<where>
+	 <include refid="listCommonWhereWH"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+<select id="countByOrderNo" parameterType="Query" resultType="Long">
+	select count(RECORD_ID) from T_EQUIPMENT_RECORD WHERE ORDER_NO=#{q.orderNo}
+</select>
+
+<select id="pageListByOrderNo" parameterType="Query" resultMap="EquipmentRecord">
+	select <include refid="CommonColumnlist"/> from T_EQUIPMENT_RECORD
+	WHERE ORDER_NO=#{q.orderNo}
+	ORDER BY START_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+<sql id="listCommonWhere">
+    <if test="q==null"><!-- 无传入参数时默认查未删除的 -->
+       AND IS_DELETED=0
+    </if>
+	<if test="q!=null">
+		<if test="q.recordId!=null and q.recordId!=''">
+			AND RECORD_ID=#{q.recordId}
+		</if>
+		<if test="q.orderNo!=null and q.orderNo!=''">
+			AND ORDER_NO=#{q.orderNo}
+		</if>
+		<if test="q.cityId!=null and q.cityId!=''">
+			AND CITY_ID=#{q.cityId}
+		</if>
+		<if test="q.cityName!=null and q.cityName!=''">
+			AND CITY_NAME=#{q.cityName}
+		</if>
+		<if test="q.storeNo!=null and q.storeNo!=''">
+			AND STORE_NO=#{q.storeNo}
+		</if>
+		<if test="q.storeName!=null and q.storeName!=''">
+			AND STORE_NAME=#{q.storeName}
+		</if>
+		<if test="q.memberNo!=null and q.memberNo!=''">
+			AND MEMBER_NO=#{q.memberNo}
+		</if>
+		<if test="q.mobilePhone!=null and q.mobilePhone!=''">
+			AND MOBILE_PHONE=#{q.mobilePhone}
+		</if>
+		<if test="q.fitnessEquipmentNo!=null and q.fitnessEquipmentNo!=''">
+			AND FITNESS_EQUIPMENT_NO=#{q.fitnessEquipmentNo}
+		</if>
+		<if test="q.sortName!=null and q.sortName!=''">
+			AND SORT_NAME=#{q.sortName}
+		</if>
+		<if test="q.rDist!=null and q.rDist!=''">
+			AND R_DIST=#{q.rDist}
+		</if>
+		<if test="q.rCal!=null and q.rCal!=''">
+			AND R_CAL=#{q.rCal}
+		</if>
+		<if test="q.whenLong!=null and q.whenLong!=''">
+			AND WHEN_LONG=#{q.whenLong}
+		</if>
+		<if test="q.startTime!=null ">
+			AND START_TIME=#{q.startTime}
+		</if>
+		<if test="q.startTimeStart!=null">
+		<![CDATA[	AND START_TIME>=#{q.startTimeStart}  ]]>
+		</if>
+		<if test="q.startTimeEnd!=null">
+		<![CDATA[	AND START_TIME<#{q.startTimeEnd}   ]]>
+		</if>
+		<if test="q.endTime!=null ">
+			AND END_TIME=#{q.endTime}
+		</if>
+		<if test="q.endTimeStart!=null">
+		<![CDATA[	AND END_TIME>=#{q.endTimeStart}  ]]>
+		</if>
+		<if test="q.endTimeEnd!=null">
+		<![CDATA[	AND END_TIME<#{q.endTimeEnd}   ]]>
+		</if>
+		<if test="q.useType!=null ">
+			AND USE_TYPE=#{q.useType}
+		</if>
+		<if test="q.useStatus!=null ">
+			AND USESTATUS=#{q.useStatus}
+		</if>
+		<if test="q.isDeleted!=null ">
+			AND IS_DELETED=#{q.isDeleted}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+
+
+<sql id="listCommonWhereWH">
+    <if test="q==null"><!-- 无传入参数时默认查未删除的 -->
+       AND IS_DELETED=0
+    </if>
+	<if test="q!=null">
+		<if test="q.recordId!=null and q.recordId!=''">
+			AND RECORD_ID like '%${q.recordId}%'
+		</if>
+		<if test="q.orderNo!=null and q.orderNo!=''">
+			AND ORDER_NO like '%${q.orderNo}%'
+		</if>
+		<if test="q.cityId!=null and q.cityId!=''">
+			AND CITY_ID like '%${q.cityId}%'
+		</if>
+		<if test="q.cityName!=null and q.cityName!=''">
+			AND CITY_NAME like '%${q.cityName}%'
+		</if>
+		<if test="q.storeNo!=null and q.storeNo!=''">
+			AND STORE_NO like '%${q.storeNo}%'
+		</if>
+		<if test="q.storeName!=null and q.storeName!=''">
+			AND STORE_NAME like '%${q.storeName}%'
+		</if>
+		<if test="q.memberNo!=null and q.memberNo!=''">
+			AND MEMBER_NO like '%${q.memberNo}%'
+		</if>
+		<if test="q.mobilePhone!=null and q.mobilePhone!=''">
+			AND MOBILE_PHONE like '%${q.mobilePhone}%'
+		</if>
+		<if test="q.fitnessEquipmentNo!=null and q.fitnessEquipmentNo!=''">
+			AND FITNESS_EQUIPMENT_NO like '%${q.fitnessEquipmentNo}%'
+		</if>
+		<if test="q.sortName!=null and q.sortName!=''">
+			AND SORT_NAME like '%${q.sortName}%'
+		</if>
+		<if test="q.startTime!=null ">
+			AND START_TIME=#{q.startTime}
+		</if>
+		<if test="q.startTimeStart!=null">
+		<![CDATA[	AND START_TIME>=#{q.startTimeStart}  ]]>
+		</if>
+		<if test="q.startTimeEnd!=null">
+		<![CDATA[	AND START_TIME<#{q.startTimeEnd}   ]]>
+		</if>
+		<if test="q.endTime!=null ">
+			AND END_TIME=#{q.endTime}
+		</if>
+		<if test="q.endTimeStart!=null">
+		<![CDATA[	AND END_TIME>=#{q.endTimeStart}  ]]>
+		</if>
+		<if test="q.endTimeEnd!=null">
+		<![CDATA[	AND END_TIME<#{q.endTimeEnd}   ]]>
+		</if>
+		<if test="q.useType!=null ">
+			AND USE_TYPE=#{q.useType}
+		</if>
+		<if test="q.isDeleted!=null ">
+			AND IS_DELETED=#{q.isDeleted}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.useStatus!=null ">
+			AND USESTATUS=#{q.useStatus}
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+</mapper>

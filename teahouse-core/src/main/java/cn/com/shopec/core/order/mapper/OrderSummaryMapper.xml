@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.order.dao.OrderSummaryDao">
+	
+<resultMap type="OrderSummary" id="OrderSummary"></resultMap>
+	
+	<select id="queryThemeOrderList" parameterType="Query" resultMap="OrderSummary">
+		select 
+			count(1) AS orderCount,
+			IFNULL(ROUND(SUM(ORDER_AMOUNT),2),0) AS orderAmount,
+			IFNULL(SUM(WHEN_LONG),0) AS whenLong,
+			IFNULL(ROUND(SUM(CASE WHEN pay_status=1 is not null THEN PAYABLE_AMOUNT else 0 end),2),0) AS alreadyAmount,
+			IFNULL(ROUND(SUM(DISCOUNT_AMOUNT),2),0) AS discountAmount,
+			IFNULL(SUM(CASE when IFNULL(DISCOUNT_AMOUNT,0) > 0 then 1 else 0 end),0) AS discountOrderCount,
+			IFNULL(ROUND(SUM(BALANCE_DISCOUNT_AMOUNT),2),0) AS balanceDiscountAmount,
+			IFNULL(SUM(CASE when IFNULL(BALANCE_DISCOUNT_AMOUNT,0) > 0 then 1 else 0 end),0) AS balanceOrderCount,
+			IFNULL(SUM(CASE when PAYMENT_METHOD = 1 then 1 else 0 end),0) AS alipayCount,
+			IFNULL(ROUND(SUM(CASE when PAYMENT_METHOD = 1 then ORDER_AMOUNT else 0 end),2),0) AS alipayAmount,
+			IFNULL(ROUND(SUM(CASE when PAYMENT_METHOD = 1 then PAYABLE_AMOUNT else 0 end),2),0) AS alipayRealAmount,
+			IFNULL(ROUND(SUM(CASE WHEN PAYMENT_METHOD=1 AND PAY_STATUS=1 THEN cast(PAYABLE_AMOUNT as decimal(15,2))*0.006 ELSE 0 END),2),0) AS alipayCharge,
+			IFNULL(SUM(CASE when PAYMENT_METHOD = 2 then 1 else 0 end),0) AS wxCount,
+			IFNULL(ROUND(SUM(CASE when PAYMENT_METHOD = 2 then ORDER_AMOUNT else 0 end),2),0) AS wxAmount,
+			IFNULL(ROUND(SUM(CASE when PAYMENT_METHOD = 2 then PAYABLE_AMOUNT else 0 end),2),0) AS wxRealAmount,
+			IFNULL(ROUND(SUM(CASE WHEN PAYMENT_METHOD=2 AND PAY_STATUS=1 THEN cast(PAYABLE_AMOUNT as decimal(15,2))*0.006 ELSE 0 END),2),0) AS wxCharge
+		FROM t_theme_order
+		<where>
+			<include refid="listCommonWhere"/>
+		</where>
+		<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+	</select>
+	<select id="queryCommunityOrderList" parameterType="Query"  resultMap="OrderSummary">
+		select 
+			count(1) AS orderCount,
+			IFNULL(ROUND(SUM(ORDER_AMOUNT),2),0) AS orderAmount,
+			IFNULL(SUM(WHEN_LONG),0) AS whenLong,
+			IFNULL(ROUND(SUM(CASE WHEN pay_status=1 is not null THEN PAYABLE_AMOUNT else 0 end),2),0) AS alreadyAmount,
+			IFNULL(ROUND(SUM(DISCOUNT_AMOUNT),2),0) AS discountAmount,
+			IFNULL(SUM(CASE when IFNULL(DISCOUNT_AMOUNT,0) > 0 then 1 else 0 end),0) AS discountOrderCount,
+			IFNULL(ROUND(SUM(BALANCE_DISCOUNT_AMOUNT),2),0) AS balanceDiscountAmount,
+			IFNULL(SUM(CASE when IFNULL(BALANCE_DISCOUNT_AMOUNT,0) > 0 then 1 else 0 end),0) AS balanceOrderCount,
+			IFNULL(SUM(CASE when PAYMENT_METHOD = 1 then 1 else 0 end),0) AS alipayCount,
+			IFNULL(ROUND(SUM(CASE when PAYMENT_METHOD = 1 then ORDER_AMOUNT else 0 end),2),0) AS alipayAmount,
+			IFNULL(ROUND(SUM(CASE when PAYMENT_METHOD = 1 then PAYABLE_AMOUNT else 0 end),2),0) AS alipayRealAmount,
+			IFNULL(ROUND(SUM(CASE WHEN PAYMENT_METHOD=1 AND PAY_STATUS=1 THEN cast(PAYABLE_AMOUNT as decimal(15,2))*0.006 ELSE 0 END),2),0) AS alipayCharge,
+			IFNULL(SUM(CASE when PAYMENT_METHOD = 2 then 1 else 0 end),0) AS wxCount,
+			IFNULL(ROUND(SUM(CASE when PAYMENT_METHOD = 2 then ORDER_AMOUNT else 0 end),2),0) AS wxAmount,
+			IFNULL(ROUND(SUM(CASE when PAYMENT_METHOD = 2 then PAYABLE_AMOUNT else 0 end),2),0) AS wxRealAmount,
+			IFNULL(ROUND(SUM(CASE WHEN PAYMENT_METHOD=2 AND PAY_STATUS=1 THEN cast(PAYABLE_AMOUNT as decimal(15,2))*0.006 ELSE 0 END),2),0) AS wxCharge
+		FROM t_community_order
+		<where>
+			<include refid="listCommonWhere"/>
+		</where>
+		<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+	</select>	
+	
+	<sql id="listCommonWhere">
+		<if test="q!=null">
+		 	<if test="q.startTime != null and q.startTime != ''">
+		    		<![CDATA[AND payment_time>=#{q.startTime}]]>
+		    </if>
+		    <if test="q.endTime != null and q.endTime != ''">
+		    		<![CDATA[AND payment_time<=#{q.endTime}]]>
+		    </if>
+		     <!-- AND ORDER_STATUS IN(2,3) -->
+	   </if>
+	</sql>
+</mapper>

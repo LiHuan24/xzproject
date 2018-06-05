@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.equipment.dao.EquipmentBrandDao">
+
+<resultMap type="EquipmentBrand" id="EquipmentBrand">
+	<id column="BRAND_NO" property="brandNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="BRAND_NAME" property="brandName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="BRAND_TYPE" property="brandType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="BRAND_WEBSITE" property="brandWebsite" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="IS_DELETED" property="isDeleted" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MEMO" property="memo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="SORT_NO" property="sortNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+BRAND_NO,BRAND_NAME,BRAND_TYPE,BRAND_WEBSITE,IS_DELETED,CREATE_TIME,UPDATE_TIME,
+OPERATOR_TYPE,OPERATOR_ID,MEMO,SORT_NO
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+BRAND_NO,BRAND_NAME,BRAND_TYPE,BRAND_WEBSITE,IS_DELETED,CREATE_TIME,UPDATE_TIME,
+OPERATOR_TYPE,OPERATOR_ID,MEMO,SORT_NO
+</sql>
+
+<insert id="add" parameterType="EquipmentBrand" useGeneratedKeys="true" keyProperty="brandNo">
+	insert into T_EQUIPMENT_BRAND(
+		<if test="brandNo!=null">
+		BRAND_NO,
+		</if>
+		BRAND_NAME,
+		BRAND_TYPE,
+		BRAND_WEBSITE,
+		IS_DELETED,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID,
+		MEMO,
+		SORT_NO
+	) values (
+		<if test="brandNo!=null">
+		#{brandNo,jdbcType = VARCHAR},
+		</if>
+		#{brandName,jdbcType = VARCHAR},
+		#{brandType,jdbcType = TINYINT},
+		#{brandWebsite,jdbcType = VARCHAR},
+		#{isDeleted,jdbcType = TINYINT},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR},
+		#{memo,jdbcType = VARCHAR},
+		#{sortNo,jdbcType = VARCHAR}
+	)
+</insert>
+
+<update id="update" parameterType="EquipmentBrand">
+	update T_EQUIPMENT_BRAND 
+	<set>
+		<if test="brandName!=null and brandName!=''">
+			BRAND_NAME=#{brandName,jdbcType = VARCHAR},
+		</if>
+		<if test="brandType!=null ">
+			BRAND_TYPE=#{brandType,jdbcType = TINYINT},
+		</if>
+		<if test="brandWebsite!=null and brandWebsite!=''">
+			BRAND_WEBSITE=#{brandWebsite,jdbcType = VARCHAR},
+		</if>
+		<if test="isDeleted!=null ">
+			IS_DELETED=#{isDeleted,jdbcType = TINYINT},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+		<if test="memo!=null and memo!=''">
+			MEMO=#{memo,jdbcType = VARCHAR},
+		</if>
+		<if test="sortNo!=null and sortNo!=''">
+			SORT_NO=#{sortNo,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND BRAND_NO=#{brandNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_EQUIPMENT_BRAND 
+	<where>
+		BRAND_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="EquipmentBrand">
+	select <include refid="AllColumnlist"/> from T_EQUIPMENT_BRAND
+	<where>
+		BRAND_NO=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="EquipmentBrand">
+	select <include refid="AllColumnlist"/> from T_EQUIPMENT_BRAND
+	<where>
+		BRAND_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(BRAND_NO) from T_EQUIPMENT_BRAND 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="EquipmentBrand">
+	select <include refid="CommonColumnlist"/> from T_EQUIPMENT_BRAND 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryUniqueBrandList" parameterType="Query" resultMap="EquipmentBrand">
+	select <include refid="CommonColumnlist"/> from T_EQUIPMENT_BRAND where BRAND_NO !=#{0} and IS_DELETED=0 
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="EquipmentBrand">
+	select <include refid="CommonColumnlist"/> from T_EQUIPMENT_BRAND
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+    <if test="q==null"><!-- 无传入参数时默认查未删除的 -->
+       AND IS_DELETED=0
+    </if>
+	<if test="q!=null">
+		<if test="q.brandNo!=null and q.brandNo!=''">
+			AND BRAND_NO=#{q.brandNo}
+		</if>
+		<if test="q.brandName!=null and q.brandName!=''">
+			AND BRAND_NAME=#{q.brandName}
+		</if>
+		<if test="q.brandType!=null ">
+			AND BRAND_TYPE=#{q.brandType}
+		</if>
+		<if test="q.brandWebsite!=null and q.brandWebsite!=''">
+			AND BRAND_WEBSITE=#{q.brandWebsite}
+		</if>
+		<if test="q.isDeleted!=null ">
+			AND IS_DELETED=#{q.isDeleted}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+		<if test="q.memo!=null and q.memo!=''">
+			AND MEMO=#{q.memo}
+		</if>
+		<if test="q.sortNo!=null and q.sortNo!=''">
+			AND SORT_NO=#{q.sortNo}
+		</if>
+	</if>
+</sql>
+
+</mapper>

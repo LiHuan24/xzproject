@@ -1,0 +1,931 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.order.dao.ThemeOrderDao">
+
+<resultMap type="ThemeOrder" id="ThemeOrder">
+	<id column="THEME_ORDER_NO" property="themeOrderNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CITY_ID" jdbcType="VARCHAR" property="cityId" javaType="java.lang.String"/>
+    <result column="CITY_NAME" jdbcType="VARCHAR" property="cityName" javaType="java.lang.String"/>
+    <result column="STORE_NO" jdbcType="VARCHAR" property="storeNo" javaType="java.lang.String"/>
+    <result column="STORE_NAME" jdbcType="VARCHAR" property="storeName" javaType="java.lang.String"/>
+    <result column="MEMBER_NO" jdbcType="VARCHAR" property="memberNo" javaType="java.lang.String"/>
+    <result column="MOBILE_PHONE" jdbcType="VARCHAR" property="mobilePhone" javaType="java.lang.String"/>
+	<result column="PART_TRADE_FLOW_NO" jdbcType="VARCHAR" property="partTradeFlowNo" javaType="java.lang.String"/>
+	<result column="COACH_NO" jdbcType="VARCHAR" property="coachNo" javaType="java.lang.String"/>
+    <result column="COACH_NAME" jdbcType="VARCHAR" property="coachName" javaType="java.lang.String"/>
+    <result column="COURSE_NO" jdbcType="VARCHAR" property="courseNo" javaType="java.lang.String"/>
+    <result column="ARRANGE_NO" jdbcType="VARCHAR" property="arrangeNo" javaType="java.lang.String"/>
+    <result column="START_TIME" jdbcType="TIMESTAMP" property="startTime"  javaType="java.util.Date"/>
+    <result column="END_TIME" jdbcType="TIMESTAMP" property="endTime"  javaType="java.util.Date"/>
+    <result column="WHEN_LONG" jdbcType="VARCHAR" property="whenLong" javaType="java.lang.String"/>
+    <result column="ORDER_STATUS" jdbcType="TINYINT" property="orderStatus" javaType="java.lang.Integer" />
+    <result column="PAY_STATUS" jdbcType="TINYINT" property="payStatus" javaType="java.lang.Integer"/>
+    <result column="PAYMENT_METHOD" jdbcType="TINYINT" property="paymentMethod"  javaType="java.lang.Integer"/>
+    <result column="PAYMENT_TIME" jdbcType="TIMESTAMP" property="paymentTime" javaType="java.util.Date"/>
+    <result column="PAYMENT_FLOW_NO" jdbcType="VARCHAR" property="paymentFlowNo" javaType="java.lang.String"/>
+    <result column="ORDER_AMOUNT" jdbcType="DOUBLE" property="orderAmount"  javaType="java.lang.Double" />
+    <result column="DISCOUNT_AMOUNT" jdbcType="DOUBLE" property="discountAmount"  javaType="java.lang.Double" />
+    <result column="BALANCE_DISCOUNT_AMOUNT" jdbcType="DOUBLE" property="balanceDiscountAmount" />
+    <result column="PAYABLE_AMOUNT" jdbcType="DOUBLE" property="payableAmount" javaType="java.lang.Double" />
+    <result column="IS_NEED_INVOICE" jdbcType="TINYINT" property="isNeedInvoice"  javaType="java.lang.Integer"/>
+    <result column="IS_INVOICE_ISSUED" jdbcType="TINYINT" property="isInvoiceIssued"  javaType="java.lang.Integer"/>
+    <result column="INVOICE_TIME" jdbcType="TIMESTAMP" property="invoiceTime"  javaType="java.util.Date"/>
+    <result column="INVIOCE_ID" jdbcType="VARCHAR" property="invioceId" javaType="java.lang.String"/>
+    <result column="INVIOCE_NO" jdbcType="VARCHAR" property="invioceNo" javaType="java.lang.String"/>
+    <result column="MEMO" jdbcType="VARCHAR" property="memo" javaType="java.lang.String"/>
+    <result column="PEOPLE_NUMBER" jdbcType="INTEGER" property="peopleNumber" />
+    <result column="IS_SIGN" jdbcType="TINYINT" property="isSign" />
+	<result column="CANCEL_TIME" jdbcType="TIMESTAMP" property="cancelTime" javaType="java.util.Date"/>
+	<result column="CANCEL_NUMBER" property="cancelNumber" jdbcType="TINYINT" javaType="java.lang.Integer"/>
+	<result column="REFUND_AMOUNT" jdbcType="DOUBLE" property="refundAmount" javaType="java.lang.Double"/>
+
+	<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date"/>
+	<result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" javaType="java.util.Date"/>
+	<result column="OPERATOR_TYPE"  jdbcType="TINYINT" property="operatorType" javaType="java.lang.Integer"/>
+	<result column="OPERATOR_ID" jdbcType="VARCHAR" property="operatorId" javaType="java.lang.String"/>
+	<result column="IS_DELETED" property="isDeleted" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="COUPON_NO" jdbcType="VARCHAR" property="couponNo" javaType="java.lang.String"/>
+	<result column="COURSE_BAG_NUM" property="courseBagNum" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CLASS_TIME" jdbcType="VARCHAR" property="classTime" javaType="java.lang.String"/>
+	<result column="OUT_REFUND_FLOW_NO" property="outRefundFlowNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="REFUND_FAIL_INFO" property="refundFailInfo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="REFUND_FLOW_NO" property="refundFlowNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="IS_SEND_MSG" property="isSendMsg" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+</resultMap>
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+
+	THEME_ORDER_NO, CITY_ID, CITY_NAME,COACH_NO,COURSE_NO,COURSE_NO, STORE_NO, STORE_NAME, MEMBER_NO, MOBILE_PHONE, 
+    ARRANGE_NO, START_TIME, END_TIME, WHEN_LONG, ORDER_STATUS, PAY_STATUS, PAYMENT_METHOD, 
+    PAYMENT_TIME, PAYMENT_FLOW_NO, ORDER_AMOUNT, DISCOUNT_AMOUNT, BALANCE_DISCOUNT_AMOUNT, 
+    PAYABLE_AMOUNT, IS_NEED_INVOICE, IS_INVOICE_ISSUED, INVOICE_TIME, INVIOCE_ID, INVIOCE_NO, 
+    MEMO, IS_DELETED, CREATE_TIME, UPDATE_TIME, OPERATOR_TYPE, OPERATOR_ID,COACH_NAME,
+    CANCEL_TIME,CANCEL_OPERATOR_TYPE,CANCEL_OPERATOR_ID,PEOPLE_NUMBER,IS_SIGN,PART_TRADE_FLOW_NO,COUPON_NO,COURSE_BAG_NUM,
+    CLASS_TIME,OUT_REFUND_FLOW_NO,REFUND_FAIL_INFO,REFUND_FLOW_NO,CANCEL_NUMBER,REFUND_AMOUNT,IS_SEND_MSG
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+	THEME_ORDER_NO, CITY_ID,CITY_NAME,COACH_NO,COURSE_NO,COURSE_NO, STORE_NO, STORE_NAME, MEMBER_NO, MOBILE_PHONE, 
+    ARRANGE_NO, START_TIME, END_TIME, WHEN_LONG, ORDER_STATUS, PAY_STATUS, PAYMENT_METHOD,PEOPLE_NUMBER,
+    PAYMENT_TIME, PAYMENT_FLOW_NO, ORDER_AMOUNT, DISCOUNT_AMOUNT, BALANCE_DISCOUNT_AMOUNT,COACH_NAME, 
+    PAYABLE_AMOUNT,IS_SIGN,PART_TRADE_FLOW_NO,COUPON_NO,COURSE_BAG_NUM,CLASS_TIME,OUT_REFUND_FLOW_NO,REFUND_FAIL_INFO,
+    REFUND_FLOW_NO,CANCEL_NUMBER,REFUND_AMOUNT,IS_SEND_MSG
+</sql>
+
+<insert id="add" parameterType="ThemeOrder" useGeneratedKeys="true" keyProperty="memberNo">
+	insert into T_THEME_ORDER(
+		<if test="themeOrderNo!=null">
+		THEME_ORDER_NO,
+		</if>
+		CITY_ID,
+		CITY_NAME,
+		COACH_NO,
+		COACH_NAME,
+		COURSE_NO,
+		STORE_NO,
+		STORE_NAME,
+		MEMBER_NO,
+		MOBILE_PHONE, 
+	    ARRANGE_NO,
+		START_TIME, 
+		END_TIME, 
+		WHEN_LONG, 
+		ORDER_STATUS, 
+		PAY_STATUS, 
+		PAYMENT_METHOD, 
+	    PAYMENT_TIME, 
+	    PAYMENT_FLOW_NO, 
+	    ORDER_AMOUNT, 
+	    DISCOUNT_AMOUNT, 
+	    BALANCE_DISCOUNT_AMOUNT, 
+	    PAYABLE_AMOUNT, 
+	    IS_NEED_INVOICE, 
+	    IS_INVOICE_ISSUED, 
+	    INVOICE_TIME, 
+	    INVIOCE_ID, 
+	    INVIOCE_NO, 
+	    PEOPLE_NUMBER,
+	    IS_SIGN,
+	    MEMO, 
+	    IS_DELETED,
+	    CANCEL_TIME,
+	    CANCEL_OPERATOR_TYPE,
+	    CANCEL_OPERATOR_ID, 
+	    CREATE_TIME, 
+	    UPDATE_TIME, 
+	    OPERATOR_TYPE, 
+	    OPERATOR_ID,
+	    PART_TRADE_FLOW_NO,
+	    COUPON_NO,
+	    COURSE_BAG_NUM,
+	    CLASS_TIME,
+	    OUT_REFUND_FLOW_NO,
+	    REFUND_FAIL_INFO,
+	    REFUND_FLOW_NO,
+	    CANCEL_NUMBER,
+	    REFUND_AMOUNT,
+	    IS_SEND_MSG
+	) values (
+		<if test="themeOrderNo!=null">
+		#{themeOrderNo,jdbcType=VARCHAR}, 
+		</if>
+		#{cityId,jdbcType=VARCHAR}, 
+		#{cityName,jdbcType=VARCHAR}, 
+		#{coachNo,jdbcType=VARCHAR}, 
+		#{coachName,jdbcType=VARCHAR}, 
+		#{courseNo,jdbcType=VARCHAR}, 
+      	#{storeNo,jdbcType=VARCHAR}, 
+      	#{storeName,jdbcType=VARCHAR}, 
+      	#{memberNo,jdbcType=VARCHAR}, 
+		#{mobilePhone,jdbcType=VARCHAR}, 
+		#{arrangeNo,jdbcType=VARCHAR}, 
+		#{startTime,jdbcType=TIMESTAMP}, 
+		#{endTime,jdbcType=TIMESTAMP}, 
+		#{whenLong,jdbcType=VARCHAR}, 
+		#{orderStatus,jdbcType=TINYINT}, 
+		#{payStatus,jdbcType=TINYINT}, 
+		#{paymentMethod,jdbcType=TINYINT}, 
+		#{paymentTime,jdbcType=TIMESTAMP}, 
+		#{paymentFlowNo,jdbcType=VARCHAR}, 
+		#{orderAmount,jdbcType=DOUBLE}, 
+		#{discountAmount,jdbcType=DOUBLE}, 
+		#{balanceDiscountAmount,jdbcType=DOUBLE}, 
+		#{payableAmount,jdbcType=DOUBLE}, 
+		#{isNeedInvoice,jdbcType=TINYINT}, 
+		#{isInvoiceIssued,jdbcType=TINYINT}, 
+		#{invoiceTime,jdbcType=TIMESTAMP}, 
+		#{invioceId,jdbcType=VARCHAR}, 
+		#{invioceNo,jdbcType=VARCHAR},
+		#{peopleNumber,jdbcType=INTEGER},
+		#{isSign,jdbcType=TINYINT}, 
+		#{memo,jdbcType=VARCHAR}, 
+		#{isDeleted,jdbcType=TINYINT}, 
+		#{cancelTime,jdbcType=TIMESTAMP}, 
+		#{cancelOperatorType,jdbcType=TINYINT}, 
+		#{cancelOperatorId,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP}, 
+		#{updateTime,jdbcType=TIMESTAMP}, 
+		#{operatorType,jdbcType=TINYINT}, 
+		#{operatorId,jdbcType=VARCHAR},
+		#{partTradeFlowNo,jdbcType=VARCHAR},
+		#{couponNo,jdbcType=VARCHAR},
+		#{courseBagNum,jdbcType=TINYINT},
+		#{classTime,jdbcType=VARCHAR},
+		#{refundFailInfo,jdbcType=VARCHAR},
+		#{outRefundFlowNo,jdbcType=VARCHAR},
+		#{refundFlowNo,jdbcType=VARCHAR},
+		#{cancelNumber,jdbcType=TINYINT},
+		#{refundAmount,jdbcType=DOUBLE},
+		#{isSendMsg,jdbcType=TINYINT}
+	)
+</insert>
+
+
+<update id="update" parameterType="ThemeOrder">
+	update T_THEME_ORDER 
+	<set>
+	  <if test="cityId != null and cityId != ''">
+        CITY_ID = #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null and cityName != ''">
+        CITY_NAME = #{cityName,jdbcType=VARCHAR},
+      </if>
+	  <if test="coachNo != null and coachNo != ''">
+        COACH_NO = #{coachNo,jdbcType=VARCHAR},
+      </if>
+      <if test="coachName != null and coachName != ''">
+        COACH_NAME = #{coachName,jdbcType=VARCHAR},
+      </if>
+      <if test="courseNo != null and courseNo != ''">
+        COURSE_NO = #{courseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="storeNo != null and storeNo != ''">
+        STORE_NO = #{storeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="partTradeFlowNo != null and partTradeFlowNo != ''">
+        PART_TRADE_FLOW_NO = #{partTradeFlowNo,jdbcType=VARCHAR},
+      </if>
+      <if test="storeName != null and storeName != ''">
+        STORE_NAME = #{storeName,jdbcType=VARCHAR},
+      </if>
+      <if test="memberNo != null and memberNo != ''">
+        MEMBER_NO = #{memberNo,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePhone != null and mobilePhone != ''">
+        MOBILE_PHONE = #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="arrangeNo != null and arrangeNo != ''">
+        ARRANGE_NO = #{arrangeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        START_TIME = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="whenLong != null and whenLong != ''">
+        WHEN_LONG = #{whenLong,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null">
+        ORDER_STATUS = #{orderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="payStatus != null">
+        PAY_STATUS = #{payStatus,jdbcType=TINYINT},
+      </if>
+      <if test="paymentMethod != null">
+        PAYMENT_METHOD = #{paymentMethod,jdbcType=TINYINT},
+      </if>
+      <if test="paymentTime != null">
+        PAYMENT_TIME = #{paymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentFlowNo != null and paymentFlowNo != ''">
+        PAYMENT_FLOW_NO = #{paymentFlowNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAmount != null">
+        ORDER_AMOUNT = #{orderAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="discountAmount != null">
+        DISCOUNT_AMOUNT = #{discountAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="balanceDiscountAmount != null">
+        BALANCE_DISCOUNT_AMOUNT = #{balanceDiscountAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="payableAmount != null">
+        PAYABLE_AMOUNT = #{payableAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="isNeedInvoice != null">
+        IS_NEED_INVOICE = #{isNeedInvoice,jdbcType=TINYINT},
+      </if>
+      <if test="isInvoiceIssued != null">
+        IS_INVOICE_ISSUED = #{isInvoiceIssued,jdbcType=TINYINT},
+      </if>
+      <if test="invoiceTime != null">
+        INVOICE_TIME = #{invoiceTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="invioceId != null and invioceId != ''">
+        INVIOCE_ID = #{invioceId,jdbcType=VARCHAR},
+      </if>
+      <if test="invioceNo != null and invioceNo != ''">
+        INVIOCE_NO = #{invioceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null and memo != ''">
+        MEMO = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED = #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operatorType != null">
+        OPERATOR_TYPE = #{operatorType,jdbcType=TINYINT},
+      </if>
+      <if test="operatorId != null and operatorId != ''">
+        OPERATOR_ID = #{operatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelTime != null">
+        CANCEL_TIME = #{cancelTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cancelOperatorType != null">
+        CANCEL_OPERATOR_TYPE = #{cancelOperatorType,jdbcType=TINYINT},
+      </if>
+      <if test="cancelOperatorId != null and cancelOperatorId != ''">
+        CANCEL_OPERATOR_ID = #{cancelOperatorId,jdbcType=VARCHAR},
+      </if>
+       <if test="isSign != null">
+        IS_SIGN = #{isSign,jdbcType=TINYINT},
+      </if>
+      <if test="peopleNumber != null">
+        PEOPLE_NUMBER = #{peopleNumber,jdbcType=INTEGER},
+      </if>
+      <if test="couponNo != null and couponNo != ''">
+        COUPON_NO = #{couponNo,jdbcType=VARCHAR},
+      </if>
+       <if test="courseBagNum != null">
+        COURSE_BAG_NUM = #{courseBagNum,jdbcType=TINYINT},
+      </if>
+      <if test="classTime != null and classTime != ''">
+        CLASS_TIME = #{classTime,jdbcType=VARCHAR},
+      </if>
+      <if test="outRefundFlowNo != null and outRefundFlowNo != ''">
+        OUT_REFUND_FLOW_NO = #{outRefundFlowNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refundFailInfo != null and refundFailInfo != ''">
+        REFUND_FAIL_INFO = #{refundFailInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="refundFlowNo != null and refundFlowNo != ''">
+        REFUND_FLOW_NO = #{refundFlowNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelNumber != null ">
+        CANCEL_NUMBER = #{cancelNumber,jdbcType=TINYINT},
+      </if>
+      <if test="refundAmount != null ">
+        REFUND_AMOUNT = #{refundAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="isSendMsg != null">
+        IS_SEND_MSG = #{isSendMsg,jdbcType=TINYINT},
+      </if>
+	</set>
+	<where>
+		AND THEME_ORDER_NO = #{themeOrderNo,jdbcType=VARCHAR}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_THEME_ORDER 
+	<where>
+		THEME_ORDER_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="ThemeOrder">
+	select <include refid="AllColumnlist"/> from T_THEME_ORDER
+	<where>
+		THEME_ORDER_NO=#{0}
+	</where>
+</select>
+   
+<select id="getByIds" resultMap="ThemeOrder">
+	select <include refid="AllColumnlist"/> from T_THEME_ORDER
+	<where>
+		THEME_ORDER_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(MEMBER_NO) from T_THEME_ORDER 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="statThemeOrderSize" parameterType="Query" resultMap="ThemeOrder">
+	select <include refid="AllColumnlist"/> from T_THEME_ORDER 
+	<where>
+	<include refid="listStatWhere"/>
+	</where>
+</select>
+
+<sql id="listStatWhere">
+    <if test="q==null"><!-- 无传入参数时默认查未删除的 -->
+       AND IS_DELETED=0
+    </if>
+	<if test="q!=null">
+		<if test="q.themeOrderNo!=null and q.themeOrderNo!=''">
+			AND THEME_ORDER_NO=#{q.themeOrderNo}
+		</if>
+		<if test="q.arrangeNo!=null and q.arrangeNo!=''">
+			AND ARRANGE_NO=#{q.arrangeNo}
+		</if>
+		<if test="q.orderStatus!=null ">
+			AND ORDER_STATUS=#{q.orderStatus}
+		</if>
+		<if test="q.payStatus!=null ">
+			AND PAY_STATUS=#{q.payStatus}
+		</if>
+	</if>
+</sql>
+
+<select id="queryOrderDataByMemberNo" parameterType="Query" resultMap="ThemeOrder">
+	select <include refid="AllColumnlist"/> from T_THEME_ORDER 
+	where ORDER_STATUS = 0 or ORDER_STATUS =1 and MEMBER_NO = #{0} 
+	ORDER BY UPDATE_TIME DESC, CREATE_TIME DESC
+</select>
+
+
+<!-- app端查询会员预约的主题馆课程size，默认查询4条 -->
+<select id="queryAppThemeOrder" parameterType="Query" resultMap="ThemeOrder">
+	select <include refid="CommonColumnlist"/> from T_THEME_ORDER 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+	ORDER BY PAYMENT_TIME DESC LIMIT 4
+</select>
+
+
+<select id="queryAll" parameterType="Query" resultMap="ThemeOrder">
+	select <include refid="AllColumnlist"/> from T_THEME_ORDER 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC, CREATE_TIME DESC
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="ThemeOrder">
+	select <include refid="CommonColumnlist"/> from T_THEME_ORDER
+	<where>
+	 <include refid="listCommonWhereWH"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC,CREATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+<!-- 统计属于该课程已预约、已支付的预约人数 -->
+<select id="statCourseAppoinNumber" parameterType="Query" resultType="Long">
+	select IFNULL(SUM(PEOPLE_NUMBER),0) from T_THEME_ORDER where ARRANGE_NO=#{0} and ORDER_STATUS=0 AND PAY_STATUS=1
+</select>
+<!-- 统计课程订单预约排队人数 -->
+<select id="statCourseLineNumber" parameterType="Query" resultType="Long">
+	select IFNULL(SUM(PEOPLE_NUMBER),0) from T_THEME_ORDER where ARRANGE_NO=#{0} and ORDER_STATUS=4 AND PAY_STATUS=1
+</select>
+<!-- 后台管理端页面展示数量查询 -->
+<select id="countForManagePage" parameterType="Query" resultType="Long">
+	select count(MEMBER_NO) from T_THEME_ORDER tco 
+	left join (
+		select member_no memberno,member_name memberName from t_member
+	) tm on tco.member_no = tm.memberno 
+	<where>
+		<include refid="listCommonWhere"/>
+		<if test="q!=null">
+		   	<if test="q.memberName != null and q.memberName != ''">
+		    		AND memberName like '%${q.memberName}%'
+		   	</if>
+	   </if>
+	</where>
+</select>
+
+<!-- 后台管理端导出Excel功能的列表查询 -->
+<select id="queryAllForManagePage" parameterType="Query" resultMap="ThemeOrder">
+	<include refid="queryListForManagePage"/>
+</select>
+
+<!-- 后台管理端页面展示的列表查询 -->
+<select id="pageListForManagePage" parameterType="Query" resultMap="ThemeOrder">
+	<include refid="queryListForManagePage"/>
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+<!-- 根据排课编号和订单状态按时间倒序统计正在排队的订单 -->
+<select id="queryLineThemeOrder" parameterType="Query" resultMap="ThemeOrder">
+	select <include refid="AllColumnlist"/> from T_THEME_ORDER
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+	ORDER BY PAYMENT_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+<select id="countLinePage" parameterType="Query" resultType="Long">
+	select count(*) from T_THEME_ORDER 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<!-- 后台管理端页面展示,以及导出Excel功能共用部分的查询列表语句 -->
+<sql id="queryListForManagePage">
+	select <include refid="CommonColumnlist"/>,memberName from T_THEME_ORDER tco
+	left join (
+		select member_no memberno,member_name memberName from t_member
+	) tm on tco.member_no = tm.memberno
+	<where>
+	 	<include refid="listCommonWhereWH"/>
+	 	<if test="q!=null">
+		   	<if test="q.memberName != null and q.memberName != ''">
+		    		AND memberName like '%${q.memberName}%'
+		   	</if>
+	   </if>
+	</where>
+	ORDER BY UPDATE_TIME DESC,CREATE_TIME DESC
+</sql>
+<!-- 按天统计 -->
+<select id="statDaysThemeOrderList" parameterType="Query" 
+	resultType="cn.com.shopec.core.order.vo.ThemeOrderStatisticVo">
+		SELECT DATE_FORMAT(t.PAYMENT_TIME,'%Y-%m-%d') As days,
+		COUNT(t.THEME_ORDER_NO) AS themeOrderNo,
+		ROUND(SUM(t.ORDER_AMOUNT), 2) AS orderAmount,
+		ROUND(SUM(t.DISCOUNT_AMOUNT), 2) AS discountAmount,
+		ROUND(SUM(t.BALANCE_DISCOUNT_AMOUNT), 2) AS balanceAmount,
+		ROUND(SUM(t.PAYABLE_AMOUNT), 2) AS payableAmount,
+		SUM(t.COURSE_BAG_NUM) AS courseBagNum
+		FROM t_theme_order t WHERE t.PAY_STATUS = 1
+		<![CDATA[ AND DATE_FORMAT(t.PAYMENT_TIME,'%Y-%m-%d') >= #{0}  ]]>
+		<![CDATA[ AND DATE_FORMAT(t.PAYMENT_TIME,'%Y-%m-%d') <=#{1}  ]]>
+        group by days
+	</select>
+	
+<!-- 按月统计 -->
+<select id="statMonthsThemeOrderList" parameterType="Query" 
+	resultType="cn.com.shopec.core.order.vo.ThemeOrderStatisticVo">
+		SELECT DATE_FORMAT(t.PAYMENT_TIME,'%Y-%m') As months,
+		COUNT(t.THEME_ORDER_NO) AS themeOrderNo,
+		ROUND(SUM(t.ORDER_AMOUNT), 2) AS orderAmount,
+		ROUND(SUM(t.DISCOUNT_AMOUNT), 2) AS discountAmount,
+		ROUND(SUM(t.BALANCE_DISCOUNT_AMOUNT), 2) AS balanceAmount,
+		ROUND(SUM(t.PAYABLE_AMOUNT), 2) AS payableAmount,
+		SUM(t.COURSE_BAG_NUM) AS courseBagNum
+		FROM t_theme_order t WHERE t.PAY_STATUS = 1
+		<![CDATA[ AND DATE_FORMAT(t.PAYMENT_TIME,'%Y-%m') >= #{0}  ]]>
+		<![CDATA[ AND DATE_FORMAT(t.PAYMENT_TIME,'%Y-%m') <=#{1}  ]]>
+        group by months
+	</select>
+	
+<!-- 按年统计 -->
+<select id="statYearsThemeOrderList" parameterType="Query" 
+	resultType="cn.com.shopec.core.order.vo.ThemeOrderStatisticVo">
+		SELECT DATE_FORMAT(t.PAYMENT_TIME,'%Y') As years,
+		COUNT(t.THEME_ORDER_NO) AS themeOrderNo,
+		ROUND(SUM(t.ORDER_AMOUNT), 2) AS orderAmount,
+		ROUND(SUM(t.DISCOUNT_AMOUNT), 2) AS discountAmount,
+		ROUND(SUM(t.BALANCE_DISCOUNT_AMOUNT), 2) AS balanceAmount,
+		ROUND(SUM(t.PAYABLE_AMOUNT), 2) AS payableAmount,
+		SUM(t.COURSE_BAG_NUM) AS courseBagNum
+		FROM t_theme_order t WHERE t.PAY_STATUS = 1
+		<![CDATA[ AND DATE_FORMAT(t.PAYMENT_TIME,'%Y') >= #{0}  ]]>
+		<![CDATA[ AND DATE_FORMAT(t.PAYMENT_TIME,'%Y') <=#{1}  ]]>
+        group by years
+	</select>
+	
+<sql id="listCommonWhere">
+    <if test="q==null"><!-- 无传入参数时默认查未删除的 -->
+       AND IS_DELETED=0
+    </if>
+	<if test="q!=null">
+		<if test="q.themeOrderNo!=null and q.themeOrderNo!=''">
+			AND THEME_ORDER_NO=#{q.themeOrderNo}
+		</if>
+		<if test="q.cityId!=null and q.cityId!=''">
+			AND CITY_ID=#{q.cityId}
+		</if>
+		<if test="q.cityName!=null and q.cityName!=''">
+			AND CITY_NAME=#{q.cityName}
+		</if>
+		<if test="q.storeNo!=null and q.storeNo!=''">
+			AND STORE_NO=#{q.storeNo}
+		</if>
+		<if test="q.coachNo!=null and q.coachNo!=''">
+			AND COACH_NO=#{q.coachNo}
+		</if>
+		<if test="q.coachName!=null and q.coachName!=''">
+			AND COACH_NAME=#{q.coachName}
+		</if>
+		<if test="q.storeName!=null and q.storeName!=''">
+			AND STORE_NAME=#{q.storeName}
+		</if>
+		<if test="q.memberNo!=null and q.memberNo!=''">
+			AND MEMBER_NO=#{q.memberNo}
+		</if>
+		<if test="q.mobilePhone!=null and q.mobilePhone!=''">
+			AND MOBILE_PHONE=#{q.mobilePhone}
+		</if>
+		<if test="q.peopleNumber!=null ">
+			AND PEOPLE_NUMBER=#{q.peopleNumber}
+		</if>
+		<if test="q.courseNo!=null and q.courseNo!=''">
+			AND COURSE_NO=#{q.courseNo}
+		</if>
+		<if test="q.arrangeNo!=null and q.arrangeNo!=''">
+			AND ARRANGE_NO=#{q.arrangeNo}
+		</if>
+		<if test="q.startTime!=null ">
+			AND START_TIME=#{q.startTime}
+		</if>
+		<if test="q.startTimeStart!=null">
+		<![CDATA[	AND START_TIME>=#{q.startTimeStart}  ]]>
+		</if>
+		<if test="q.startTimeEnd!=null">
+		<![CDATA[	AND START_TIME<#{q.startTimeEnd}   ]]>
+		</if>
+		<if test="q.endTime!=null ">
+			AND END_TIME=#{q.endTime}
+		</if>
+		<if test="q.endTimeStart!=null">
+		<![CDATA[	AND END_TIME>=#{q.endTimeStart}  ]]>
+		</if>
+		<if test="q.endTimeEnd!=null">
+		<![CDATA[	AND END_TIME<#{q.endTimeEnd}   ]]>
+		</if>
+		<if test="q.whenLong!=null and q.whenLong!=''">
+			AND WHEN_LONG=#{q.whenLong}
+		</if>
+		<if test="q.orderStatus!=null ">
+			AND ORDER_STATUS=#{q.orderStatus}
+		</if>
+		<if test="q.payStatus!=null ">
+			AND PAY_STATUS=#{q.payStatus}
+		</if>
+		<if test="q.paymentMethod!=null ">
+			AND PAYMENT_METHOD=#{q.paymentMethod}
+		</if>
+		<if test="q.paymentTime!=null ">
+			AND PAYMENT_TIME=#{q.paymentTime}
+		</if>
+		<if test="q.paymentTimeStart!=null">
+		<![CDATA[	AND PAYMENT_TIME>=#{q.paymentTimeStart}  ]]>
+		</if>
+		<if test="q.paymentTimeEnd!=null">
+		<![CDATA[	AND PAYMENT_TIME<#{q.paymentTimeEnd}   ]]>
+		</if>
+		<if test="q.partTradeFlowNo!=null and q.partTradeFlowNo!=''">
+			AND PART_TRADE_FLOW_NO=#{q.partTradeFlowNo}
+		</if>
+		<if test="q.paymentFlowNo!=null and q.paymentFlowNo!=''">
+			AND PAYMENT_FLOW_NO=#{q.paymentFlowNo}
+		</if>
+		<if test="q.orderAmount!=null ">
+			AND ORDER_AMOUNT=#{q.orderAmount}
+		</if>
+		<if test="q.discountAmount!=null ">
+			AND DISCOUNT_AMOUNT=#{q.discountAmount}
+		</if>
+		<if test="q.balanceDiscountAmount!=null ">
+			AND BALANCE_DISCOUNT_AMOUNT=#{q.balanceDiscountAmount}
+		</if>
+		<if test="q.payableAmount!=null ">
+			AND PAYABLE_AMOUNT=#{q.payableAmount}
+		</if>
+		<if test="q.isNeedInvoice!=null ">
+			AND IS_NEED_INVOICE=#{q.isNeedInvoice}
+		</if>
+		<if test="q.isInvoiceIssued!=null ">
+			AND IS_INVOICE_ISSUED=#{q.isInvoiceIssued}
+		</if>
+		<if test="q.isSign!=null ">
+			AND IS_SIGN=#{q.isSign}
+		</if>
+		<if test="q.invoiceTime!=null ">
+			AND INVOICE_TIME=#{q.invoiceTime}
+		</if>
+		<if test="q.invoiceTimeStart!=null">
+		<![CDATA[	AND INVOICE_TIME>=#{q.invoiceTimeStart}  ]]>
+		</if>
+		<if test="q.invoiceTimeEnd!=null">
+		<![CDATA[	AND INVOICE_TIME<#{q.invoiceTimeEnd}   ]]>
+		</if>
+		<if test="q.invioceId!=null and q.invioceId!=''">
+			AND INVIOCE_ID=#{q.invioceId}
+		</if>
+		<if test="q.invioceNo!=null and q.invioceNo!=''">
+			AND INVIOCE_NO=#{q.invioceNo}
+		</if>
+		<if test="q.memo!=null and q.memo!=''">
+			AND MEMO=#{q.memo}
+		</if>
+		<if test="q.cancelTime!=null ">
+			AND CANCEL_TIME=#{q.cancelTime}
+		</if>
+		<if test="q.cancelTimeStart!=null">
+		<![CDATA[	AND CANCEL_TIME>=#{q.cancelTimeStart}  ]]>
+		</if>
+		<if test="q.cancelTimeEnd!=null">
+		<![CDATA[	AND CANCEL_TIME<#{q.cancelTimeEnd}   ]]>
+		</if>
+		<if test="q.cancelOperatorType!=null ">
+			AND CANCEL_OPERATOR_TYPE=#{q.cancelOperatorType}
+		</if>
+		<if test="q.cancelOperatorId!=null and q.cancelOperatorId!=''">
+			AND CANCEL_OPERATOR_ID=#{q.cancelOperatorId}
+		</if>
+		<if test="q.isDeleted!=null ">
+			AND IS_DELETED=#{q.isDeleted}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.couponNo!=null and q.couponNo!=''">
+			AND COUPON_NO=#{q.couponNo}
+		</if>
+		<if test="q.courseBagNum!=null ">
+			AND COURSE_BAG_NUM=#{q.courseBagNum}
+		</if>
+		<if test="q.classTime != null and q.classTime != ''">
+	    	AND CLASS_TIME = #{q.classTime}
+	  </if>
+	  <if test="q.refundFailInfo!=null and q.refundFailInfo!=''">
+			AND REFUND_FAIL_INFO=#{q.refundFailInfo}
+		</if>
+		<if test="q.outRefundFlowNo!=null and q.outRefundFlowNo!=''">
+			AND OUT_REFUND_FLOW_NO=#{q.outRefundFlowNo}
+		</if>
+		<if test="q.refundFlowNo!=null and q.refundFlowNo!=''">
+			AND REFUND_FLOW_NO=#{q.refundFlowNo}
+		</if>
+		<if test="q.cancelNumber!=null ">
+			AND CANCEL_NUMBER=#{q.cancelNumber}
+		</if>
+		<if test="q.refundAmount!=null ">
+			AND REFUND_AMOUNT=#{q.refundAmount}
+		</if>
+		<if test="q.isSendMsg!=null ">
+			AND IS_SEND_MSG=#{q.isSendMsg}
+		</if>
+	</if>
+</sql>
+
+<sql id="listCommonWhereWH">
+	<if test="q!=null">
+	 	<if test="q.themeOrderNo != null and q.themeOrderNo != ''">
+	    		AND THEME_ORDER_NO like '%${q.themeOrderNo}%'
+	    </if>
+	   	<if test="q.cityId != null and q.cityId != ''">
+	    		AND CITY_ID = #{q.cityId}
+	   	</if>
+	   	<if test="q.cityName != null and q.cityName != ''">
+	    		AND CITY_NAME like '%${q.cityName}%'
+	    </if>
+	    <if test="q.coachNo != null and q.coachNo != ''">
+	    		AND COACH_NO = #{q.storeNo}
+	    </if>
+	    <if test="q.coachName != null and q.coachName != ''">
+	    		AND COACH_NAME = #{q.coachName}
+	    </if>
+	    <if test="q.courseNo != null and q.courseNo != ''">
+	    		AND COURSE_NO = #{q.courseNo}
+	    </if>
+	    <if test="q.storeNo != null and q.storeNo != ''">
+	    		AND STORE_NO = #{q.storeNo}
+	    </if>
+	    <if test="q.storeName != null and q.storeName != ''">
+	    		AND STORE_NAME like '%${q.storeName}%'
+	    </if>
+	    <if test="q.memberNo != null and q.memberNo != ''">
+	     		AND MEMBER_NO = #{q.memberNo}
+	    </if>
+		<if test="q.mobilePhone!=null and q.mobilePhone!=''">
+				AND MOBILE_PHONE like '%${q.mobilePhone}%'
+		</if>
+	    <if test="q.arrangeNo != null and q.arrangeNo != ''">
+	    		AND ARRANGE_NO = #{q.arrangeNo}
+	    </if>
+	    <if test="q.whenLong != null and q.whenLong != ''">
+	    		AND WHEN_LONG = #{q.whenLong}
+	    </if>
+	    <if test="q.orderStatus != null">
+	   			AND ORDER_STATUS = #{q.orderStatus}
+	    </if>
+	    <if test="q.payStatus != null">
+	    		AND PAY_STATUS = #{q.payStatus}
+	    </if>
+		<if test="q.isSign != null">
+       	 		AND IS_SIGN = #{q.isSign}
+		</if>
+		<if test="q.peopleNumber != null">
+		  		AND PEOPLE_NUMBER = #{q.peopleNumber}
+		</if>
+	    <if test="q.paymentMethod != null">
+	   			AND PAYMENT_METHOD = #{q.paymentMethod}
+	    </if>
+	    <if test="q.paymentFlowNo != null and q.paymentFlowNo != ''">
+	    		AND PAYMENT_FLOW_NO = #{q.paymentFlowNo}
+	   	</if>
+	   	<if test="q.orderAmount != null">
+	    		AND ORDER_AMOUNT = #{q.orderAmount}
+	   	</if>
+	   	<if test="q.discountAmount != null">
+	    		AND DISCOUNT_AMOUNT = #{q.discountAmount}
+	   	</if>
+	   	<if test="q.balanceDiscountAmount != null">
+	    		AND BALANCE_DISCOUNT_AMOUNT = #{q.balanceDiscountAmount}
+	   	</if>
+	   	<if test="q.payableAmount != null">
+	    		AND PAYABLE_AMOUNT = #{q.payableAmount}
+	   	</if>
+	   	<if test="q.isNeedInvoice != null">
+	    		AND IS_NEED_INVOICE = #{q.isNeedInvoice}
+	   	</if>
+	   	<if test="q.isInvoiceIssued != null">
+			AND IS_INVOICE_ISSUED = #{q.isInvoiceIssued}
+	   </if>
+	   <if test="q.invioceId != null and q.invioceId != ''">
+			AND INVIOCE_ID = #{q.invioceId}
+	   </if>
+	   <if test="q.invioceNo != null and q.invioceNo != ''">
+			AND INVIOCE_NO = #{q.invioceNo}
+	   </if>
+	   <if test="q.memo != null and q.memo != ''">
+			AND MEMO = #{q.memo}
+	   </if>
+	   <if test="q.isDeleted != null">
+			AND IS_DELETED = #{q.isDeleted}
+	   </if>
+	   <if test="q.cancelOperatorType != null">
+			AND CANCEL_OPERATOR_TYPE = #{q.cancelOperatorType}
+	   </if>
+	   <if test="q.cancelOperatorId != null and q.cancelOperatorId != ''">
+			AND CANCEL_OPERATOR_ID = #{q.cancelOperatorId}
+	   </if>	   
+	   <if test="q.couponNo != null and q.couponNo != ''">
+			AND COUPON_NO = #{q.couponNo}
+	   </if>
+	   <if test="q.operatorType != null">
+			AND OPERATOR_TYPE = #{q.operatorType}
+	   </if>
+	   <if test="q.operatorId != null and q.operatorId != ''">
+			AND OPERATOR_ID = #{q.operatorId}
+	   </if>
+	   <if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+       </if>
+	   <if test="q.createTimeStart!=null">
+			<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+	    </if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.partTradeFlowNo != null and q.partTradeFlowNo != ''">
+	    		AND PART_TRADE_FLOW_NO = #{q.partTradeFlowNo}
+	    </if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+      <if test="q.startTime!=null ">
+			AND START_TIME=#{q.startTime}
+	  </if>
+	  <if test="q.startTimeStart!=null">
+			<![CDATA[	AND START_TIME>=#{q.startTimeStart}  ]]>
+	  </if>
+	  <if test="q.startTimeEnd!=null">
+			<![CDATA[	AND START_TIME<#{q.startTimeEnd}   ]]>
+	  </if>
+	  <if test="q.endTime!=null ">
+			AND END_TIME=#{q.endTime}
+	  </if>
+	  <if test="q.endTimeStart!=null">
+			<![CDATA[	AND END_TIME>=#{q.endTimeStart}  ]]>
+	  </if>
+	  <if test="q.startTimeEnd!=null">
+			<![CDATA[	AND END_TIME<#{q.endTimeEnd}   ]]>
+	  </if>
+	  <if test="q.paymentTime != null">
+       		AND PAYMENT_TIME = #{q.paymentTime}
+      </if>
+      <if test="q.paymentTimeStart !=null">
+			<![CDATA[	AND PAYMENT_TIME>=#{q.paymentTimeStart}  ]]>
+	  </if>
+	  <if test="q.paymentTimeEnd !=null">
+			<![CDATA[	AND PAYMENT_TIME<#{q.paymentTimeEnd}   ]]>
+	  </if>
+      <if test="q.invoiceTime != null">
+       		AND INVOICE_TIME = #{q.invoiceTime}
+      </if>
+      <if test="q.invoiceTimeStart !=null">
+			<![CDATA[	AND INVOICE_TIME>=#{q.invoiceTimeStart}  ]]>
+	  </if>
+	  <if test="q.invoiceTimeEnd !=null">
+			<![CDATA[	AND INVOICE_TIME<#{q.invoiceTimeEnd}   ]]>
+	  </if>
+      <if test="q.cancelTime != null">
+       		AND CANCEL_TIME = #{q.cancelTime}
+      </if>
+      <if test="q.cancelTimeStart !=null">
+			<![CDATA[	AND CANCEL_TIME>=#{q.cancelTimeStart}  ]]>
+	  </if>
+	  <if test="q.cancelTimeEnd !=null">
+			<![CDATA[	AND CANCEL_TIME<#{q.cancelTimeEnd}   ]]>
+	  </if>	
+	  <if test="q.courseBagNum!=null ">
+			AND COURSE_BAG_NUM=#{q.courseBagNum}
+	  </if>  
+	  <if test="q.classTime != null and q.classTime != ''">
+	    	AND CLASS_TIME = #{q.classTime}
+	  </if>
+	  <if test="q.refundFailInfo!=null and q.refundFailInfo!=''">
+			AND REFUND_FAIL_INFO=#{q.refundFailInfo}
+		</if>
+		<if test="q.outRefundFlowNo!=null and q.outRefundFlowNo!=''">
+			AND OUT_REFUND_FLOW_NO=#{q.outRefundFlowNo}
+		</if>
+		<if test="q.refundFlowNo!=null and q.refundFlowNo!=''">
+			AND REFUND_FLOW_NO=#{q.refundFlowNo}
+		</if>
+		<if test="q.cancelNumber!=null ">
+			AND CANCEL_NUMBER=#{q.cancelNumber}
+		</if>
+		<if test="q.refundAmount!=null ">
+			AND REFUND_AMOUNT=#{q.refundAmount}
+		</if>
+		<if test="q.isSendMsg!=null ">
+			AND IS_SEND_MSG=#{q.isSendMsg}
+		</if>
+	</if>
+</sql>
+</mapper>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.order.dao.OrderDayChargingDao">
+
+<resultMap type="OrderDayCharging" id="OrderDayCharging">
+	<id column="ORDER_DAY_CHARGING_NO" property="orderDayChargingNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="ORDER_NO" property="orderNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="ORDER_DAY_TIME" property="orderDayTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="CAR_NO" property="carNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="INSURANCE" property="insurance" javaType="java.lang.Double" jdbcType="DOUBLE"/>
+	<result column="ORDER_DAY_AMOUNT" property="orderDayAmount" javaType="java.lang.Double" jdbcType="DOUBLE"/>
+	<result column="STATUS" property="status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+ORDER_DAY_CHARGING_NO,ORDER_NO,ORDER_DAY_TIME,CAR_NO,INSURANCE,ORDER_DAY_AMOUNT,CREATE_TIME,
+UPDATE_TIME,OPERATOR_ID,OPERATOR_TYPE,STATUS
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+ORDER_DAY_CHARGING_NO,ORDER_NO,ORDER_DAY_TIME,CAR_NO,INSURANCE,ORDER_DAY_AMOUNT,CREATE_TIME,
+UPDATE_TIME,OPERATOR_ID,OPERATOR_TYPE,STATUS
+</sql>
+
+<insert id="add" parameterType="OrderDayCharging" useGeneratedKeys="true" keyProperty="orderDayChargingNo">
+	insert into T_ORDER_DAY_CHARGING(
+		<if test="orderDayChargingNo!=null">
+		ORDER_DAY_CHARGING_NO,
+		</if>
+		ORDER_NO,
+		ORDER_DAY_TIME,
+		CAR_NO,
+		INSURANCE,
+		ORDER_DAY_AMOUNT,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_ID,
+		OPERATOR_TYPE,
+		STATUS
+	) values (
+		<if test="orderDayChargingNo!=null">
+		#{orderDayChargingNo,jdbcType = VARCHAR},
+		</if>
+		#{orderNo,jdbcType = VARCHAR},
+		#{orderDayTime,jdbcType = TIMESTAMP},
+		#{carNo,jdbcType = VARCHAR},
+		#{insurance,jdbcType = DOUBLE},
+		#{orderDayAmount,jdbcType = DOUBLE},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorId,jdbcType = VARCHAR},
+		#{operatorType,jdbcType = TINYINT},
+		#{status,jdbcType = TINYINT}
+	)
+</insert>
+
+<update id="update" parameterType="OrderDayCharging">
+	update T_ORDER_DAY_CHARGING 
+	<set>
+		<if test="orderNo!=null and orderNo!=''">
+			ORDER_NO=#{orderNo,jdbcType = VARCHAR},
+		</if>
+		<if test="orderDayTime!=null ">
+			ORDER_DAY_TIME=#{orderDayTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="carNo!=null and carNo!=''">
+			CAR_NO=#{carNo,jdbcType = VARCHAR},
+		</if>
+		<if test="insurance!=null ">
+			INSURANCE=#{insurance,jdbcType = DOUBLE},
+		</if>
+		<if test="orderDayAmount!=null ">
+			ORDER_DAY_AMOUNT=#{orderDayAmount,jdbcType = DOUBLE},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="status!=null ">
+			STATUS=#{status,jdbcType = TINYINT},
+		</if>
+	</set>
+	<where>
+		AND ORDER_DAY_CHARGING_NO=#{orderDayChargingNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_ORDER_DAY_CHARGING 
+	<where>
+		ORDER_DAY_CHARGING_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="OrderDayCharging">
+	select <include refid="AllColumnlist"/> from T_ORDER_DAY_CHARGING
+	<where>
+		ORDER_DAY_CHARGING_NO=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="OrderDayCharging">
+	select <include refid="AllColumnlist"/> from T_ORDER_DAY_CHARGING
+	<where>
+		ORDER_DAY_CHARGING_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(ORDER_DAY_CHARGING_NO) from T_ORDER_DAY_CHARGING 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+
+
+<select id="queryAll" parameterType="Query" resultMap="OrderDayCharging">
+	select <include refid="CommonColumnlist"/> from T_ORDER_DAY_CHARGING 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="OrderDayCharging">
+	select <include refid="CommonColumnlist"/> from T_ORDER_DAY_CHARGING
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+	<if test="q!=null">
+		<if test="q.orderDayChargingNo!=null and q.orderDayChargingNo!=''">
+			AND ORDER_DAY_CHARGING_NO=#{q.orderDayChargingNo}
+		</if>
+		<if test="q.orderNo!=null and q.orderNo!=''">
+			AND ORDER_NO=#{q.orderNo}
+		</if>
+		<if test="q.orderDayTime!=null ">
+			AND ORDER_DAY_TIME=#{q.orderDayTime}
+		</if>
+		<if test="q.orderDayTimeStart!=null">
+		<![CDATA[	AND ORDER_DAY_TIME>=#{q.orderDayTimeStart}  ]]>
+		</if>
+		<if test="q.orderDayTimeEnd!=null">
+		<![CDATA[	AND ORDER_DAY_TIME<#{q.orderDayTimeEnd}   ]]>
+		</if>
+		<if test="q.carNo!=null and q.carNo!=''">
+			AND CAR_NO=#{q.carNo}
+		</if>
+		<if test="q.insurance!=null ">
+			AND INSURANCE=#{q.insurance}
+		</if>
+		<if test="q.orderDayAmount!=null ">
+			AND ORDER_DAY_AMOUNT=#{q.orderDayAmount}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.status!=null ">
+			AND STATUS=#{q.status}
+		</if>
+	</if>
+</sql>
+
+</mapper>

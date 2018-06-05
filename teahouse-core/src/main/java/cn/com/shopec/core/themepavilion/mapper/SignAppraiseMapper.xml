@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.themepavilion.dao.SignAppraiseDao">
+
+<resultMap type="SignAppraise" id="SignAppraise">
+	<id column="SIAP_ID" property="siapId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COURSE_NO" property="courseNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CHINESE_NAME" property="chineseName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COURSE_DATE" property="courseDate" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="START_TIME_PERIOD" property="startTimePeriod" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="END_TIME_PERIOD" property="endTimePeriod" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CITY_ID" property="cityId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="CITY_NAME" property="cityName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MEMBER_NO" property="memberNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MEMBER_NAME" property="memberName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="SIGN_DATE" property="signDate" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="COURSE_APPRAISE" property="courseAppraise" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COURSE_APPRAISE_DATE" property="courseAppraiseDate" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="COACH_APPRAISE" property="coachAppraise" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COACH_APPRAISE_DATE" property="coachAppraiseDate" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="STORE_NO" property="storeNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="STORE_NAME" property="storeName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COACH_NO" property="coachNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="COACHNAME" property="coachname" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="THEME_ORDER_NO" property="themeOrderNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="IS_DELETED" property="isDeleted" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="SIGN_TYPE" property="signType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	
+	<result column="IS_SIGN" property="isSign" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="SIGN_STATUS" property="signStatus" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="IS_FINISH" property="isFinish" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="ARRAY_COURSE_NO" property="arrayCourseNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+SIAP_ID,COURSE_NO,CHINESE_NAME,COURSE_DATE,START_TIME_PERIOD,END_TIME_PERIOD,CITY_ID,
+CITY_NAME,MEMBER_NO,MEMBER_NAME,SIGN_DATE,COURSE_APPRAISE,COURSE_APPRAISE_DATE,
+COACH_APPRAISE,COACH_APPRAISE_DATE,STORE_NO,STORE_NAME,COACH_NO,COACHNAME,
+THEME_ORDER_NO,IS_DELETED,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID,
+SIGN_TYPE,IS_SIGN,SIGN_STATUS,IS_FINISH,ARRAY_COURSE_NO
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+SIAP_ID,COURSE_NO,CHINESE_NAME,COURSE_DATE,START_TIME_PERIOD,END_TIME_PERIOD,CITY_ID,
+CITY_NAME,MEMBER_NO,MEMBER_NAME,SIGN_DATE,COURSE_APPRAISE_DATE,
+COACH_APPRAISE_DATE,STORE_NO,COACH_NO,COACHNAME,
+THEME_ORDER_NO,IS_DELETED,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID,SIGN_TYPE,
+IS_SIGN,SIGN_STATUS,IS_FINISH,ARRAY_COURSE_NO
+</sql>
+
+<insert id="add" parameterType="SignAppraise" useGeneratedKeys="true" keyProperty="siapId">
+	insert into T_SIGN_APPRAISE(
+		<if test="siapId!=null">
+		SIAP_ID,
+		</if>
+		COURSE_NO,
+		CHINESE_NAME,
+		COURSE_DATE,
+		START_TIME_PERIOD,
+		END_TIME_PERIOD,
+		CITY_ID,
+		CITY_NAME,
+		MEMBER_NO,
+		MEMBER_NAME,
+		SIGN_DATE,
+		COURSE_APPRAISE,
+		COURSE_APPRAISE_DATE,
+		COACH_APPRAISE,
+		COACH_APPRAISE_DATE,
+		STORE_NO,
+		STORE_NAME,
+		COACH_NO,
+		COACHNAME,
+		THEME_ORDER_NO,
+		IS_DELETED,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID,
+		SIGN_TYPE,
+		IS_SIGN,
+		SIGN_STATUS,
+		IS_FINISH,
+		ARRAY_COURSE_NO
+	) values (
+		<if test="siapId!=null">
+		#{siapId,jdbcType = VARCHAR},
+		</if>
+		#{courseNo,jdbcType = VARCHAR},
+		#{chineseName,jdbcType = VARCHAR},
+		#{courseDate,jdbcType = VARCHAR},
+		#{startTimePeriod,jdbcType = VARCHAR},
+		#{endTimePeriod,jdbcType = VARCHAR},
+		#{cityId,jdbcType = VARCHAR},
+		#{cityName,jdbcType = VARCHAR},
+		#{memberNo,jdbcType = VARCHAR},
+		#{memberName,jdbcType = VARCHAR},
+		#{signDate,jdbcType = TIMESTAMP},
+		#{courseAppraise,jdbcType = VARCHAR},
+		#{courseAppraiseDate,jdbcType = TIMESTAMP},
+		#{coachAppraise,jdbcType = VARCHAR},
+		#{coachAppraiseDate,jdbcType = TIMESTAMP},
+		#{storeNo,jdbcType = VARCHAR},
+		#{storeName,jdbcType = VARCHAR},
+		#{coachNo,jdbcType = VARCHAR},
+		#{coachname,jdbcType = VARCHAR},
+		#{themeOrderNo,jdbcType = VARCHAR},
+		#{isDeleted,jdbcType = TINYINT},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR},
+		#{signType,jdbcType = TINYINT},
+		#{isSign,jdbcType = TINYINT},
+		#{signStatus,jdbcType = TINYINT},
+		#{isFinish,jdbcType = TINYINT},
+		#{arrayCourseNo,jdbcType = VARCHAR}
+	)
+</insert>
+
+<update id="update" parameterType="SignAppraise">
+	update T_SIGN_APPRAISE 
+	<set>
+		<if test="courseNo!=null and courseNo!=''">
+			COURSE_NO=#{courseNo,jdbcType = VARCHAR},
+		</if>
+		<if test="chineseName!=null and chineseName!=''">
+			CHINESE_NAME=#{chineseName,jdbcType = VARCHAR},
+		</if>
+		<if test="courseDate!=null and courseDate !=''">
+			COURSE_DATE=#{courseDate,jdbcType = VARCHAR},
+		</if>
+		<if test="startTimePeriod!=null and startTimePeriod!=''">
+			START_TIME_PERIOD=#{startTimePeriod,jdbcType = VARCHAR},
+		</if>
+		<if test="endTimePeriod!=null and endTimePeriod!=''">
+			END_TIME_PERIOD=#{endTimePeriod,jdbcType = VARCHAR},
+		</if>
+		<if test="cityId!=null and cityId!=''">
+			CITY_ID=#{cityId,jdbcType = VARCHAR},
+		</if>
+		<if test="cityName!=null and cityName!=''">
+			CITY_NAME=#{cityName,jdbcType = VARCHAR},
+		</if>
+		<if test="memberNo!=null and memberNo!=''">
+			MEMBER_NO=#{memberNo,jdbcType = VARCHAR},
+		</if>
+		<if test="memberName!=null and memberName!=''">
+			MEMBER_NAME=#{memberName,jdbcType = VARCHAR},
+		</if>
+		<if test="signDate!=null ">
+			SIGN_DATE=#{signDate,jdbcType = TIMESTAMP},
+		</if>
+		<if test="courseAppraise!=null and courseAppraise!=''">
+			COURSE_APPRAISE=#{courseAppraise,jdbcType = VARCHAR},
+		</if>
+		<if test="courseAppraiseDate!=null ">
+			COURSE_APPRAISE_DATE=#{courseAppraiseDate,jdbcType = TIMESTAMP},
+		</if>
+		<if test="coachAppraise!=null and coachAppraise!=''">
+			COACH_APPRAISE=#{coachAppraise,jdbcType = VARCHAR},
+		</if>
+		<if test="coachAppraiseDate!=null ">
+			COACH_APPRAISE_DATE=#{coachAppraiseDate,jdbcType = TIMESTAMP},
+		</if>
+		<if test="storeNo!=null and storeNo!=''">
+			STORE_NO=#{storeNo,jdbcType = VARCHAR},
+		</if>
+		<if test="storeName!=null and storeName!=''">
+			STORE_NAME=#{storeName,jdbcType = VARCHAR},
+		</if>
+		<if test="coachNo!=null and coachNo!=''">
+			COACH_NO=#{coachNo,jdbcType = VARCHAR},
+		</if>
+		<if test="coachname!=null and coachname!=''">
+			COACHNAME=#{coachname,jdbcType = VARCHAR},
+		</if>
+		<if test="themeOrderNo!=null and themeOrderNo!=''">
+			THEME_ORDER_NO=#{themeOrderNo,jdbcType = VARCHAR},
+		</if>
+		<if test="isDeleted!=null ">
+			IS_DELETED=#{isDeleted,jdbcType = TINYINT},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+		<if test="signType!=null ">
+			SIGN_TYPE=#{signType,jdbcType = TINYINT},
+		</if>
+		
+		<if test="isSign!=null ">
+			IS_SIGN=#{isSign,jdbcType = TINYINT},
+		</if>
+		<if test="signStatus!=null ">
+			SIGN_STATUS=#{signStatus,jdbcType = TINYINT},
+		</if>
+		<if test="isFinish!=null ">
+			IS_FINISH=#{isFinish,jdbcType = TINYINT},
+		</if>
+		<if test="arrayCourseNo!=null and arrayCourseNo!=''">
+			ARRAY_COURSE_NO=#{arrayCourseNo,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND SIAP_ID=#{siapId}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_SIGN_APPRAISE 
+	<where>
+		SIAP_ID=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="SignAppraise">
+	select <include refid="AllColumnlist"/> from T_SIGN_APPRAISE
+	<where>
+		SIAP_ID=#{0}
+	</where>
+</select>
+
+<!-- 查询教练签到 -->
+<select id="getSignAppraiseStatus" resultMap="SignAppraise">
+	select <include refid="AllColumnlist"/> from T_SIGN_APPRAISE
+	<where>
+		COACH_NO=#{0} AND ARRAY_COURSE_NO=#{1} AND SIGN_TYPE = 1
+	</where>
+</select>
+
+<select id="getByIds" resultMap="SignAppraise">
+	select <include refid="AllColumnlist"/> from T_SIGN_APPRAISE
+	<where>
+		SIAP_ID in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(SIAP_ID) from T_SIGN_APPRAISE 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="SignAppraise">
+	select <include refid="CommonColumnlist"/> from T_SIGN_APPRAISE 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="SignAppraise">
+	select <include refid="AllColumnlist"/> from T_SIGN_APPRAISE
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC,CREATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+    <if test="q==null"><!-- 无传入参数时默认查未删除的 -->
+       AND IS_DELETED=0
+    </if>
+	<if test="q!=null">
+		<if test="q.siapId!=null and q.siapId!=''">
+			AND SIAP_ID=#{q.siapId}
+		</if>
+		<if test="q.courseNo!=null and q.courseNo!=''">
+			AND COURSE_NO=#{q.courseNo}
+		</if>
+		<if test="q.chineseName!=null and q.chineseName!=''">
+			AND CHINESE_NAME=#{q.chineseName}
+		</if>
+		<if test="q.courseDate!=null and q.courseDate!=''">
+			AND COURSE_DATE=#{q.courseDate}
+		</if>
+		<if test="q.courseDateStart!=null">
+		<![CDATA[	AND COURSE_DATE>=#{q.courseDateStart}  ]]>
+		</if>
+		<if test="q.courseDateEnd!=null">
+		<![CDATA[	AND COURSE_DATE<#{q.courseDateEnd}   ]]>
+		</if>
+		<if test="q.startTimePeriod!=null and q.startTimePeriod!=''">
+			AND START_TIME_PERIOD=#{q.startTimePeriod}
+		</if>
+		<if test="q.endTimePeriod!=null and q.endTimePeriod!=''">
+			AND END_TIME_PERIOD=#{q.endTimePeriod}
+		</if>
+		<if test="q.cityId!=null and q.cityId!=''">
+			AND CITY_ID=#{q.cityId}
+		</if>
+		<if test="q.cityName!=null and q.cityName!=''">
+			AND CITY_NAME=#{q.cityName}
+		</if>
+		<if test="q.memberNo!=null and q.memberNo!=''">
+			AND MEMBER_NO=#{q.memberNo}
+		</if>
+		<if test="q.memberName!=null and q.memberName!=''">
+			AND MEMBER_NAME=#{q.memberName}
+		</if>
+		<if test="q.signDate!=null ">
+			AND SIGN_DATE=#{q.signDate}
+		</if>
+		<if test="q.signDateStart!=null">
+		<![CDATA[	AND SIGN_DATE>=#{q.signDateStart}  ]]>
+		</if>
+		<if test="q.signDateEnd!=null">
+		<![CDATA[	AND SIGN_DATE<#{q.signDateEnd}   ]]>
+		</if>
+		<if test="q.courseAppraise!=null and q.courseAppraise!=''">
+			AND COURSE_APPRAISE=#{q.courseAppraise}
+		</if>
+		<if test="q.courseAppraiseDate!=null ">
+			AND COURSE_APPRAISE_DATE=#{q.courseAppraiseDate}
+		</if>
+		<if test="q.courseAppraiseDateStart!=null">
+		<![CDATA[	AND COURSE_APPRAISE_DATE>=#{q.courseAppraiseDateStart}  ]]>
+		</if>
+		<if test="q.courseAppraiseDateEnd!=null">
+		<![CDATA[	AND COURSE_APPRAISE_DATE<#{q.courseAppraiseDateEnd}   ]]>
+		</if>
+		<if test="q.coachAppraise!=null and q.coachAppraise!=''">
+			AND COACH_APPRAISE=#{q.coachAppraise}
+		</if>
+		<if test="q.coachAppraiseDate!=null ">
+			AND COACH_APPRAISE_DATE=#{q.coachAppraiseDate}
+		</if>
+		<if test="q.coachAppraiseDateStart!=null">
+		<![CDATA[	AND COACH_APPRAISE_DATE>=#{q.coachAppraiseDateStart}  ]]>
+		</if>
+		<if test="q.coachAppraiseDateEnd!=null">
+		<![CDATA[	AND COACH_APPRAISE_DATE<#{q.coachAppraiseDateEnd}   ]]>
+		</if>
+		<if test="q.storeNo!=null and q.storeNo!=''">
+			AND STORE_NO=#{q.storeNo}
+		</if>
+		<if test="q.storeName!=null and q.storeName!=''">
+			AND STORE_NAME=#{q.storeName}
+		</if>
+		<if test="q.coachNo!=null and q.coachNo!=''">
+			AND COACH_NO=#{q.coachNo}
+		</if>
+		<if test="q.coachname!=null and q.coachname!=''">
+			AND COACHNAME=#{q.coachname}
+		</if>
+		<if test="q.themeOrderNo!=null and q.themeOrderNo!=''">
+			AND THEME_ORDER_NO=#{q.themeOrderNo}
+		</if>
+		<if test="q.isDeleted!=null ">
+			AND IS_DELETED=#{q.isDeleted}
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+		<if test="q.signType!=null ">
+			AND SIGN_TYPE=#{q.signType}
+		</if>
+		<if test="q.isSign!=null ">
+			AND IS_SIGN=#{q.isSign},
+		</if>
+		<if test="q.signStatus!=null ">
+			AND SIGN_STATUS=#{q.signStatus},
+		</if>
+		<if test="q.isFinish!=null ">
+			AND IS_FINISH=#{q.isFinish},
+		</if>
+		<if test="q.arrayCourseNo!=null and q.arrayCourseNo!=''">
+			AND ARRAY_COURSE_NO=#{q.arrayCourseNo},
+		</if>
+	</if>
+</sql>
+
+</mapper>

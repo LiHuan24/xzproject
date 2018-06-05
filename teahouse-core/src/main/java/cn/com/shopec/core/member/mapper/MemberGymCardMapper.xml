@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.shopec.core.member.dao.MemberGymCardDao">
+
+<resultMap type="MemberGymCard" id="MemberGymCard">
+	<id column="MEMBER_GYM_CARD_NO" property="memberGymCardNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MEMBER_NO" property="memberNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="MEMBER_NAME" property="memberName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="GYM_CARD_NO" property="gymCardNo" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="GYM_CARD_NAME" property="gymCardName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result column="GYM_CARD_TYPE" property="gymCardType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="GYMCARD_STATUS" property="gymcardStatus" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="START_TIME" property="startTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="END_TIME" property="endTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="CREATE_TIME" property="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="UPDATE_TIME" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+	<result column="OPERATOR_TYPE" property="operatorType" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+	<result column="OPERATOR_ID" property="operatorId" javaType="java.lang.String" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<!-- 全部字段，一般用于明细查询 -->
+<sql id="AllColumnlist">
+MEMBER_GYM_CARD_NO,MEMBER_NO,MEMBER_NAME,GYM_CARD_NO,GYM_CARD_NAME,GYM_CARD_TYPE,GYMCARD_STATUS,
+START_TIME,END_TIME,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID
+
+</sql>
+
+<!-- 常见字段，一般用于列表查询，可能不包含备注之类的字段 -->
+<sql id="CommonColumnlist">
+MEMBER_GYM_CARD_NO,MEMBER_NO,MEMBER_NAME,GYM_CARD_NO,GYM_CARD_NAME,GYM_CARD_TYPE,GYMCARD_STATUS,
+START_TIME,END_TIME,CREATE_TIME,UPDATE_TIME,OPERATOR_TYPE,OPERATOR_ID
+
+</sql>
+
+<insert id="add" parameterType="MemberGymCard" useGeneratedKeys="true" keyProperty="memberGymCardNo">
+	insert into T_MEMBER_GYM_CARD(
+		<if test="memberGymCardNo!=null">
+		MEMBER_GYM_CARD_NO,
+		</if>
+		MEMBER_NO,
+		MEMBER_NAME,
+		GYM_CARD_NO,
+		GYM_CARD_NAME,
+		GYM_CARD_TYPE,
+		GYMCARD_STATUS,
+		START_TIME,
+		END_TIME,
+		CREATE_TIME,
+		UPDATE_TIME,
+		OPERATOR_TYPE,
+		OPERATOR_ID
+	) values (
+		<if test="memberGymCardNo!=null">
+		#{memberGymCardNo,jdbcType = VARCHAR},
+		</if>
+		#{memberNo,jdbcType = VARCHAR},
+		#{memberName,jdbcType = VARCHAR},
+		#{gymCardNo,jdbcType = VARCHAR},
+		#{gymCardName,jdbcType = VARCHAR},
+		#{gymCardType,jdbcType = TINYINT},
+		#{gymcardStatus,jdbcType = TINYINT},
+		#{startTime,jdbcType = TIMESTAMP},
+		#{endTime,jdbcType = TIMESTAMP},
+		#{createTime,jdbcType = TIMESTAMP},
+		#{updateTime,jdbcType = TIMESTAMP},
+		#{operatorType,jdbcType = TINYINT},
+		#{operatorId,jdbcType = VARCHAR}
+	)
+</insert>
+
+<update id="update" parameterType="MemberGymCard">
+	update T_MEMBER_GYM_CARD 
+	<set>
+		<if test="memberNo!=null and memberNo!=''">
+			MEMBER_NO=#{memberNo,jdbcType = VARCHAR},
+		</if>
+		<if test="memberName!=null and memberName!=''">
+			MEMBER_NAME=#{memberName,jdbcType = VARCHAR},
+		</if>
+		<if test="gymCardNo!=null and gymCardNo!=''">
+			GYM_CARD_NO=#{gymCardNo,jdbcType = VARCHAR},
+		</if>
+		<if test="gymCardName!=null and gymCardName!=''">
+			GYM_CARD_NAME=#{gymCardName,jdbcType = VARCHAR},
+		</if>
+		<if test="gymCardType!=null ">
+			GYM_CARD_TYPE=#{gymCardType,jdbcType = TINYINT},
+		</if>
+		<if test="gymcardStatus!=null ">
+			GYMCARD_STATUS=#{gymcardStatus,jdbcType = TINYINT},
+		</if>
+		<if test="startTime!=null ">
+			START_TIME=#{startTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="endTime!=null ">
+			END_TIME=#{endTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="createTime!=null ">
+			CREATE_TIME=#{createTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="updateTime!=null ">
+			UPDATE_TIME=#{updateTime,jdbcType = TIMESTAMP},
+		</if>
+		<if test="operatorType!=null ">
+			OPERATOR_TYPE=#{operatorType,jdbcType = TINYINT},
+		</if>
+		<if test="operatorId!=null and operatorId!=''">
+			OPERATOR_ID=#{operatorId,jdbcType = VARCHAR},
+		</if>
+	</set>
+	<where>
+		AND MEMBER_GYM_CARD_NO=#{memberGymCardNo}
+	</where>
+</update>
+
+<delete id="delete">
+	delete from T_MEMBER_GYM_CARD 
+	<where>
+		MEMBER_GYM_CARD_NO=#{0}
+	</where>
+</delete>
+
+<select id="get" resultMap="MemberGymCard">
+	select <include refid="AllColumnlist"/> from T_MEMBER_GYM_CARD
+	<where>
+		MEMBER_GYM_CARD_NO=#{0}
+	</where>
+</select>
+
+<select id="getByIds" resultMap="MemberGymCard">
+	select <include refid="AllColumnlist"/> from T_MEMBER_GYM_CARD
+	<where>
+		MEMBER_GYM_CARD_NO in <foreach item="item" index="index" collection="array" open="(" separator="," close=")">#{item}</foreach>
+	</where>
+</select>
+
+<select id="count" parameterType="Query" resultType="Long">
+	select count(MEMBER_GYM_CARD_NO) from T_MEMBER_GYM_CARD 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="queryAll" parameterType="Query" resultMap="MemberGymCard">
+	select <include refid="CommonColumnlist"/> from T_MEMBER_GYM_CARD 
+	<where>
+	<include refid="listCommonWhere"/>
+	</where>
+</select>
+
+<select id="pageList" parameterType="Query" resultMap="MemberGymCard">
+	select <include refid="CommonColumnlist"/> from T_MEMBER_GYM_CARD
+	<where>
+	 <include refid="listCommonWhere"/>
+	</where>
+	ORDER BY UPDATE_TIME DESC,CREATE_TIME DESC
+	<![CDATA[LIMIT #{rowIndex},#{pageSize} ]]>
+</select>
+
+
+<sql id="listCommonWhere">
+	<if test="q!=null">
+		<if test="q.memberGymCardNo!=null and q.memberGymCardNo!=''">
+			AND MEMBER_GYM_CARD_NO=#{q.memberGymCardNo}
+		</if>
+		<if test="q.memberNo!=null and q.memberNo!=''">
+			AND MEMBER_NO=#{q.memberNo}
+		</if>
+		<if test="q.memberName!=null and q.memberName!=''">
+			AND MEMBER_NAME=#{q.memberName}
+		</if>
+		<if test="q.gymCardNo!=null and q.gymCardNo!=''">
+			AND GYM_CARD_NO=#{q.gymCardNo}
+		</if>
+		<if test="q.gymCardName!=null and q.gymCardName!=''">
+			AND GYM_CARD_NAME=#{q.gymCardName}
+		</if>
+		<if test="q.gymCardType!=null ">
+			AND GYM_CARD_TYPE=#{q.gymCardType}
+		</if>
+		<if test="q.gymcardStatus!=null ">
+			AND GYMCARD_STATUS=#{q.gymcardStatus}
+		</if>
+		<if test="q.startTime!=null ">
+			AND START_TIME=#{q.startTime}
+		</if>
+		<if test="q.startTimeStart!=null">
+		<![CDATA[	AND START_TIME>=#{q.startTimeStart}  ]]>
+		</if>
+		<if test="q.startTimeEnd!=null">
+		<![CDATA[	AND START_TIME<#{q.startTimeEnd}   ]]>
+		</if>
+		<if test="q.endTime!=null ">
+			AND END_TIME=#{q.endTime}
+		</if>
+		<if test="q.endTimeStart!=null">
+		<![CDATA[	AND END_TIME>=#{q.endTimeStart}  ]]>
+		</if>
+		<if test="q.endTimeEnd!=null">
+		<![CDATA[	AND END_TIME<#{q.endTimeEnd}   ]]>
+		</if>
+		<if test="q.endTimeNs!=null">
+		<![CDATA[	AND END_TIME>#{q.endTimeNs}   ]]>
+		</if>
+		<if test="q.createTime!=null ">
+			AND CREATE_TIME=#{q.createTime}
+		</if>
+		<if test="q.createTimeStart!=null">
+		<![CDATA[	AND CREATE_TIME>=#{q.createTimeStart}  ]]>
+		</if>
+		<if test="q.createTimeEnd!=null">
+		<![CDATA[	AND CREATE_TIME<#{q.createTimeEnd}   ]]>
+		</if>
+		<if test="q.updateTime!=null ">
+			AND UPDATE_TIME=#{q.updateTime}
+		</if>
+		<if test="q.updateTimeStart!=null">
+		<![CDATA[	AND UPDATE_TIME>=#{q.updateTimeStart}  ]]>
+		</if>
+		<if test="q.updateTimeEnd!=null">
+		<![CDATA[	AND UPDATE_TIME<#{q.updateTimeEnd}   ]]>
+		</if>
+		<if test="q.operatorType!=null ">
+			AND OPERATOR_TYPE=#{q.operatorType}
+		</if>
+		<if test="q.operatorId!=null and q.operatorId!=''">
+			AND OPERATOR_ID=#{q.operatorId}
+		</if>
+	</if>
+</sql>
+
+</mapper>
